@@ -9,7 +9,7 @@
 
 Matrix4 Transform2D::GetTransformationMatrix() {
 
-    Matrix4 scale_mat =  {
+    Matrix4 scale_mat =     {
                                 { this->scale.x,    0.0f,               0.0f,   0.0f    },
                                 { 0.0f,             this->scale.y,      0.0f,   0.0f    },
                                 { 0.0f,             0.0f,               1.0f,   0.0f    },

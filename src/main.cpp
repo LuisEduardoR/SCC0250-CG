@@ -334,9 +334,6 @@ int main(void) {
     // Creates the program we are going to use from our vertex and fragment shader's source code
     renderer.SetProgram(vertexCode, fragmentCode);
 
-    // Creates the data that will be used for the GPU:
-    Circle circle = Circle();
-
     // Stores the position of our pyramid (x and y)
     float tX = 0.0f, tY = 0.0f;
 
@@ -370,36 +367,60 @@ int main(void) {
         // Clears our screen with a certain color
         renderer.Clear(Color::black);
 
-        // TODO: Draw all shapes
-        renderer.DrawShape2DCollection(ship, Color::white);
+        // Calculates the sin and cos of our angle
+        float cosValue = cosf(angle), sinValue = sinf(angle);
+
+        // Calculates our transformation matrixes
+        Matrix4 scale_mat =     {
+                                    { scale,        +0.00f,     +0.00f,     +0.00f }, 
+                                    { +0.00f,       scale,      +0.00f,     +0.00f }, 
+                                    { +0.00f,       +0.00f,     scale,      +0.00f }, 
+                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
+                                };
+
+        Matrix4 rotation_mat =    {
+                                    { +cosValue, -sinValue,   +0.00f,     +0.00f }, 
+                                    { +sinValue, +cosValue,   +0.00f,     +0.00f }, 
+                                    { +0.00f,       +0.00f,   +1.00f,     +0.00f }, 
+                                    { +0.00f,       +0.00f,   +0.00f,     +1.00f }
+                                };
+
+        Matrix4 pos_mat =       {
+                                    { 1.00f,        +0.00f,     +0.00f,     +tX }, 
+                                    { +0.00f,       1.00f,      +0.00f,     +tY }, 
+                                    { +0.00f,       +0.00f,     1.00f,      +0.00F }, 
+                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
+                                };
+
+        // Calculates the resulting transformation matrix
+        Matrix4 transform = pos_mat * rotation_mat * scale_mat;
+
+        // Draws our ship
+        renderer.DrawShape2DCollection(ship, Color::white, transform);
 
         // Swaps the old buffer for the new one
         windowSystem.SwapBuffers();
 
-        // TODO: Process Input
-
-        /*
         // Updates the scale (based on input)
         if(leftMousePressed)
-            ;
+            scale += 0.50f * deltaTime;
         else if(rightMousePressed)
-            ;
+            scale -= 0.50f * deltaTime;
 
         // Updates the angle
         angle += 2.00f * deltaTime;
 
         // Updates the X position (based on input)
         if(rightPressed)
-            ;
+            tX += 1.00f * deltaTime;
         else if(leftPressed)
-            ;
+            tX -= 1.00f * deltaTime;
 
         // Updates the Y position (based on input)
         if(upPressed)
-            ;
+            tY += 1.00f * deltaTime;
         else if(downPressed)
-            ;
-        */
+            tY -= 1.00f * deltaTime;
 
         // Gets the end time.
         uint64_t endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

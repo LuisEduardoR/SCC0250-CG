@@ -114,31 +114,10 @@ void Renderer::DrawShape2D(const Shape2D& shape, const Color& color) { DrawShape
 void Renderer::DrawShape2D(const Shape2D& shape, const Color& color, const Matrix4& transform) {
 
     // Gets the vertices of our shape
-    std::vector<Vector2> vertices = shape.GetVertices();
-
-    // Breaks our Shape2D data into a simple array
-    float data[2 * vertices.size()];
-    for(int i = 0; i < vertices.size(); i++) {
-        data[2 * i]         = vertices[i].x; 
-        data[(2 * i) + 1]   = vertices[i].y;
-    }
+    VertexData data = shape.GetVertices();
 
     // Performs the drawing
-    DrawBasic2D(data, sizeof(data), vertices.size(), shape.GetDrawMode(), color, transform);
-
-}
-
-// Draws a Shape2DCollection (uses the default transform matrix)
-void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color) { DrawShape2DCollection(shapes, color, Matrix4()); }
-
-// Draws a Shape2DCollection applying a transformation matrix
-void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color, const Matrix4& transform) {
-
-    // Performs the drawing of each shape
-    for (auto iter = (*shapes).cbegin(); iter != (*shapes).cend(); iter++)
-        DrawShape2D((*iter).get(), color, transform);
-    // for (const std::unique_ptr<Shape2D>& shape : *shapes.get())
-        // DrawShape2D(shape.get(), color, transform);
+    DrawBasic2D((float*)data.vertices2D, data.vertexCount * sizeof(Vector2), data.vertexCount, shape.GetDrawMode(), color, transform);
 
 }
 
@@ -146,34 +125,25 @@ void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Colo
 void Renderer::DrawShape2D(const Shape2D* shape, const Color& color, const Matrix4& transform) {
 
     // Gets the vertices of our shape
-    std::vector<Vector2> vertices = (*shape).GetVertices();
-
-    // Breaks our Shape2D data into a simple array
-    float data[2 * vertices.size()];
-    for(int i = 0; i < vertices.size(); i++) {
-        data[2 * i]         = vertices[i].x; 
-        data[(2 * i) + 1]   = vertices[i].y;
-    }
+    VertexData data = (*shape).GetVertices();
 
     // Performs the drawing
-    DrawBasic2D(data, sizeof(data), vertices.size(), shape->GetDrawMode(), color, transform);
+    DrawBasic2D((float*)data.vertices2D, data.vertexCount * sizeof(Vector2), data.vertexCount, shape->GetDrawMode(), color, transform);
 
 }
 
-// Functions to draw some of our basic geometry (uses the default transform matrix):
+// Draws a Shape2DCollection (uses the default transform matrix)
+void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color) { DrawShape2DCollection(shapes, color, Matrix4()); }
 
-// void Renderer::DrawPoint(const Vector2& vec, const Color& color) { DrawPoint(vec, color, Matrix4()); }
 
-// Draws a point
-/*void Renderer::DrawPoint(const Vector2& vec, const Color& color, const Matrix4& transform) {
+// Draws a Shape2DCollection applying a transformation matrix
+void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color, const Matrix4& transform) {
 
-    // Breaks our quad data into a simple array
-    float data[2] = { vec.x, vec.y };
+    // Performs the drawing of each shape
+    for (auto iter = (*shapes).cbegin(); iter != (*shapes).cend(); iter++)
+        DrawShape2D((*iter).get(), color, transform);
 
-    // Performs the drawing
-    DrawBasic2D(data, sizeof(data), 1, GL_POINTS, color, transform);
-
-}*/
+}
 
 // 3D =====================================
 

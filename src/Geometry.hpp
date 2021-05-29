@@ -16,70 +16,12 @@
 # include <memory>
 
 # include "Color.hpp"
+# include "Vector.hpp"
+# include "VertexData.hpp"
 
 /*
     This file contains the base classes to represent some really simple geometric figures
 */
-
-// Represents a 2D vector, but can also be used to represent 2D coordinates 
-class Vector2 {
-
-public:
-
-    float x, y;
-
-    // Constructors
-    Vector2(float x, float y);
-    Vector2() : Vector2(0.0f, 0.0f) {}
-
-};
-
-// Represents a 3D vector, but can also be used to represent 3D coordinates 
-class Vector3 {
-
-public:
-
-    float x, y, z;
-
-    // Constructors
-    Vector3(float x, float y, float z);
-    Vector3() : Vector3(0.0f, 0.0f, 0.0f) {}
-
-};
-
-// Represents a 4D vector, but can also be used to represent 4D coordinates 
-class Vector4 {
-
-public:
-
-    float x, y, z, w;
-
-    // Constructors
-    Vector4(float x, float y, float z, float w);
-    Vector4() : Vector4(0.0f, 0.0f, 0.0f, 0.0f) {}
-
-};
-
-// Represents a 4D transformation matrix
-class Matrix4 {
-
-public:
-
-    Vector4 i, j, k, l;
-
-    // Constructors
-    Matrix4(Vector4 i, Vector4 j, Vector4 k, Vector4 l);
-    Matrix4() : Matrix4 (
-                            Vector4(1.0f, 0.0f, 0.0f, 0.0f), 
-                            Vector4(0.0f, 1.0f, 0.0f, 0.0f), 
-                            Vector4(0.0f, 0.0f, 1.0f, 0.0f), 
-                            Vector4(0.0f, 0.0f, 0.0f, 1.0f)
-                        ) {}
-
-    // Operators
-    Matrix4 operator*(const Matrix4& m);
-
-};
 
 class Shape2D {
 
@@ -97,7 +39,7 @@ public:
     virtual ~Shape2D() = default;
 
     // Returns the vertices used to represent this shape
-    virtual std::vector<Vector2> GetVertices() const = 0;
+    virtual const VertexData GetVertices() const = 0;
 
     // Returns the draw mode of this shape
     virtual GLenum GetDrawMode() const = 0;
@@ -108,6 +50,7 @@ public:
 class Point :  public Shape2D {
 
 public:
+
 
     Vector2 a;
 
@@ -121,7 +64,7 @@ public:
     virtual ~Point() = default;
 
     // Returns the vertices used to represent this shape
-    std::vector<Vector2> GetVertices() const override;
+    const VertexData GetVertices() const override;
 
     // Returns the draw mode of this shape
     GLenum GetDrawMode() const override;
@@ -140,13 +83,13 @@ public:
         this->a = a;
         this->b = b;
     }
-    Line() : Line(Vector2(0.0f, -0.5f), Vector2(0.0f, 0.5f)) {}
+    Line() : Line({ 0.0f, -0.5f}, { 0.0f, 0.5f}) {}
 
     // Destructors
     virtual ~Line() = default;
 
     // Returns the vertices used to represent this shape
-    std::vector<Vector2> GetVertices() const override;
+    const VertexData GetVertices() const override;
 
     // Returns the draw mode of this shape
     GLenum GetDrawMode() const override;
@@ -158,26 +101,29 @@ class Polyline : public Shape2D {
 
 public:
 
-    std::vector<Vector2> vertices;
-
     // Constructors
     Polyline(std::vector<Vector2> vertices, Color color = Color::white) : Shape2D(color) {
-        this->vertices = vertices;
+        // Allocates memory to store the vertices and copies them
+        this->vertices = std::make_unique<Vector2[]>(vertices.size());
+        for(int i = 0; i < vertices.size(); i++)
+            this->vertices[i] = vertices[i];
     }
-    Polyline(Vector2 a, Vector2 b, Color color = Color::white) : Shape2D(color) {
-        this->vertices.push_back(a);
-        this->vertices.push_back(b);
-    }
-    Polyline() : Shape2D(Color::white) { this->vertices.clear(); }
+    Polyline(Vector2 a, Vector2 b, Color color = Color::white) : Polyline({a, b}, color) {}
+    Polyline() : Shape2D(Color::white) { this->vertices.reset(); }
 
     // Destructors
     virtual ~Polyline() = default;
 
     // Returns the vertices used to represent this shape
-    std::vector<Vector2> GetVertices() const override;
+    const VertexData GetVertices() const override;
 
     // Returns the draw mode of this shape
     GLenum GetDrawMode() const override;
+
+private:
+
+    // Stores the vertices of the polyline
+    std::unique_ptr<Vector2[]> vertices;
 
 };
 
@@ -194,7 +140,7 @@ public:
         this->b = b;
         this->c = c;
     }
-    Triangle() : Triangle(Vector2(0.0f, 0.5f), Vector2(-0.5f, -0.5f), Vector2(0.5f, -0.5f)) {}
+    Triangle() : Triangle({ 0.0f, 0.5f}, { -0.5f, -0.5f}, { 0.5f, -0.5f}) {}
 
     Triangle(const Triangle& other) = default;
     Triangle(Triangle&& other) = default;
@@ -206,7 +152,7 @@ public:
     virtual ~Triangle() = default;
 
     // Returns the vertices used to represent this shape
-    std::vector<Vector2> GetVertices() const override;
+    const VertexData GetVertices() const override;
 
     // Returns the draw mode of this shape
     GLenum GetDrawMode() const override;
@@ -227,13 +173,13 @@ public:
         this->c = c;
         this->d = d;
     };
-    Quad() : Quad(Vector2(0.5f, 0.5f), Vector2(-0.5f, 0.5f), Vector2(-0.5f, -0.5f), Vector2(0.5f, -0.5f)) {}
+    Quad() : Quad({ 0.5f, 0.5f}, { -0.5f, 0.5f}, { -0.5f, -0.5f}, { 0.5f, -0.5f}) {}
 
     // Destructors
     virtual ~Quad() = default;
 
     // Returns the vertices used to represent this shape
-    std::vector<Vector2> GetVertices() const override;
+    const VertexData GetVertices() const override;
 
     // Returns the draw mode of this shape
     GLenum GetDrawMode() const override;
@@ -257,21 +203,38 @@ public:
 
     // Constructors
     Circle(Vector2 center, float radius, int precision, Color color = Color::white) : Shape2D(color) {
+
         this->center = center;
         this->radius = radius;
         this->precision = precision;
-    };
+
+        // Calculates some points to represent the circle
+        this->vertices = std::make_unique<Vector2[]>(this->precision);
+        float angle = 0.0;
+        for(int i = 0; i < this->precision; i++){
+            angle += (2.0f * CONST_PI) / this->precision;
+            float x = this->center.x + cos(angle) * this->radius;
+            float y = this->center.y + sin(angle) * this->radius;
+            this->vertices[i] = { x, y};
+        }
+        
+    }
     Circle(Vector2 center, float radius) : Circle(center, radius, this->default_precision) {} 
-    Circle() : Circle(Vector2(0.0f, 0.0f), 1.0f, this->default_precision) {}
+    Circle() : Circle({ 0.0f, 0.0f}, 1.0f, this->default_precision) {}
 
     // Destructors
     virtual ~Circle() = default;
 
     // Returns the vertices used to represent this shape (an approximation of the Circle represented by a certain number of vertices)
-    std::vector<Vector2> GetVertices() const override;
+    const VertexData GetVertices() const override;
 
     // Returns the draw mode of this shape
     GLenum GetDrawMode() const override;
+
+private:
+
+    // Stores the vertices of the circle
+    std::unique_ptr<Vector2[]> vertices;
 
 };
 
@@ -290,7 +253,7 @@ public:
         this->b = b;
         this->c = c;
     }
-    Triangle3D() : Triangle3D(Vector3(0.0f, 0.5f, 0.0f), Vector3(-0.5f, -0.5f, 0.0f), Vector3(0.5f, -0.5f, 0.0f)) {}    
+    Triangle3D() : Triangle3D({ 0.0f, 0.5f, 0.0f}, { -0.5f, -0.5f, 0.0f}, { 0.5f, -0.5f, 0.0f}) {}    
 
 };
 

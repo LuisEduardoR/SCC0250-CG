@@ -10,6 +10,8 @@
 
 # include <cmath>
 
+# include "Vector.hpp"
+# include "Matrix.hpp"
 # include "Geometry.hpp"
 
 /*
@@ -26,7 +28,7 @@ public:
 
     // Constructors
     Transform2D(Vector2 position, float rotation, Vector2 scale);
-    Transform2D() : Transform2D(Vector2(), 0.0f, Vector2(1.0f, 1.0f)) {}
+    Transform2D() : Transform2D({ 0.0f, 0.0f}, 0.0f, { 1.0f, 1.0f}) {}
 
     // Gets the 4x4 transformation matrix for this object.
     Matrix4 GetTransformationMatrix();

@@ -11,6 +11,8 @@
 # include <GL/glew.h>
 
 # include "Shader.hpp"
+# include "Vector.hpp"
+# include "Matrix.hpp"
 # include "Geometry.hpp"
 # include "Color.hpp"
 
@@ -41,12 +43,6 @@ public:
     // ========================================
     // 2D =====================================
     // ========================================
-
-    // Draws a basic 2D shape (uses the default transform matrix)
-    void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
-
-    // Draws a basic 2D shape applying a transformation matrix
-    void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform);
 
     // Draws a Shape2D (uses the default transform matrix)
     void DrawShape2D(const Shape2D& shape, const Color& color);
@@ -91,10 +87,15 @@ private:
     // 2D =====================================
     // ========================================
 
+    // Draws a basic 2D shape (uses the default transform matrix)
+    void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
+
+    // Draws a basic 2D shape applying a transformation matrix
+    void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform);
+
     // Draws a Shape2D applying a transformation matrix (uses a Shape2D pointer, intended for use with DrawShape2DCollection)
     void DrawShape2D(const Shape2D* shape, const Color& color, const Matrix4& transform);
 
-};
- 
+}; 
 
 # endif
