@@ -1,0 +1,296 @@
+// Abner Eduardo Silveira Santos - NUSP 10692012
+// Amanda de Moura Peres - NUSP 10734522
+// Luís Eduardo Rozante de Freitas Pereira - NUSP 10734794
+// Desenvolvido para a disciplina:
+//  SCC0250 - Computação Gráfica (2021)
+//  Prof. Ricardo M. Marcacini
+
+/* para linux, instalar os pacotes libglfw3-dev mesa-common-dev libglew-dev */
+/* para compilar no linux: g++ ./src/*.cpp -lglfw -lGL -lGLEW -lm */
+
+/* para windows, instalar o MSYS2 e as depedências: 
+
+    mingw-w64-x86_64-toolchain, 
+    mingw-w64-x86_64-glfw, 
+    mingw-w64-x86_64-glew, 
+    e mingw-w64-x86_64-glm
+
+    adicionar "C:\msys64\mingw64\bin" ao PATH (se o MSYS2 foi instalado no local padrão)
+*/
+/* para compilar no windows: g++ ./src/*.cpp -lglfw3 -lglew32 -lopengl32 -lm */
+
+# include <GL/glew.h>
+
+# include <iostream>
+# include <cmath>
+# include <chrono>
+# include <thread>
+
+# include "WindowSystem.hpp"
+# include "Renderer.hpp"
+# include "Shader.hpp"
+# include "Color.hpp"
+# include "Geometry.hpp"
+
+
+
+// Stores what mouse buttons are pressed:
+
+static bool leftMousePressed = false;
+static bool rightMousePressed = false;
+
+// Process mouse input
+void ProcessMouse(GLFWwindow *window, int button, int action, int mods) {
+
+    switch (button) {
+
+    case GLFW_MOUSE_BUTTON_LEFT:
+        if(action == GLFW_PRESS)
+            leftMousePressed = true;
+        else if (action == GLFW_RELEASE)
+            leftMousePressed = false;
+        break;
+    
+    case GLFW_MOUSE_BUTTON_RIGHT:
+        if(action == GLFW_PRESS)
+            rightMousePressed = true;
+        else if (action == GLFW_RELEASE)
+            rightMousePressed = false;
+        break;
+
+    default:
+        break;
+
+    }
+
+}
+
+// Stores what keys are pressed:
+
+static bool leftArrowPressed = false;
+static bool rightArrowPressed = false;
+
+static bool leftPressed = false;
+static bool rightPressed = false;
+static bool upPressed = false;
+static bool downPressed = false;
+
+// Process key input
+void ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int mods) {
+
+    switch (keyCode) {
+
+    case GLFW_KEY_LEFT:
+        if(action == GLFW_PRESS)
+            leftArrowPressed = true;
+        else if (action == GLFW_RELEASE)
+            leftArrowPressed = false;
+        break;
+    
+    case GLFW_KEY_RIGHT:
+        if(action == GLFW_PRESS)
+            rightArrowPressed = true;
+        else if (action == GLFW_RELEASE)
+            rightArrowPressed = false;
+        break;
+
+    case GLFW_KEY_A:
+        if(action == GLFW_PRESS)
+            leftPressed = true;
+        else if (action == GLFW_RELEASE)
+            leftPressed = false;
+        break;
+    
+    case GLFW_KEY_D:
+        if(action == GLFW_PRESS)
+            rightPressed = true;
+        else if (action == GLFW_RELEASE)
+            rightPressed = false;
+        break;
+
+    case GLFW_KEY_W:
+        if(action == GLFW_PRESS)
+            upPressed = true;
+        else if (action == GLFW_RELEASE)
+            upPressed = false;
+        break;
+    
+    case GLFW_KEY_S:
+        if(action == GLFW_PRESS)
+            downPressed = true;
+        else if (action == GLFW_RELEASE)
+            downPressed = false;
+        break;
+
+    default:
+        break;
+
+    }
+
+}
+
+
+
+int main(void) {
+ 
+    // Creates our window system (constructor initializes GLFW)
+    WindowSystem windowSystem;
+
+    // Creates our renderer (constructor initializes GLEW)
+    Renderer renderer(true);
+
+    // Vertex Shader's GLSL code
+    std::string vertexCode =
+    "#version 330 core\n"
+    "out vec4 v_color;\n"
+    "attribute vec3 position;\n"
+    "uniform mat4 transform;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = transform * vec4(position, 1.0);\n"
+    "    v_color = vec4(position, 1.0);\n"
+    "}\n";
+
+    // Fragment Shader's GLSL code
+    std::string fragmentCode =
+    "#version 330 core\n"
+    "uniform vec4 color;\n"
+    "in vec4 v_color;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_FragColor = v_color;\n"
+    "}\n";
+
+    // Creates the program we are going to use from our vertex and fragment shader's source code
+    renderer.SetProgram(vertexCode, fragmentCode);
+
+    // Creates the data that will be used for the GPU:
+
+    // Stores our pyramid as a list of triangles
+    Mesh3D mesh(
+                    {
+                        // faceIndex 0 (side 1)
+                        { { -0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, +0.5f}, { +0.0f, +1.0f, +0.0f} },
+                        // faceIndex 1 (side 2)
+                        { { -0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, +0.5f}, { +0.0f, +1.0f, +0.0f} },
+                        // faceIndex 2 (side 3)
+                        { { +0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, -0.5f}, { +0.0f, +1.0f, +0.0f} },
+                        // faceIndex 3 (side 4)
+                        { { +0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, -0.5f}, { +0.0f, +1.0f, +0.0f} },
+                        // faceIndex 4 (base)
+                        { { +0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, -0.5f} },
+                        { { -0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, +0.5f} }
+                    }
+                );
+
+    // Stores the position of our pyramid (x and y)
+    float tX = 0.0f, tY = 0.0f;
+
+    // Stores the angle of our pyramid (in radians)
+    float angle = 0.0f;
+
+    // Stores the scale of our pyramid
+    float scale = 1.0f;
+
+    // Sets the callback function for when our windows system detects a mouse button input
+    windowSystem.SetMouseButtonCallback(ProcessMouse);
+
+    // Sets the callback function for when our windows system detects a key input
+    windowSystem.SetKeyCallback(ProcessKey);
+
+
+    // Shows our window
+    windowSystem.Show();
+
+    // While our program isn't closed:
+    while (!windowSystem.ShouldClose()) {
+
+        // Gets the start time.
+        uint64_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+        // Polls our window system for events
+        windowSystem.PollEvents();
+
+        // Calculates the sin and cos of our angle
+        float cosValue = cosf(angle), sinValue = sinf(angle);
+
+        // Calculates our transformation matrixes
+        Matrix4 scale_mat =     {
+                                    { scale,        +0.00f,     +0.00f,     +0.00f }, 
+                                    { +0.00f,       scale,      +0.00f,     +0.00f }, 
+                                    { +0.00f,       +0.00f,     scale,      +0.00f }, 
+                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
+                                };
+
+        Matrix4 rotation_z =    {
+                                    { +cosValue, -sinValue,   +0.00f,     +0.00f }, 
+                                    { +sinValue, +cosValue,   +0.00f,     +0.00f }, 
+                                    { +0.00f,       +0.00f,   +1.00f,     +0.00f }, 
+                                    { +0.00f,       +0.00f,   +0.00f,     +1.00f }
+                                };
+
+        Matrix4 rotation_y =    {
+                                    { +cosValue,    +0.00f,   -sinValue,    +0.00f }, 
+                                    { +0.00f,       +1.00f,   +0.00f,       +0.00f }, 
+                                    { +sinValue,    +0.00f,   +cosValue,    +0.00f }, 
+                                    { +0.00f,       +0.00f,   +0.00f,       +1.00f }
+                                };
+
+        Matrix4 rotation_x =    {
+                                    { +1.00f,       +0.00f,     +0.00f,     +0.00f }, 
+                                    { +0.00f,       +cosValue,  -sinValue,  +0.00f }, 
+                                    { +0.00f,       +sinValue,  +cosValue,  +0.00f }, 
+                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
+                                };
+
+        Matrix4 pos_mat =       {
+                                    { 1.00f,        +0.00f,     +0.00f,     +tX }, 
+                                    { +0.00f,       1.00f,      +0.00f,     +tY }, 
+                                    { +0.00f,       +0.00f,     1.00f,      +0.00F }, 
+                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
+                                };
+
+        // Calculates the resulting transformation matrix
+        Matrix4 transform = pos_mat * rotation_z * rotation_y * rotation_x * scale_mat;
+
+        // Clears our screen with a certain color
+        renderer.Clear(Color::black);
+
+        // Draws colored geometry using the program we've loaded before
+        renderer.DrawMesh3D(mesh, Color::red, transform);
+ 
+        // Swaps the old buffer for the new one
+        windowSystem.SwapBuffers();
+
+        // Gets the end time.
+        uint64_t endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        
+        // Calculates our frame time delta
+        float deltaTime = (endTime - startTime) / 1000.0f;
+
+        // Updates the scale (based on input)
+        if(leftMousePressed)
+            scale += 0.50f * deltaTime;
+        else if(rightMousePressed)
+            scale -= 0.50f * deltaTime;
+
+        // Updates the angle
+        angle += 2.00f * deltaTime;
+
+        // Updates the X position (based on input)
+        if(rightPressed)
+            tX += 1.00f * deltaTime;
+        else if(leftPressed)
+            tX -= 1.00f * deltaTime;
+
+        // Updates the Y position (based on input)
+        if(upPressed)
+            tY += 1.00f * deltaTime;
+        else if(downPressed)
+            tY -= 1.00f * deltaTime;
+        
+    }
+
+    return EXIT_SUCCESS;
+
+}

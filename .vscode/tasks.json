@@ -1,0 +1,68 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build",
+			"windows": {
+				"command": "mingw32-make",
+				"args": [
+					"windows"
+				],
+			},
+			"command": "make",
+			"args": [
+				"linux"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"type": "shell",
+			"label": "Build (DEBUG)",
+			"windows": {
+				"command": "mingw32-make",
+				"args": [
+					"debug-windows"
+				],
+			},
+			"command": "make",
+			"args": [
+				"debug-linux"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"type": "shell",
+			"label": "Run",
+			"windows": {
+				"command": "mingw32-make",
+				"args": [
+					"run"
+				],
+			},
+			"command": "make",
+			"args": [
+				"run"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+	]
+}
