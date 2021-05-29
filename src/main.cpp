@@ -128,60 +128,214 @@ void ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int m
     }
 
 }
+/*
+
+const Shape2DCollection ship( new std::vector<std::unique_ptr<Shape2D>> {
+    // Ship Base 
+    std::unique_ptr<Triangle>{
+        new Triangle{ { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f } } },
+    std::unique_ptr<Triangle>{
+        new Triangle{ { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f } } },
+    std::unique_ptr<Triangle>{
+        new Triangle{ { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f } } },
+    std::unique_ptr<Triangle>{
+        new Triangle{ { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f } } },
+    std::unique_ptr<Triangle>{
+        new Triangle{ { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f } } },
+    std::unique_ptr<Triangle>{
+        new Triangle{ { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f } } },
+    std::unique_ptr<Triangle>{
+        new Triangle{ { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f } } },
+    // Ship Window
+    std::unique_ptr<Triangle>{
+        new Triangle{ { +0.000f, +0.530f }, { -0.194f, -0.074f }, { +0.194f, -0.074f } } },
+    std::unique_ptr<Triangle>{
+        new Triangle{ { +0.000f, -0.290f }, { -0.194f, -0.074f }, { +0.194f, -0.074f } } },
+    // Ship Cannons
+    std::unique_ptr<Quad>{
+        new Quad{ { -0.405f, +0.264f }, { -0.304f, +0.263f }, { -0.405f, -0.196f }, { -0.304f, +0.196f } } },
+    std::unique_ptr<Quad>{
+        new Quad{ { +0.304f, +0.264f }, { +0.405f, +0.263f }, { +0.304f, -0.196f }, { +0.405f, +0.196f } } },
+    // Ship Thruster
+    std::unique_ptr<Quad>{
+        new Quad{ { -0.190f, -0.455f }, { +0.213f, -0.455f }, { -0.150f, -0.728f }, { +0.150f, -0.728f } } },
+    // Ship Circles
+    std::unique_ptr<Circle>{
+        new Circle{ { -0.357f, -0.354f }, 0.156f } },
+    std::unique_ptr<Circle>{
+        new Circle{ { +0.357f, -0.354f }, 0.156f } },
+});*/
+// const std::array<Triangle, 7> shipBase{{
+//     { { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f } },
+//     { { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f } },
+//     { { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f } },
+//     { { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f } },
+//     { { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f } },
+//     { { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f } },
+//     { { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f } },
+// }};
+
+// const std::array<Quad, 2> shipCannons{{
+//     { { -0.405f, +0.264f }, { -0.304f, +0.263f }, { -0.405f, -0.196f }, { -0.304f, +0.196f } },
+//     { { +0.304f, +0.264f }, { +0.405f, +0.263f }, { +0.304f, -0.196f }, { +0.405f, +0.196f } },
+// }};
+
+// GL_TRIANGLE_STRIP FORMAT
+// constexpr Mesh3D shipNose{
+//     { 
+//         { +0.000f, +0.660f, 0.0f},
+//         { -0.231f, +0.048f, 0.0f },
+//         { +0.231f, +0.048f, 0.0f },
+//     }
+// };
+
+// constexpr Mesh3D shipBodyRight{
+//     { 
+//         { -0.231f, +0.048f, 0.0f },
+//         { +0.231f, +0.048f, 0.0f },
+//         { -0.526f, -0.205f, 0.0f },
+//         { +0.526f, -0.205f, 0.0f },
+//         { +0.190f, -0.455f, 0.0f },
+//         { +0.581f, -0.744f, 0.0f },
+//     }
+// };
+
+// constexpr Mesh3D shipBodyLeft{
+//     { 
+//         { +0.000f, +0.660f, 0.0f},
+//         { -0.231f, +0.048f, 0.0f },
+//         { -0.526f, -0.205f, 0.0f },
+//         { -0.581f, -0.744f, 0.0f },
+//         { -0.190f, -0.455f, 0.0f },
+//         { +0.190f, -0.455f, 0.0f },
+//         { +0.581f, -0.744f, 0.0f },
+//         { +0.526f, -0.205f, 0.0f },
+//         { +0.231f, +0.048f, 0.0f },
+//     }
+// };
+
 
 
 
 int main(void) {
+
+    Shape2DCollection ship( new std::vector<std::unique_ptr<Shape2D>>{});
+    // Ship Base 
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f }
+    }});
+    // Ship Window
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, +0.530f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -0.290f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }
+    }});
+    // Ship Cannons
+    ship.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.405f, +0.264f }, { -0.304f, +0.263f }, { -0.405f, -0.196f }, { -0.304f, +0.196f }
+    }});
+    ship.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { +0.304f, +0.264f }, { +0.405f, +0.263f }, { +0.304f, -0.196f }, { +0.405f, +0.196f }
+    }});
+    // Ship Thruster
+    ship.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.190f, -0.455f }, { +0.213f, -0.455f }, { -0.150f, -0.728f }, { +0.150f, -0.728f }
+    }});
+    // Ship Circles
+    ship.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.357f, -0.354f }, 0.156f
+    }});
+    ship.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.357f, -0.354f }, 0.156f
+    }});
+
+    // Shape2DCollection boss( new std::vector<std::unique_ptr<Shape2D>>{});
+
+    // // Boss Base
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { -80.000f, -76.950f }, { -50.000f, -18.320f }
+    // }});
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { -50.000f, -18.320f }, { +0.000f, +0.000f }
+    // }});
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { +0.000f, +0.000f }, { +50.000f, -18.320f }
+    // }});
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { 50.000f, -18.320f }, { +80.000f, -77.000f }
+    // }});
+
+    // // Boss Window
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -167.000f }, { -54.000f, -75.890f }, { -33.750f, -34.830f }
+    // }});
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { -33.750f, -34.830f }, { +0.000f, -22.000f }
+    // }});
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { +0.000f, -22.000f }, { +33.750f, -34.830f }
+    // }});
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { +33.750f, -34.830f }, { +54.000f, -75.890f }
+    // }});
+
+    // // Boss body shape
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { -90.000f, -170.250f }, { -80.00, -76.94f }
+    // }});
+    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+    //     { +0.000f, -207.000f }, { 90.000f, -170.250f }, { +80.000f, -77.000f }
+    // }});
+
+    // Boss big claw
  
     // Creates our window system (constructor initializes GLFW)
     WindowSystem windowSystem;
 
     // Creates our renderer (constructor initializes GLEW)
-    Renderer renderer(true);
+    Renderer renderer(false);
 
     // Vertex Shader's GLSL code
     std::string vertexCode =
-    "#version 330 core\n"
-    "out vec4 v_color;\n"
     "attribute vec3 position;\n"
     "uniform mat4 transform;\n"
     "void main()\n"
     "{\n"
     "    gl_Position = transform * vec4(position, 1.0);\n"
-    "    v_color = vec4(position, 1.0);\n"
     "}\n";
 
     // Fragment Shader's GLSL code
     std::string fragmentCode =
-    "#version 330 core\n"
     "uniform vec4 color;\n"
-    "in vec4 v_color;\n"
     "void main()\n"
     "{\n"
-    "    gl_FragColor = v_color;\n"
+    "    gl_FragColor = color;\n"
     "}\n";
 
     // Creates the program we are going to use from our vertex and fragment shader's source code
     renderer.SetProgram(vertexCode, fragmentCode);
 
     // Creates the data that will be used for the GPU:
-
-    // Stores our pyramid as a list of triangles
-    Mesh3D mesh(
-                    {
-                        // faceIndex 0 (side 1)
-                        { { -0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, +0.5f}, { +0.0f, +1.0f, +0.0f} },
-                        // faceIndex 1 (side 2)
-                        { { -0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, +0.5f}, { +0.0f, +1.0f, +0.0f} },
-                        // faceIndex 2 (side 3)
-                        { { +0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, -0.5f}, { +0.0f, +1.0f, +0.0f} },
-                        // faceIndex 3 (side 4)
-                        { { +0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, -0.5f}, { +0.0f, +1.0f, +0.0f} },
-                        // faceIndex 4 (base)
-                        { { +0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, -0.5f} },
-                        { { -0.5f, +0.0f, -0.5f}, { -0.5f, +0.0f, +0.5f}, { +0.5f, +0.0f, +0.5f} }
-                    }
-                );
+    Circle circle = Circle();
 
     // Stores the position of our pyramid (x and y)
     float tX = 0.0f, tY = 0.0f;
@@ -198,9 +352,11 @@ int main(void) {
     // Sets the callback function for when our windows system detects a key input
     windowSystem.SetKeyCallback(ProcessKey);
 
-
     // Shows our window
     windowSystem.Show();
+
+    // Duration of the last frame in seconds.
+    float deltaTime = 0.0f;
 
     // While our program isn't closed:
     while (!windowSystem.ShouldClose()) {
@@ -211,84 +367,46 @@ int main(void) {
         // Polls our window system for events
         windowSystem.PollEvents();
 
-        // Calculates the sin and cos of our angle
-        float cosValue = cosf(angle), sinValue = sinf(angle);
-
-        // Calculates our transformation matrixes
-        Matrix4 scale_mat =     {
-                                    { scale,        +0.00f,     +0.00f,     +0.00f }, 
-                                    { +0.00f,       scale,      +0.00f,     +0.00f }, 
-                                    { +0.00f,       +0.00f,     scale,      +0.00f }, 
-                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
-                                };
-
-        Matrix4 rotation_z =    {
-                                    { +cosValue, -sinValue,   +0.00f,     +0.00f }, 
-                                    { +sinValue, +cosValue,   +0.00f,     +0.00f }, 
-                                    { +0.00f,       +0.00f,   +1.00f,     +0.00f }, 
-                                    { +0.00f,       +0.00f,   +0.00f,     +1.00f }
-                                };
-
-        Matrix4 rotation_y =    {
-                                    { +cosValue,    +0.00f,   -sinValue,    +0.00f }, 
-                                    { +0.00f,       +1.00f,   +0.00f,       +0.00f }, 
-                                    { +sinValue,    +0.00f,   +cosValue,    +0.00f }, 
-                                    { +0.00f,       +0.00f,   +0.00f,       +1.00f }
-                                };
-
-        Matrix4 rotation_x =    {
-                                    { +1.00f,       +0.00f,     +0.00f,     +0.00f }, 
-                                    { +0.00f,       +cosValue,  -sinValue,  +0.00f }, 
-                                    { +0.00f,       +sinValue,  +cosValue,  +0.00f }, 
-                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
-                                };
-
-        Matrix4 pos_mat =       {
-                                    { 1.00f,        +0.00f,     +0.00f,     +tX }, 
-                                    { +0.00f,       1.00f,      +0.00f,     +tY }, 
-                                    { +0.00f,       +0.00f,     1.00f,      +0.00F }, 
-                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
-                                };
-
-        // Calculates the resulting transformation matrix
-        Matrix4 transform = pos_mat * rotation_z * rotation_y * rotation_x * scale_mat;
-
         // Clears our screen with a certain color
         renderer.Clear(Color::black);
 
-        // Draws colored geometry using the program we've loaded before
-        renderer.DrawMesh3D(mesh, Color::red, transform);
- 
+        // TODO: Draw all shapes
+        renderer.DrawShape2DCollection(ship, Color::white);
+
         // Swaps the old buffer for the new one
         windowSystem.SwapBuffers();
 
-        // Gets the end time.
-        uint64_t endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        
-        // Calculates our frame time delta
-        float deltaTime = (endTime - startTime) / 1000.0f;
+        // TODO: Process Input
 
+        /*
         // Updates the scale (based on input)
         if(leftMousePressed)
-            scale += 0.50f * deltaTime;
+            ;
         else if(rightMousePressed)
-            scale -= 0.50f * deltaTime;
+            ;
 
         // Updates the angle
         angle += 2.00f * deltaTime;
 
         // Updates the X position (based on input)
         if(rightPressed)
-            tX += 1.00f * deltaTime;
+            ;
         else if(leftPressed)
-            tX -= 1.00f * deltaTime;
+            ;
 
         // Updates the Y position (based on input)
         if(upPressed)
-            tY += 1.00f * deltaTime;
+            ;
         else if(downPressed)
-            tY -= 1.00f * deltaTime;
+            ;
+        */
+
+        // Gets the end time.
+        uint64_t endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         
+        // Calculates our frame time delta
+        deltaTime = (endTime - startTime) / 1000.0f;
+
     }
 
     return EXIT_SUCCESS;

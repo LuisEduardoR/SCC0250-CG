@@ -4,7 +4,7 @@
 // Desenvolvido para a disciplina:
 //  SCC0250 - Computação Gráfica (2021)
 //  Prof. Ricardo M. Marcacini
-#include <iostream>
+
 # include "Renderer.hpp"
 
 // Constructor
@@ -107,17 +107,65 @@ void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum m
 
 }
 
+// Draws a Shape2D (uses the default transform matrix)
+void Renderer::DrawShape2D(const Shape2D& shape, const Color& color) { DrawShape2D(shape, color, Matrix4()); }
+
+// Draws a Shape2D applying a transformation matrix
+void Renderer::DrawShape2D(const Shape2D& shape, const Color& color, const Matrix4& transform) {
+
+    // Gets the vertices of our shape
+    std::vector<Vector2> vertices = shape.GetVertices();
+
+    // Breaks our Shape2D data into a simple array
+    float data[2 * vertices.size()];
+    for(int i = 0; i < vertices.size(); i++) {
+        data[2 * i]         = vertices[i].x; 
+        data[(2 * i) + 1]   = vertices[i].y;
+    }
+
+    // Performs the drawing
+    DrawBasic2D(data, sizeof(data), vertices.size(), shape.GetDrawMode(), color, transform);
+
+}
+
+// Draws a Shape2DCollection (uses the default transform matrix)
+void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color) { DrawShape2DCollection(shapes, color, Matrix4()); }
+
+// Draws a Shape2DCollection applying a transformation matrix
+void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color, const Matrix4& transform) {
+
+    // Performs the drawing of each shape
+    for (auto iter = (*shapes).cbegin(); iter != (*shapes).cend(); iter++)
+        DrawShape2D((*iter).get(), color, transform);
+    // for (const std::unique_ptr<Shape2D>& shape : *shapes.get())
+        // DrawShape2D(shape.get(), color, transform);
+
+}
+
+// Draws a Shape2D applying a transformation matrix (uses shape as a pointer, intended for use with DrawShape2DCollection)
+void Renderer::DrawShape2D(const Shape2D* shape, const Color& color, const Matrix4& transform) {
+
+    // Gets the vertices of our shape
+    std::vector<Vector2> vertices = (*shape).GetVertices();
+
+    // Breaks our Shape2D data into a simple array
+    float data[2 * vertices.size()];
+    for(int i = 0; i < vertices.size(); i++) {
+        data[2 * i]         = vertices[i].x; 
+        data[(2 * i) + 1]   = vertices[i].y;
+    }
+
+    // Performs the drawing
+    DrawBasic2D(data, sizeof(data), vertices.size(), shape->GetDrawMode(), color, transform);
+
+}
+
 // Functions to draw some of our basic geometry (uses the default transform matrix):
 
-void Renderer::DrawPoint(const Vector2& vec, const Color& color) { DrawPoint(vec, color, Matrix4()); }
-void Renderer::DrawLine(const Line& line, const Color& color) { DrawLine(line, color, Matrix4()); }
-void Renderer::DrawPolyline(const Polyline& polyline, const Color& color) { DrawPolyline(polyline, color, Matrix4()); }
-void Renderer::DrawTriangle(const Triangle& triangle, const Color& color) { DrawTriangle(triangle, color, Matrix4()); }
-void Renderer::DrawQuad(const Quad& quad, const Color& color) { DrawQuad(quad, color, Matrix4()); }
-void Renderer::DrawCircle(const Circle& circle, const Color& color) { DrawCircle(circle, color, Matrix4()); }
+// void Renderer::DrawPoint(const Vector2& vec, const Color& color) { DrawPoint(vec, color, Matrix4()); }
 
 // Draws a point
-void Renderer::DrawPoint(const Vector2& vec, const Color& color, const Matrix4& transform) {
+/*void Renderer::DrawPoint(const Vector2& vec, const Color& color, const Matrix4& transform) {
 
     // Breaks our quad data into a simple array
     float data[2] = { vec.x, vec.y };
@@ -125,74 +173,7 @@ void Renderer::DrawPoint(const Vector2& vec, const Color& color, const Matrix4& 
     // Performs the drawing
     DrawBasic2D(data, sizeof(data), 1, GL_POINTS, color, transform);
 
-}
-
-// Draws a line (converts our line to a polyline so we can re-use the polyline rendering function)
-void Renderer::DrawLine(const Line& line, const Color& color, const Matrix4& transform) { DrawPolyline(Polyline(line.a, line.b), color, transform); }
-
-// Draws a polyline
-void Renderer::DrawPolyline(const Polyline& polyline, const Color& color, const Matrix4& transform) {
-
-    // Breaks our polyline data into a simple array
-    float data[2 * polyline.points.size()];
-    for(int i = 0; i < polyline.points.size(); i++) {
-        data[2 * i]         = polyline.points[i].x; 
-        data[(2 * i) + 1]   = polyline.points[i].y;
-    }
-
-    // Performs the drawing
-    DrawBasic2D(data, sizeof(data), polyline.points.size(), GL_LINE_STRIP, color, transform);
-
-}
-    
-// Draws a triangle
-void Renderer::DrawTriangle(const Triangle& triangle, const Color& color, const Matrix4& transform) {
-
-    // Breaks our triangle data into a simple array
-    float data[6] = {
-                        triangle.a.x, triangle.a.y,
-                        triangle.b.x, triangle.b.y,
-                        triangle.c.x, triangle.c.y
-                    };
-
-    // Performs the drawing
-    DrawBasic2D(data, sizeof(data), 3, GL_TRIANGLES, color, transform);
-
-}
-
-// Draws a quad
-void Renderer::DrawQuad(const Quad& quad, const Color& color, const Matrix4& transform) {
-
-    // Breaks our quad data into a simple array
-    float data[8] = {
-                        quad.a.x, quad.a.y,
-                        quad.b.x, quad.b.y,
-                        quad.c.x, quad.c.y,
-                        quad.d.x, quad.d.y
-                    };
-
-    // Performs the drawing
-    DrawBasic2D(data, sizeof(data), 4, GL_TRIANGLE_STRIP, color, transform);
-
-}
-
-// Draws a circle (converts the circle to a shape with a certain number of vertices - given by Circle.precision - before drawing)
-void Renderer::DrawCircle(const Circle& circle, const Color& color, const Matrix4& transform) {
-
-    // Gets the points of our circle.
-    std::vector<Vector2> points = circle.GetPoints();
-
-    // Breaks our circle data into a simple array
-    float data[2 * points.size()];
-    for(int i = 0; i < points.size(); i++) {
-        data[(2 * i) + 0] = points[i].x; 
-        data[(2 * i) + 1] = points[i].y;
-    }
-
-    // Performs the drawing
-    DrawBasic2D(data, sizeof(data), points.size(), GL_TRIANGLE_FAN, color, transform);
-
-}
+}*/
 
 // 3D =====================================
 

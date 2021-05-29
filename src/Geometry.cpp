@@ -72,55 +72,50 @@ Matrix4 Matrix4::operator*(const Matrix4& m) {
 
 }
 
+// Point ======================================
+
+// Returns the vertices used to represent this shape
+std::vector<Vector2> Point::GetVertices() const { return {a}; }
+
+// Returns the draw mode of this shape
+GLenum Point::GetDrawMode() const { return GL_POINTS; }
+
 // Line =======================================
 
-Line::Line(Vector2 a, Vector2 b) {
-    this->a = a;
-    this->b = b;
-}
+// Returns the vertices used to represent this shape
+std::vector<Vector2> Line::GetVertices() const { return {a, b}; }
+
+// Returns the draw mode of this shape
+GLenum Line::GetDrawMode() const { return GL_LINE_STRIP; }
 
 // Polyline ===================================
 
-Polyline::Polyline() {
-    points.clear();
-}
+// Returns the vertices used to represent this shape
+std::vector<Vector2> Polyline::GetVertices() const { return this->vertices; }
 
-Polyline::Polyline(Vector2 a, Vector2 b) {
-    this->points.push_back(a);
-    this->points.push_back(b);
-}
-
-Polyline::Polyline(std::vector<Vector2> points) {
-    this->points = points;
-}
+// Returns the draw mode of this shape
+GLenum Polyline::GetDrawMode() const { return GL_LINE_STRIP; }
 
 // Triangle ===================================
 
-Triangle::Triangle(Vector2 a, Vector2 b, Vector2 c) {
-    this->a = a;
-    this->b = b;
-    this->c = c;
-}
+// Returns the vertices used to represent this shape
+std::vector<Vector2> Triangle::GetVertices() const { return {a, b, c}; }
+
+// Returns the draw mode of this shape
+GLenum Triangle::GetDrawMode() const { return GL_TRIANGLE_STRIP; }
 
 // Quad =======================================
 
-Quad::Quad(Vector2 a, Vector2 b, Vector2 c, Vector2 d) {
-    this->a = a;
-    this->b = b;
-    this->c = c;
-    this->d = d;
-}
+// Returns the vertices used to represent this shape
+std::vector<Vector2> Quad::GetVertices() const { return {a, b, c, d}; }
 
-// Circle =====================================
+// Returns the draw mode of this shape
+GLenum Quad::GetDrawMode() const { return GL_TRIANGLE_STRIP; }
 
-Circle::Circle(Vector2 center, float radius, int precision) {
-    this->center = center;
-    this->radius = radius;
-    this->precision = precision;
-}
+// Circle =======================================
 
-// Returns a approximation of the Circle represented by a vector with a certain number of points
-std::vector<Vector2> Circle::GetPoints() const {
+// Returns the vertices used to represent this shape (an approximation of the Circle represented by a certain number of vertices)
+std::vector<Vector2> Circle::GetVertices() const {
 
     // Calculates some points to represent the circle
     std::vector<Vector2> points;
@@ -136,18 +131,10 @@ std::vector<Vector2> Circle::GetPoints() const {
 
 }
 
-// Triangle3D =================================
-Triangle3D::Triangle3D(Vector3 a, Vector3 b, Vector3 c) {
-    this->a = a;
-    this->b = b;
-    this->c = c;
-}
+// Returns the draw mode of this shape
+GLenum Circle::GetDrawMode() const { return GL_TRIANGLE_FAN; }
 
-// Mesh3D =====================================
-
-Mesh3D::Mesh3D(std::vector<Triangle3D> triangles) {
-    this->triangles = triangles;
-}
+// 3D =========================================
 
 // Returns the triangles of our mesh
 std::vector<Triangle3D> Mesh3D::GetTriangles() const {

@@ -9,7 +9,6 @@
 # define RENDERER_HPP
 
 # include <GL/glew.h>
-# include <iostream>
 
 # include "Shader.hpp"
 # include "Geometry.hpp"
@@ -39,7 +38,9 @@ public:
     // Sets the program our renderer will use based on some shader code
     void SetProgram(std::string vertex_code, std::string fragment_code);
 
+    // ========================================
     // 2D =====================================
+    // ========================================
 
     // Draws a basic 2D shape (uses the default transform matrix)
     void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
@@ -47,25 +48,21 @@ public:
     // Draws a basic 2D shape applying a transformation matrix
     void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform);
 
-    // Functions to draw some of our basic geometry (uses the default transform matrix):
+    // Draws a Shape2D (uses the default transform matrix)
+    void DrawShape2D(const Shape2D& shape, const Color& color);
 
-    void DrawPoint(const Vector2& vec, const Color& color);
-    void DrawLine(const Line& line, const Color& color);
-    void DrawPolyline(const Polyline& polyline, const Color& color);
-    void DrawTriangle(const Triangle& triangle, const Color& color);
-    void DrawQuad(const Quad& quad, const Color& color);
-    void DrawCircle(const Circle& circle, const Color& color);
+    // Draws a Shape2D applying a transformation matrix
+    void DrawShape2D(const Shape2D& shape, const Color& color, const Matrix4& transform);
 
-    // Functions to draw some of our basic geometry applying transformation matrixes:
+    // Draws a Shape2DCollection (uses the default transform matrix)
+    void DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color);
 
-    void DrawPoint(const Vector2& vec, const Color& color, const Matrix4& transform);
-    void DrawLine(const Line& line, const Color& color, const Matrix4& transform);
-    void DrawPolyline(const Polyline& polyline, const Color& color, const Matrix4& transform);
-    void DrawTriangle(const Triangle& triangle, const Color& color, const Matrix4& transform);
-    void DrawQuad(const Quad& quad, const Color& color, const Matrix4& transform);
-    void DrawCircle(const Circle& circle, const Color& color, const Matrix4& transform);
+    // Draws a Shape2D applying a transformation matrix
+    void DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color, const Matrix4& transform);
 
+    // ========================================
     // 3D =====================================
+    // ========================================
 
     // Draws a basic 3D shape (uses the default transform matrix)
     void DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
@@ -73,12 +70,10 @@ public:
     // Draws a basic 3D shape applying a transformation matrix
     void DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform);
 
-    // Functions to draw some of our basic geometry (uses the default transform matrix):
-
+    // Draws a Mesh3D (uses the default transform matrix)
     void DrawMesh3D(const Mesh3D& mesh, const Color& color);
 
-    // Functions to draw some of our basic geometry applying transformation matrixes:
-
+    // Draws a Mesh3D applying a transformation matrix
     void DrawMesh3D(const Mesh3D& mesh, const Color& color, const Matrix4& transform);
 
 private:
@@ -91,6 +86,13 @@ private:
 
     // Creates an array buffer (if one was already created re-uses it)
     void CreateArrayBuffer();
+
+    // ========================================
+    // 2D =====================================
+    // ========================================
+
+    // Draws a Shape2D applying a transformation matrix (uses a Shape2D pointer, intended for use with DrawShape2DCollection)
+    void DrawShape2D(const Shape2D* shape, const Color& color, const Matrix4& transform);
 
 };
  

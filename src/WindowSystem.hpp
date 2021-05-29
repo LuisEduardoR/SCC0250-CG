@@ -17,8 +17,8 @@
 # include <GLFW/glfw3.h> /* verifique no seu SO onde fica o glfw3.h */
 
 # define WINDOW_WIDTH 800
-# define WINDOW_HEIGHT 600
-# define WINDOW_TITLE "Minha Janela (EP3 - Pirâmide)"
+# define WINDOW_HEIGHT 800
+# define WINDOW_TITLE "Trabalho 1"
 
 /*
     This file contains the classes that handles the program's window system
