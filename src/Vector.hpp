@@ -1,6 +1,14 @@
+// Abner Eduardo Silveira Santos - NUSP 10692012
+// Amanda de Moura Peres - NUSP 10734522
+// Luís Eduardo Rozante de Freitas Pereira - NUSP 10734794
+// Desenvolvido para a disciplina:
+//  SCC0250 - Computação Gráfica (2021)
+//  Prof. Ricardo M. Marcacini
+
 # ifndef VECTOR_HPP
 # define VECTOR_HPP
 
+class Vector3;
 class Vector4;
 
 // Represents a 2D vector, but can also be used to represent 2D coordinates 
@@ -12,6 +20,7 @@ public:
 
     Vector2(float x, float y) { this->x = x; this->y = y; }
     Vector2() : Vector2(0.0f, 0.0f) {}
+	explicit Vector2(const Vector3& vec);
 	explicit Vector2(const Vector4& vec);
 
     Vector2(const Vector2& other) = default;
@@ -22,6 +31,8 @@ public:
 
     auto operator+=(Vector2 a) -> Vector2&;
 	auto operator-=(Vector2 a) -> Vector2&;
+	auto operator+=(float a) -> Vector2&;
+	auto operator-=(float a) -> Vector2&;
 	auto operator*=(float a) -> Vector2&;
 	auto operator/=(float a) -> Vector2&;
 	[[nodiscard]] auto operator-() const -> Vector2;
@@ -50,6 +61,7 @@ public:
 
     Vector3(float x, float y, float z) { this->x = x; this->y = y; this->z = z; }
     Vector3() : Vector3(0.0f, 0.0f, 0.0f) {}
+	explicit Vector3(const Vector2& vec);
 	explicit Vector3(const Vector4& vec);
 
     Vector3(const Vector3& other) = default;
@@ -60,6 +72,8 @@ public:
 
 	auto operator+=(Vector3 a) -> Vector3&;
 	auto operator-=(Vector3 a) -> Vector3&;
+	auto operator+=(float a) -> Vector3&;
+	auto operator-=(float a) -> Vector3&;
 	auto operator*=(float a) -> Vector3&;
 	auto operator/=(float a) -> Vector3&;
 	[[nodiscard]] auto operator-() const -> Vector3;
@@ -102,6 +116,8 @@ public:
 
 	auto operator+=(Vector4 a) -> Vector4&;
 	auto operator-=(Vector4 a) -> Vector4&;
+	auto operator+=(float a) -> Vector4&;
+	auto operator-=(float a) -> Vector4&;
 	auto operator*=(float a) -> Vector4&;
 	auto operator/=(float a) -> Vector4&;
 	[[nodiscard]] auto operator-() const -> Vector4;

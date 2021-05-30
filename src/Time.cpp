@@ -5,12 +5,6 @@
 //  SCC0250 - Computação Gráfica (2021)
 //  Prof. Ricardo M. Marcacini
 
-# ifndef TIME_HPP
-# define TIME_HPP
+#include "Time.hpp"
 
-namespace Time
-{
-    extern float DeltaTime;    
-}
-
-# endif
+float Time::DeltaTime = 0.0f;

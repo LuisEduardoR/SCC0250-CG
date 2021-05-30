@@ -22,6 +22,13 @@ namespace Adven
     private:
         std::list<std::unique_ptr<Component>> components;
     public:
+        GameObject() = default;
+        GameObject(GameObject&& other) = default;
+
+        GameObject& operator=(GameObject&& other) = default;
+
+        ~GameObject() override = default;
+    public:
         void Start() override;
         void VDrawUpdate() override;
         void VBlankUpdate() override;

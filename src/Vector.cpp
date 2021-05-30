@@ -1,7 +1,15 @@
+// Abner Eduardo Silveira Santos - NUSP 10692012
+// Amanda de Moura Peres - NUSP 10734522
+// Luís Eduardo Rozante de Freitas Pereira - NUSP 10734794
+// Desenvolvido para a disciplina:
+//  SCC0250 - Computação Gráfica (2021)
+//  Prof. Ricardo M. Marcacini
+
 # include "Vector.hpp"
 
 # include <cmath>
 
+Vector2::Vector2(const Vector3& vec) : x(vec.x), y(vec.y) {}
 Vector2::Vector2(const Vector4& vec) : x(vec.x), y(vec.y) {}
 
 auto Vector2::operator+=(Vector2 a) -> Vector2&
@@ -15,6 +23,20 @@ auto Vector2::operator-=(Vector2 a) -> Vector2&
 {
     x -= a.x;
     y -= a.y;
+    return *this;
+}
+
+auto Vector2::operator+=(float a) -> Vector2&
+{
+    x += a;
+    y += a;
+    return *this;
+}
+
+auto Vector2::operator-=(float a) -> Vector2&
+{
+    x -= a;
+    y -= a;
     return *this;
 }
 
@@ -106,6 +128,7 @@ auto operator!=(Vector2 a, Vector2 b) -> bool
     return a.x != b.x || a.y != b.y;
 }
 
+Vector3::Vector3(const Vector2& vec) : x(vec.x), y(vec.y) {}
 Vector3::Vector3(const Vector4& vec) : x(vec.x), y(vec.y), z(vec.z) {}
 
 auto Vector3::operator+=(Vector3 a) -> Vector3&
@@ -121,6 +144,22 @@ auto Vector3::operator-=(Vector3 a) -> Vector3&
     x -= a.x;
     y -= a.y;
 	z -= a.z;
+    return *this;
+}
+
+auto Vector3::operator+=(float a) -> Vector3&
+{
+    x += a;
+    y += a;
+    z += a;
+    return *this;
+}
+
+auto Vector3::operator-=(float a) -> Vector3&
+{
+    x -= a;
+    y -= a;
+    z -= a;
     return *this;
 }
 
@@ -239,6 +278,24 @@ auto Vector4::operator-=(Vector4 a) -> Vector4&
     y -= a.y;
 	z -= a.z;
     w -= a.w;
+    return *this;
+}
+
+auto Vector4::operator+=(float a) -> Vector4&
+{
+    x += a;
+    y += a;
+    z += a;
+    w += a;
+    return *this;
+}
+
+auto Vector4::operator-=(float a) -> Vector4&
+{
+    x -= a;
+    y -= a;
+    z -= a;
+    w -= a;
     return *this;
 }
 

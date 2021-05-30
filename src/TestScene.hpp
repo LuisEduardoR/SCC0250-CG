@@ -5,12 +5,17 @@
 //  SCC0250 - Computação Gráfica (2021)
 //  Prof. Ricardo M. Marcacini
 
-# ifndef TIME_HPP
-# define TIME_HPP
+#ifndef TEST_SCENE_HPP
+#define TEST_SCENE_HPP
 
-namespace Time
+#include "adven/Scene.hpp"
+#include "Renderer.hpp"
+
+class TestScene : public Adven::Scene
 {
-    extern float DeltaTime;    
-}
+public:
+    TestScene();
+    ~TestScene() override = default;
+};
 
-# endif
+#endif

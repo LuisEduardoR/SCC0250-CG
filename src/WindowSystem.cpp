@@ -6,9 +6,12 @@
 //  Prof. Ricardo M. Marcacini
 
 # include "WindowSystem.hpp"
+# include "Input.hpp"
 
-// Constructor
-WindowSystem::WindowSystem() {
+GLFWwindow* WindowSystem::mainWindow{ nullptr };
+
+// Initializes the windom system
+void WindowSystem::Init() {
     
     // Initializes GLFW
     glfwInit();
@@ -24,27 +27,31 @@ WindowSystem::WindowSystem() {
 	// glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
     // Creates our window
-    this->mainWindow = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
+    WindowSystem::mainWindow = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
 
     // Makes our window the default
-    glfwMakeContextCurrent(this->mainWindow);
+    glfwMakeContextCurrent(WindowSystem::mainWindow);
+
+    // Binds input
+    SetKeyCallback(Input::ProcessKey);
+    SetMouseButtonCallback(Input::ProcessMouse);
 
 }
 
-// Destructor
-WindowSystem::~WindowSystem() {
-    glfwDestroyWindow(this->mainWindow);
+// Destroys the windows system
+void WindowSystem::Destroy() {
+    glfwDestroyWindow(WindowSystem::mainWindow);
     glfwTerminate();
 }
 
 // Shows our window
 void WindowSystem::Show() {
-    glfwShowWindow(this->mainWindow);
+    glfwShowWindow(WindowSystem::mainWindow);
 }
 
 // Checks if our program should close
 int WindowSystem::ShouldClose() {
-    return glfwWindowShouldClose(this->mainWindow);
+    return glfwWindowShouldClose(WindowSystem::mainWindow);
 }
 
 // Pools our window system for events
@@ -54,15 +61,15 @@ void WindowSystem::PollEvents() {
 
 // Swaps our back and front buffers
 void WindowSystem::SwapBuffers() {
-    glfwSwapBuffers(this->mainWindow);
+    glfwSwapBuffers(mainWindow);
 }
 
 // Sets a callback function for when a key input is detected
 void WindowSystem::SetKeyCallback(GLFWkeyfun callback) {
-    glfwSetKeyCallback(this->mainWindow, callback);
+    glfwSetKeyCallback(mainWindow, callback);
 }
 
 // Sets a callback function for when a mouse button input is detected
 void WindowSystem::SetMouseButtonCallback(GLFWmousebuttonfun callback) {
-    glfwSetMouseButtonCallback(this->mainWindow, callback);
+    glfwSetMouseButtonCallback(mainWindow, callback);
 }

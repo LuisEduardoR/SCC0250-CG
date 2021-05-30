@@ -29,33 +29,33 @@ class WindowSystem {
 private:
 
     // Our current main window
-    GLFWwindow *mainWindow;
+    static GLFWwindow *mainWindow;
 
 public:
 
-    // Constructor
-    WindowSystem();
+    // Initializes the windom system
+    static void Init();
 
-    // Destructor
-    ~WindowSystem();
+    // Destroys the windows system
+    static void Destroy();
 
     // Shows our window
-    void Show();
+    static void Show();
 
     // Checks if our program should close
-    int ShouldClose();
+    static int ShouldClose();
 
     // Pools our window system for events
-    void PollEvents();
+    static void PollEvents();
 
     // Swaps our back and front buffers
-    void SwapBuffers();
+    static void SwapBuffers();
 
     // Sets a callback function for when a key input is detected
-    void SetKeyCallback(GLFWkeyfun callback);
+    static void SetKeyCallback(GLFWkeyfun callback);
 
     // Sets a callback function for when a mouse button input is detected
-    void SetMouseButtonCallback(GLFWmousebuttonfun callback);
+    static void SetMouseButtonCallback(GLFWmousebuttonfun callback);
 
 };
 

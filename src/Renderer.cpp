@@ -7,29 +7,41 @@
 
 # include "Renderer.hpp"
 
-// Constructor
-Renderer::Renderer(bool enable3D) {
+GLuint Renderer::currentProgram{ 0 };
 
-    this->currentProgram = 0;
-    this->arrayBuffer = 0;
+    //Current array buffer bound to the renderer
+GLuint Renderer::arrayBuffer{ 0 };
+
+// Initializes the renderer
+void Renderer::Init() {
+
+    Renderer::currentProgram = 0;
+    Renderer::arrayBuffer = 0;
 
     // Initializes GLEW to handle OpenGL functions
     GLint result = glewInit();
     std::cout << "GlewStatus: " << glewGetErrorString(result) << std::endl;
 
-    // Enables the depth buffer if using 3D
-    if(enable3D) glEnable(GL_DEPTH_TEST);
-
 }
 
-// Destructor
-Renderer::~Renderer() {
-    glDeleteBuffers(1, &(this->arrayBuffer));
+// Destroys the renderer
+void Renderer::Destroy() {
+    glDeleteBuffers(1, &(Renderer::arrayBuffer));
+}
+
+// Enables or disables 3D rendering (enables or disables depth buffer testing)  
+void Renderer::Set3D(bool enabled) {
+
+    if(enabled)
+        glEnable(GL_DEPTH_TEST);
+    else
+        glDisable(GL_DEPTH_TEST);
+
 }
 
 // Clears our color program with a certain color
 void Renderer::Clear(const Color& c) {
-    glClearColor(c.r, c.b, c.g, c.a);
+    glClearColor(c.r, c.g, c.b, c.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -40,10 +52,10 @@ void Renderer::Clear() { Clear(Color::black); }
 void Renderer::SetProgram(std::string vertex_code, std::string fragment_code) {
 
     // Creates the program we are going to use from our vertex and fragment shader's source code
-    this->currentProgram = CreateProgram(vertex_code, fragment_code);
+    Renderer::currentProgram = CreateProgram(vertex_code, fragment_code);
 
     // Uses our program
-    glUseProgram(this->currentProgram);
+    glUseProgram(Renderer::currentProgram);
 
 }
 
@@ -59,7 +71,7 @@ void Renderer::CreateArrayBuffer() {
     glGenBuffers(1, &buffer);
     
     // Sets our buffer as the GL_ARRAY_BUFFER
-    this->arrayBuffer = buffer;
+    Renderer::arrayBuffer = buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
 }
@@ -78,28 +90,20 @@ void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum m
     // Sends our data to the array buffer
     glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_DYNAMIC_DRAW);
 
-    // Breaks our transform matrix into a simple array
-    /* float transform_data[16] =  { */ 
-    /*                                 transform.i.x, transform.i.y, transform.i.z, transform.i.w, */
-    /*                                 transform.j.x, transform.j.y, transform.j.z, transform.j.w, */
-    /*                                 transform.k.x, transform.k.y, transform.k.z, transform.k.w, */
-    /*                                 transform.l.x, transform.l.y, transform.l.z, transform.l.w */ 
-    /*                             }; */
-
     // Associates the variables from our program with our data:
     GLint loc;
 
     // Associates the positions of our geometry
-    loc = glGetAttribLocation(this->currentProgram, "position");
+    loc = glGetAttribLocation(Renderer::currentProgram, "position");
     glEnableVertexAttribArray(loc);
     glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
     // Associates our color
-    loc = glGetUniformLocation(this->currentProgram, "color");
+    loc = glGetUniformLocation(Renderer::currentProgram, "color");
     glUniform4f(loc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
     // Associates our transform matrix
-    loc = glGetUniformLocation(this->currentProgram, "transform");
+    loc = glGetUniformLocation(Renderer::currentProgram, "transform");
     glUniformMatrix4fv(loc, 1, GL_FALSE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
     // Performs the drawing
@@ -142,28 +146,20 @@ void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum m
     // Sends our data to the array buffer
     glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_DYNAMIC_DRAW);
 
-    // Breaks our transform matrix into a simple array
-    /* float transform_data[16] =  { */ 
-    /*                                 transform.i.x, transform.i.y, transform.i.z, transform.i.w, */
-    /*                                 transform.j.x, transform.j.y, transform.j.z, transform.j.w, */
-    /*                                 transform.k.x, transform.k.y, transform.k.z, transform.k.w, */
-    /*                                 transform.l.x, transform.l.y, transform.l.z, transform.l.w */ 
-    /*                             }; */
-
     // Associates the variables from our program with our data:
     GLint loc;
 
     // Associates the positions of our geometry
-    loc = glGetAttribLocation(this->currentProgram, "position");
+    loc = glGetAttribLocation(Renderer::currentProgram, "position");
     glEnableVertexAttribArray(loc);
     glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
     // Associates our color
-    loc = glGetUniformLocation(this->currentProgram, "color");
+    loc = glGetUniformLocation(Renderer::currentProgram, "color");
     glUniform4f(loc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
     // Associates our transform matrix
-    loc = glGetUniformLocation(this->currentProgram, "transform");
+    loc = glGetUniformLocation(Renderer::currentProgram, "transform");
     glUniformMatrix4fv(loc, 1, GL_TRUE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
     // Performs the drawing

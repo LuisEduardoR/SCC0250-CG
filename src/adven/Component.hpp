@@ -17,6 +17,8 @@ namespace Adven
     class Component : public IUpdatable
     {
         friend class GameObject;
+    public:
+        ~Component() override = default;
     protected:
         GameObject* gameObject;
     };

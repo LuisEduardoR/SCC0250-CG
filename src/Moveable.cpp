@@ -24,7 +24,7 @@ void Moveable::VDrawUpdate()
         return;
     }
 
-    transform->localPosition = Vector3 {
+    transform->localPosition += Vector3 {
         Matrix4x4::Rotate(transform->localRotation)
         * Vector4{ speed, 1.0f }
         * Time::DeltaTime

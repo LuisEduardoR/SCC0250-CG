@@ -13,6 +13,7 @@ namespace Adven
     class IUpdatable
     {
     public:
+        virtual ~IUpdatable() = default;
         inline virtual void Start() {};
         inline virtual void VDrawUpdate() {};
         inline virtual void VBlankUpdate() {};

@@ -11,6 +11,38 @@
 # include "Matrix4x4.hpp"
 # include "Geometry.hpp"
 
+Transform::Transform(Vector3 localPosition) : localPosition(localPosition) {}
+
+Transform::Transform(Vector3 localPosition, Vector3 localRotation)
+    : localPosition(localPosition), localRotation(localRotation) {}
+
+Transform::Transform(Vector3 localPosition, Vector3 localRotation, Vector3 localScale)
+    : localPosition(localPosition), localRotation(localRotation), localScale(localScale) {}
+
+Transform::Transform(Transform* parent)
+    : parent(parent)
+{
+    parent->children.push_back(this);
+}
+
+Transform::Transform(Transform* parent, Vector3 localPosition)
+    : parent(parent), localPosition(localPosition)
+{
+    parent->children.push_back(this);
+}
+
+Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation)
+    : parent(parent), localPosition(localPosition), localRotation(localRotation)
+{
+    parent->children.push_back(this);
+}
+
+Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation, Vector3 localScale)
+    : parent(parent), localPosition(localPosition), localRotation(localRotation), localScale(localScale)
+{
+    parent->children.push_back(this);
+}
+
 [[nodiscard]] auto Transform::LocalMatrix() const -> Matrix4x4
 {
     return Matrix4x4::TRS(localPosition, localRotation, localScale);
@@ -23,6 +55,35 @@
     for (const Transform* transform = parent; transform != nullptr; transform=transform->parent)
     {
         world = transform->LocalMatrix() * world;
+    }
+
+    return world;
+}
+
+[[nodiscard]] auto Transform::WorldPosition() const -> Vector3
+{
+    return Vector3{ WorldMatrix() * Vector4{} };
+}
+
+[[nodiscard]] auto Transform::WorldRotation() const -> Vector3
+{
+    Vector3 world = localRotation;
+    
+    for (const Transform* transform = parent; transform != nullptr; transform=transform->parent)
+    {
+        world += localRotation;
+    }
+
+    return world;
+}
+
+[[nodiscard]] auto Transform::WorldScale() const -> Vector3
+{
+    Vector3 world = localScale;
+    
+    for (const Transform* transform = parent; transform != nullptr; transform=transform->parent)
+    {
+        world += localScale;
     }
 
     return world;

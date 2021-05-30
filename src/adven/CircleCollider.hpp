@@ -5,25 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DM_ADVEN_MOVEABLE_HPP
-#define DM_ADVEN_MOVEABLE_HPP
+#ifndef DM_ADVEN_CIRCLECOLLIDER_HPP
+#define DM_ADVEN_CIRCLECOLLIDER_HPP
 
-#include "Component.hpp"
-#include "GameObject.hpp"
-#include "../Vector.hpp"
+#include "Collider.hpp"
 
 namespace Adven
 {
-    class Moveable : public Component
+    class CircleCollider : public Collider
     {
         friend class GameObject;
     public:
-        ~Moveable() override = default;
-    public:
+        static bool CheckCollision(const CircleCollider& a, const CircleCollider& b);
+    private:
+        float radius;
+    private:
         virtual void Start() override;
         virtual void VDrawUpdate() override;
         virtual void VBlankUpdate() override;
-        Vector3 speed;
+    public:
+        CircleCollider(float radius, bool isTrigger = false);
+        virtual ~CircleCollider();
     };
 }
 

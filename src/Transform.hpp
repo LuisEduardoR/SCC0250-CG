@@ -21,16 +21,30 @@ union Matrix4x4;
 
 class Transform : public Adven::Component {
 private:
-    Transform* parent;
-    std::list<Transform> childs;
+    Transform* parent{ nullptr };
+    std::list<Transform*> children{};
 public:
-    Vector3 localPosition;
-    Vector3 localRotation;
-    Vector3 localScale;
+    Vector3 localPosition{};
+    Vector3 localRotation{};
+    Vector3 localScale{ 1.0f, 1.0f, 1.0f };
 public:
+    Transform() = default;
+    explicit Transform(Vector3 localPosition);
+    Transform(Vector3 localPosition, Vector3 localRotation);
+    Transform(Vector3 localPosition, Vector3 localRotation, Vector3 localScale);
+    explicit Transform(Transform* parent);
+    Transform(Transform* parent, Vector3 localPosition);
+    Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation);
+    Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation, Vector3 localScale);
+public:
+    [[nodiscard]] auto GetChildren() const -> const std::list<Transform*>&;
+    [[nodiscard]] auto GetChildren() -> std::list<Transform*>&;
     [[nodiscard]] auto GetParent() const -> Transform*; 
     [[nodiscard]] auto LocalMatrix() const -> Matrix4x4;
     [[nodiscard]] auto WorldMatrix() const -> Matrix4x4;
+    [[nodiscard]] auto WorldPosition() const -> Vector3;
+    [[nodiscard]] auto WorldRotation() const -> Vector3;
+    [[nodiscard]] auto WorldScale() const -> Vector3;
         // void SetWorldPosition(Vector3 worldPos);
 };
 
