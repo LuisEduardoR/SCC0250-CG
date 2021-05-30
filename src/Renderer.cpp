@@ -107,41 +107,24 @@ void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum m
 
 }
 
-// Draws a Shape2D (uses the default transform matrix)
-void Renderer::DrawShape2D(const Shape2D& shape, const Color& color) { DrawShape2D(shape, color, Matrix4()); }
-
 // Draws a Shape2D applying a transformation matrix
-void Renderer::DrawShape2D(const Shape2D& shape, const Color& color, const Matrix4& transform) {
-
+void Renderer::DrawShape2D(const Shape2D& shape, const Matrix4& transform) {
     // Gets the vertices of our shape
     VertexData data = shape.GetVertices();
 
     // Performs the drawing
-    DrawBasic2D((float*)data.vertices2D, data.vertexCount * sizeof(Vector2), data.vertexCount, shape.GetDrawMode(), color, transform);
+    DrawBasic2D((float*)data.vertices2D, data.vertexCount * sizeof(Vector2), data.vertexCount, shape.GetDrawMode(), shape.color, transform);
 
 }
-
-// Draws a Shape2D applying a transformation matrix (uses shape as a pointer, intended for use with DrawShape2DCollection)
-void Renderer::DrawShape2D(const Shape2D* shape, const Color& color, const Matrix4& transform) {
-
-    // Gets the vertices of our shape
-    VertexData data = (*shape).GetVertices();
-
-    // Performs the drawing
-    DrawBasic2D((float*)data.vertices2D, data.vertexCount * sizeof(Vector2), data.vertexCount, shape->GetDrawMode(), color, transform);
-
-}
-
-// Draws a Shape2DCollection (uses the default transform matrix)
-void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color) { DrawShape2DCollection(shapes, color, Matrix4()); }
-
 
 // Draws a Shape2DCollection applying a transformation matrix
-void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color, const Matrix4& transform) {
+void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Matrix4& transform) {
 
     // Performs the drawing of each shape
-    for (auto iter = (*shapes).cbegin(); iter != (*shapes).cend(); iter++)
-        DrawShape2D((*iter).get(), color, transform);
+    /* for (auto iter = (*shapes).cbegin(); iter != (*shapes).cend(); iter++) */
+    /*     DrawShape2D(*(*iter).get(), transform); */
+    for (const std::unique_ptr<Shape2D>& shape : *shapes.get())
+        DrawShape2D(*shape.get(), transform);
 
 }
 

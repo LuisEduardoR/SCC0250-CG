@@ -8,7 +8,7 @@
 # ifndef GEOMETRY_HPP
 # define GEOMETRY_HPP
 
-# define CONST_PI 3.14159265358979323846
+# define CONST_PI 3.14159265358979323846f
 
 # include <GL/glew.h>
 # include <cmath>
@@ -102,14 +102,11 @@ class Polyline : public Shape2D {
 public:
 
     // Constructors
-    Polyline(std::vector<Vector2> vertices, Color color = Color::white) : Shape2D(color) {
-        // Allocates memory to store the vertices and copies them
-        this->vertices = std::make_unique<Vector2[]>(vertices.size());
-        for(int i = 0; i < vertices.size(); i++)
-            this->vertices[i] = vertices[i];
+    Polyline(std::vector<Vector2> vertices, Color color = Color::white)
+        : Shape2D(color), vertices(std::move(vertices)) {
     }
     Polyline(Vector2 a, Vector2 b, Color color = Color::white) : Polyline({a, b}, color) {}
-    Polyline() : Shape2D(Color::white) { this->vertices.reset(); }
+    Polyline() : Shape2D(Color::white) {}
 
     // Destructors
     virtual ~Polyline() = default;
@@ -123,7 +120,7 @@ public:
 private:
 
     // Stores the vertices of the polyline
-    std::unique_ptr<Vector2[]> vertices;
+    std::vector<Vector2> vertices{};
 
 };
 
@@ -209,13 +206,13 @@ public:
         this->precision = precision;
 
         // Calculates some points to represent the circle
-        this->vertices = std::make_unique<Vector2[]>(this->precision);
+        this->vertices.reserve(precision);
         float angle = 0.0;
         for(int i = 0; i < this->precision; i++){
             angle += (2.0f * CONST_PI) / this->precision;
-            float x = this->center.x + cos(angle) * this->radius;
-            float y = this->center.y + sin(angle) * this->radius;
-            this->vertices[i] = { x, y};
+            float x = this->center.x + std::cos(angle) * this->radius;
+            float y = this->center.y + std::sin(angle) * this->radius;
+            this->vertices.push_back({ x, y });
         }
         
     }
@@ -234,7 +231,7 @@ public:
 private:
 
     // Stores the vertices of the circle
-    std::unique_ptr<Vector2[]> vertices;
+    std::vector<Vector2> vertices{};
 
 };
 

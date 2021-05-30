@@ -44,17 +44,11 @@ public:
     // 2D =====================================
     // ========================================
 
-    // Draws a Shape2D (uses the default transform matrix)
-    void DrawShape2D(const Shape2D& shape, const Color& color);
+    // Draws a Shape2D applying a transformation matrix
+    void DrawShape2D(const Shape2D& shape, const Matrix4& transform = Matrix4());
 
     // Draws a Shape2D applying a transformation matrix
-    void DrawShape2D(const Shape2D& shape, const Color& color, const Matrix4& transform);
-
-    // Draws a Shape2DCollection (uses the default transform matrix)
-    void DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color);
-
-    // Draws a Shape2D applying a transformation matrix
-    void DrawShape2DCollection(const Shape2DCollection& shapes, const Color& color, const Matrix4& transform);
+    void DrawShape2DCollection(const Shape2DCollection& shapes, const Matrix4& transform = Matrix4());
 
     // ========================================
     // 3D =====================================
@@ -92,9 +86,6 @@ private:
 
     // Draws a basic 2D shape applying a transformation matrix
     void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform);
-
-    // Draws a Shape2D applying a transformation matrix (uses a Shape2D pointer, intended for use with DrawShape2DCollection)
-    void DrawShape2D(const Shape2D* shape, const Color& color, const Matrix4& transform);
 
 }; 
 
