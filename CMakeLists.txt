@@ -20,6 +20,7 @@ set(COMMON_SOURCES
     "src/Transform.hpp"
     "src/Transform.cpp"
     "src/Vector.hpp"
+    "src/Vector.cpp"
     "src/Matrix.hpp"
     "src/Matrix.cpp"
     "src/Shader.hpp"
