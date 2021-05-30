@@ -67,10 +67,10 @@ void Renderer::CreateArrayBuffer() {
 // 2D =====================================
 
 // Draws a basic 2D shape (uses the default transform matrix)
-void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color) { DrawBasic2D(data, data_size, count, mode, color, Matrix4()); }
+void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color) { DrawBasic2D(data, data_size, count, mode, color, Matrix4x4::Identity); }
 
 // Draws a basic 2D shape
-void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform) {
+void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
 
     // Creates our array buffer
     CreateArrayBuffer();
@@ -79,12 +79,12 @@ void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum m
     glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_DYNAMIC_DRAW);
 
     // Breaks our transform matrix into a simple array
-    float transform_data[16] =  { 
-                                    transform.i.x, transform.i.y, transform.i.z, transform.i.w,
-                                    transform.j.x, transform.j.y, transform.j.z, transform.j.w,
-                                    transform.k.x, transform.k.y, transform.k.z, transform.k.w,
-                                    transform.l.x, transform.l.y, transform.l.z, transform.l.w 
-                                };
+    /* float transform_data[16] =  { */ 
+    /*                                 transform.i.x, transform.i.y, transform.i.z, transform.i.w, */
+    /*                                 transform.j.x, transform.j.y, transform.j.z, transform.j.w, */
+    /*                                 transform.k.x, transform.k.y, transform.k.z, transform.k.w, */
+    /*                                 transform.l.x, transform.l.y, transform.l.z, transform.l.w */ 
+    /*                             }; */
 
     // Associates the variables from our program with our data:
     GLint loc;
@@ -100,7 +100,7 @@ void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum m
 
     // Associates our transform matrix
     loc = glGetUniformLocation(this->currentProgram, "transform");
-    glUniformMatrix4fv(loc, 1, GL_TRUE, transform_data); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    glUniformMatrix4fv(loc, 1, GL_FALSE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
     // Performs the drawing
     glDrawArrays(mode, 0, count);
@@ -108,7 +108,7 @@ void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum m
 }
 
 // Draws a Shape2D applying a transformation matrix
-void Renderer::DrawShape2D(const Shape2D& shape, const Matrix4& transform) {
+void Renderer::DrawShape2D(const Shape2D& shape, const Matrix4x4& transform) {
     // Gets the vertices of our shape
     VertexData data = shape.GetVertices();
 
@@ -118,7 +118,7 @@ void Renderer::DrawShape2D(const Shape2D& shape, const Matrix4& transform) {
 }
 
 // Draws a Shape2DCollection applying a transformation matrix
-void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Matrix4& transform) {
+void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Matrix4x4& transform) {
 
     // Performs the drawing of each shape
     /* for (auto iter = (*shapes).cbegin(); iter != (*shapes).cend(); iter++) */
@@ -131,10 +131,10 @@ void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Matr
 // 3D =====================================
 
 // Draws a basic 3D shape (uses the default transform matrix)
-void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color) { DrawBasic3D(data, data_size, count, mode, color, Matrix4()); }
+void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color) { DrawBasic3D(data, data_size, count, mode, color, Matrix4x4::Identity); }
 
 // Draws a basic 3D shape applying a transformation matrix
-void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform) {
+void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
 
     // Creates our array buffer
     CreateArrayBuffer();
@@ -143,12 +143,12 @@ void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum m
     glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_DYNAMIC_DRAW);
 
     // Breaks our transform matrix into a simple array
-    float transform_data[16] =  { 
-                                    transform.i.x, transform.i.y, transform.i.z, transform.i.w,
-                                    transform.j.x, transform.j.y, transform.j.z, transform.j.w,
-                                    transform.k.x, transform.k.y, transform.k.z, transform.k.w,
-                                    transform.l.x, transform.l.y, transform.l.z, transform.l.w 
-                                };
+    /* float transform_data[16] =  { */ 
+    /*                                 transform.i.x, transform.i.y, transform.i.z, transform.i.w, */
+    /*                                 transform.j.x, transform.j.y, transform.j.z, transform.j.w, */
+    /*                                 transform.k.x, transform.k.y, transform.k.z, transform.k.w, */
+    /*                                 transform.l.x, transform.l.y, transform.l.z, transform.l.w */ 
+    /*                             }; */
 
     // Associates the variables from our program with our data:
     GLint loc;
@@ -164,7 +164,7 @@ void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum m
 
     // Associates our transform matrix
     loc = glGetUniformLocation(this->currentProgram, "transform");
-    glUniformMatrix4fv(loc, 1, GL_TRUE, transform_data); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    glUniformMatrix4fv(loc, 1, GL_TRUE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
     // Performs the drawing
     glDrawArrays(mode, 0, count);
@@ -173,11 +173,11 @@ void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum m
 
 // Functions to draw some of our basic geometry (uses the default transform matrix):
 
-void Renderer::DrawMesh3D(const Mesh3D& mesh, const Color& color) { DrawMesh3D(mesh, color, Matrix4()); }
+void Renderer::DrawMesh3D(const Mesh3D& mesh, const Color& color) { DrawMesh3D(mesh, color, Matrix4x4::Identity); }
 
 // Functions to draw some of our basic geometry applying transformation matrixes:
 
-void Renderer::DrawMesh3D(const Mesh3D& mesh, const Color& color, const Matrix4& transform) {
+void Renderer::DrawMesh3D(const Mesh3D& mesh, const Color& color, const Matrix4x4& transform) {
 
     // Gets the triangles of our mesh.
     std::vector<Triangle3D> triangles = mesh.GetTriangles();

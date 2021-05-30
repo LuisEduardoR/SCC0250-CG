@@ -61,6 +61,8 @@ public:
 	auto operator=(Matrix4x4&& other) noexcept -> Matrix4x4& = default;
 
 public:
+	auto DataFlat() const -> const std::array<float, 16>&;
+
 	[[nodiscard]] auto operator[](std::array<std::size_t, 2> xy_index) const -> float;
 
 	[[nodiscard]] auto operator[](std::array<std::size_t, 2> xy_index) -> float&;

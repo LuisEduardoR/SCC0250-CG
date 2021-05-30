@@ -12,7 +12,7 @@
 
 # include "Shader.hpp"
 # include "Vector.hpp"
-# include "Matrix.hpp"
+# include "Matrix4x4.hpp"
 # include "Geometry.hpp"
 # include "Color.hpp"
 
@@ -45,10 +45,11 @@ public:
     // ========================================
 
     // Draws a Shape2D applying a transformation matrix
-    void DrawShape2D(const Shape2D& shape, const Matrix4& transform = Matrix4());
+    void DrawShape2D(const Shape2D& shape, const Matrix4x4& transform = Matrix4x4::Identity);
 
     // Draws a Shape2D applying a transformation matrix
-    void DrawShape2DCollection(const Shape2DCollection& shapes, const Matrix4& transform = Matrix4());
+    void DrawShape2DCollection(const Shape2DCollection& shapes,
+        const Matrix4x4& transform = Matrix4x4::Identity);
 
     // ========================================
     // 3D =====================================
@@ -58,13 +59,13 @@ public:
     void DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
 
     // Draws a basic 3D shape applying a transformation matrix
-    void DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform);
+    void DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform);
 
     // Draws a Mesh3D (uses the default transform matrix)
     void DrawMesh3D(const Mesh3D& mesh, const Color& color);
 
     // Draws a Mesh3D applying a transformation matrix
-    void DrawMesh3D(const Mesh3D& mesh, const Color& color, const Matrix4& transform);
+    void DrawMesh3D(const Mesh3D& mesh, const Color& color, const Matrix4x4& transform);
 
 private:
 
@@ -85,7 +86,7 @@ private:
     void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
 
     // Draws a basic 2D shape applying a transformation matrix
-    void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4& transform);
+    void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform);
 
 }; 
 

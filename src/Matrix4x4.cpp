@@ -114,6 +114,11 @@ auto Matrix4x4::TRS(Vector3 translation, Vector3 rotationAngle, Vector3 scaleFac
 	return Matrix4x4::Translate(translation) * Matrix4x4::Rotate(rotationAngle) * Matrix4x4::Scale(scaleFactor);
 }
 
+auto Matrix4x4::DataFlat() const -> const std::array<float, 16>&
+{
+	return flat;
+}
+
 auto Matrix4x4::operator[](std::array<std::size_t, 2> xy_index) const -> float
 {
 	return matrix[xy_index[0]][xy_index[1]];
