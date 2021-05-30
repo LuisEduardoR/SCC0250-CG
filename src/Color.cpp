@@ -15,6 +15,13 @@ Color::Color(float r, float g, float b, float a) {
     this->a = a;
 }
 
+Color::Color(int r, int g, int b, int a) {
+    this->r = r/255.0f;
+    this->g = g/255.0f;
+    this->b = b/255.0f;
+    this->a = a/255.0f;
+}
+
 // Some default colors constants:
 const Color Color::black    = { 0.0f, 0.0f, 0.0f };
 const Color Color::white    = { 1.0f, 1.0f, 1.0f };

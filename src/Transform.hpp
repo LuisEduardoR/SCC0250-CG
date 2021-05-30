@@ -9,13 +9,30 @@
 # define TRANSFORM2D_HPP
 
 # include <cmath>
+# include <list>
 
+# include "adven/Component.hpp"
 # include "Vector.hpp"
 union Matrix4x4;
 
 /*
     This file contains the base class to represent 2D objects
 */
+
+class Transform : public Adven::Component {
+private:
+    Transform* parent;
+    std::list<Transform> childs;
+public:
+    Vector3 localPosition;
+    Vector3 localRotation;
+    Vector3 localScale;
+public:
+    [[nodiscard]] auto GetParent() const -> Transform*; 
+    [[nodiscard]] auto LocalMatrix() const -> Matrix4x4;
+    [[nodiscard]] auto WorldMatrix() const -> Matrix4x4;
+        // void SetWorldPosition(Vector3 worldPos);
+};
 
 class Transform2D {
 

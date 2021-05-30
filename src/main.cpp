@@ -206,45 +206,166 @@ int main(void) {
         { 0.0f, 0.0f }, { 0.0f, 1.0f }
     }});
 
-    // Shape2DCollection boss( new std::vector<std::unique_ptr<Shape2D>>{});
+    Shape2DCollection boss( new std::vector<std::unique_ptr<Shape2D>>{});
 
-    // // Boss Base
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { -80.000f, -76.950f }, { -50.000f, -18.320f }
-    // }});
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { -50.000f, -18.320f }, { +0.000f, +0.000f }
-    // }});
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { +0.000f, +0.000f }, { +50.000f, -18.320f }
-    // }});
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { 50.000f, -18.320f }, { +80.000f, -77.000f }
-    // }});
+    // Boss Base
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { -80.000f, -76.950f }, { -50.000f, -18.320f }, Color(31, 40, 126)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { -50.000f, -18.320f }, { +0.000f, +0.000f }, Color(31, 40, 126)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { +0.000f, +0.000f }, { +50.000f, -18.320f }, Color(31, 40, 126)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { 50.000f, -18.320f }, { +80.000f, -77.000f }, Color(31, 40, 126)
+    }});
 
-    // // Boss Window
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -167.000f }, { -54.000f, -75.890f }, { -33.750f, -34.830f }
-    // }});
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { -33.750f, -34.830f }, { +0.000f, -22.000f }
-    // }});
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { +0.000f, -22.000f }, { +33.750f, -34.830f }
-    // }});
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { +33.750f, -34.830f }, { +54.000f, -75.890f }
-    // }});
+    // Boss Window
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -167.000f }, { -54.000f, -75.890f }, { -33.750f, -34.830f }, Color(67, 39, 197)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { -33.750f, -34.830f }, { +0.000f, -22.000f }, Color(67, 39, 197)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { +0.000f, -22.000f }, { +33.750f, -34.830f }, Color(67, 39, 197)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { +33.750f, -34.830f }, { +54.000f, -75.890f }, Color(67, 39, 197)
+    }});
 
-    // // Boss body shape
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { -90.000f, -170.250f }, { -80.00, -76.94f }
-    // }});
-    // boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-    //     { +0.000f, -207.000f }, { 90.000f, -170.250f }, { +80.000f, -77.000f }
-    // }});
+    // Boss body shape
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { -90.000f, -170.250f }, { -80.00, -76.94f }, Color(117, 72, 138)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, -207.000f }, { 90.000f, -170.250f }, { +80.000f, -77.000f }, Color(117, 72, 138)
+    }});
 
-    // Boss big claw
+    // Boss Big Claw Left
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -73.000f, -67.500f }, { -152.000f, 26.000f }, { -59.000f, -35.500f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -152.000f, 26.000f }, { -59.000f, -35.500f }, { -110.000f, +26.000f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -152.000f, 26.000f }, { -110.000f, +26.000f }, { -59.000f, +122.000f }, Color(195, 195, 195)
+    }});
+
+    // Boss Big Claw Right
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +73.000f, -67.500f }, { +152.000f, 26.000f }, { +59.000f, -35.500f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +152.000f, 26.000f }, { +59.000f, -35.500f }, { +110.000f, +26.000f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +152.000f, 26.000f }, { +110.000f, +26.000f }, { +59.000f, +122.000f }, Color(195, 195, 195)
+    }});
+
+    // Boss Small Claw Left
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -50.000f, -18.320f }, { -80.000f, +22.130f }, { -34.500f, -12.640f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -80.000f, +22.130f }, { -34.500f, -12.640f }, { -58.140f, +22.130f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -80.000f, +22.130f }, { -58.140f, +22.130f }, { -35.470f, +81.000f }, Color(195, 195, 195)
+    }});
+
+    // Boss Small Claw Right
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +50.000f, -18.320f }, { +80.000f, +22.130f }, { +34.500f, -12.640f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +80.000f, +22.130f }, { +34.500f, -12.640f }, { +58.140f, +22.130f }, Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +80.000f, +22.130f }, { +58.140f, +22.130f }, { +35.470f, +81.000f }, Color(195, 195, 195)
+    }});
+
+    // Center Orb
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +3.000f, +92.000f }, 40.000f, 32
+    }});
+
+    // Tail Left
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -59.000f, -227.000f }, 40.000f, 32, Color(117, 72, 138)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -139.000f, -215.000f }, 40.000f, 32, Color(117, 72, 138)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -204.000f, -167.000f }, 40.000f, 32, Color(31, 40, 126)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -239.000f, -95.000f }, 40.000f, 32, Color(31, 40, 126)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -261.000f, -18.000f }, 40.000f, 32, Color(67, 39, 197)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -268.000f, +62.000f }, 40.000f, 32, Color(67, 39, 197)
+    }});
+
+     // Tail Right
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +59.000f, -227.000f }, 40.000f, 32, Color(117, 72, 138)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +139.000f, -215.000f }, 40.000f, 32, Color(117, 72, 138)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +204.000f, -167.000f }, 40.000f, 32, Color(31, 40, 126)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +239.000f, -95.000f }, 40.000f, 32, Color(31, 40, 126)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +261.000f, -18.000f }, 40.000f, 32, Color(67, 39, 197)
+    }});
+    boss.get()->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +268.000f, +62.000f }, 40.000f, 32, Color(67, 39, 197)
+    }});
+
+    // Left Cannon
+    boss.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -295.000f, +90.000f }, { -285.000f, +90.000f },
+        { -295.000f, +120.000f }, { -285.000f, +120.000f },
+        Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -277.000f, +96.000f }, { -259.000f, +96.000f },
+        { -277.000f, +153.000f }, { -259.000f, +153.000f },
+        Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -251.000f, +90.000f }, { -241.000f, +90.000f },
+        { -251.000f, +120.000f }, { -241.000f, +120.000f },
+        Color(195, 195, 195)
+    }});
+    
+    // Right Cannon
+    boss.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { +295.000f, +90.000f }, { +285.000f, +90.000f },
+        { +295.000f, +120.000f }, { +285.000f, +120.000f },
+        Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { +277.000f, +96.000f }, { +259.000f, +96.000f },
+        { +277.000f, +153.000f }, { +259.000f, +153.000f },
+        Color(195, 195, 195)
+    }});
+    boss.get()->push_back(std::unique_ptr<Quad>{ new Quad{
+        { +251.000f, +90.000f }, { +241.000f, +90.000f },
+        { +251.000f, +120.000f }, { +241.000f, +120.000f },
+        Color(195, 195, 195)
+    }});
  
     // Creates our window system (constructor initializes GLFW)
     WindowSystem windowSystem;
@@ -305,7 +426,13 @@ int main(void) {
             Transform2D{ { 0.6f, 0.6f }, 0, { 0.2f, 0.2f } },
             CircleCollider2D { 0.1f },
             ship,
-        }
+        },
+        // Boss ship
+        Object2D {
+            Transform2D{ { 0.0f, 0.4f }, CONST_PI, { 0.0025f, 0.0025f } },
+            CircleCollider2D { 0.1f },
+            boss,
+        },
     };
 
     using object_iter = typename decltype(objects)::iterator;
@@ -328,17 +455,17 @@ int main(void) {
         objects[0].transform.rotation = angle;
         objects[0].transform.scale = { scale, scale };
 
-        for (object_iter i = objects.begin(); i < objects.end(); i++)
-        {
-            for (object_iter j = objects.begin(); j < objects.end(); j++)
-            {
-                if (i != j && i->CheckCollision(*j))
-                {
-                    markedForDeletion.insert(i); 
-                    markedForDeletion.insert(j); 
-                }
-            }
-        }
+        // for (object_iter i = objects.begin(); i < objects.end(); i++)
+        // {
+        //     for (object_iter j = objects.begin(); j < objects.end(); j++)
+        //     {
+        //         if (i != j && i->CheckCollision(*j))
+        //         {
+        //             markedForDeletion.insert(i); 
+        //             markedForDeletion.insert(j); 
+        //         }
+        //     }
+        // }
 
         for (const object_iter& deleteIter : markedForDeletion)
         {

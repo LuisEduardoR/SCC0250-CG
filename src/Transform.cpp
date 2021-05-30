@@ -11,6 +11,23 @@
 # include "Matrix4x4.hpp"
 # include "Geometry.hpp"
 
+[[nodiscard]] auto Transform::LocalMatrix() const -> Matrix4x4
+{
+    return Matrix4x4::TRS(localPosition, localRotation, localScale);
+}
+
+[[nodiscard]] auto Transform::WorldMatrix() const -> Matrix4x4
+{
+    Matrix4x4 world = LocalMatrix();
+    
+    for (const Transform* transform = parent; transform != nullptr; transform=transform->parent)
+    {
+        world = transform->LocalMatrix() * world;
+    }
+
+    return world;
+}
+
 Transform2D::Transform2D(Vector2 position, float rotation, Vector2 scale)
     : position(position), rotation(rotation), scale(scale) {}
 

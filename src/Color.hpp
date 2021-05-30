@@ -23,6 +23,8 @@ public:
     // Constructors
     Color(float r, float g, float b, float a);
     Color(float r, float g, float b) : Color(r, g, b, 1.0f) {}
+    Color(int r, int g, int b, int a);
+    Color(int r, int g, int b) : Color(r, g, b, 255) {}
     Color() : Color(0.0f, 0.0f, 0.0f, 0.0f) {}
 
     // Some default colors constants:

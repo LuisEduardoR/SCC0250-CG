@@ -32,6 +32,16 @@ set(COMMON_SOURCES
     "src/Object2D.hpp"
     "src/Object2D.cpp"
     "src/Collider2D.hpp"
+    "src/Time.hpp"
+    "src/Transform.hpp"
+    "src/Transform.cpp"
+    "src/adven/GameObject.hpp"
+    "src/adven/Scene.hpp"
+    "src/adven/Component.hpp"
+    "src/adven/IUpdatable.hpp"
+    "src/adven/Moveable.hpp"
+    "src/GameObject.cpp"
+    "src/Moveable.cpp"
 )
 
 add_executable(main

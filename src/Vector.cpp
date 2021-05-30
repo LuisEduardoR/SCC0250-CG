@@ -106,6 +106,8 @@ auto operator!=(Vector2 a, Vector2 b) -> bool
     return a.x != b.x || a.y != b.y;
 }
 
+Vector3::Vector3(const Vector4& vec) : x(vec.x), y(vec.y), z(vec.z) {}
+
 auto Vector3::operator+=(Vector3 a) -> Vector3&
 {
     x += a.x;
