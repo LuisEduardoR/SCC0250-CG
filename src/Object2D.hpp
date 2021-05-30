@@ -33,8 +33,9 @@ public:
     Shape2DCollection geometry;
 
     // Constructors
-    Object2D(Transform2D transform, Shape2DCollection& geometry) {
+    Object2D(Transform2D transform, CircleCollider2D collider, Shape2DCollection& geometry) {
         this->transform = transform;
+        this->collider = collider;
         this->geometry = geometry;
     }
 

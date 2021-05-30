@@ -21,16 +21,21 @@
 
 # include <GL/glew.h>
 
+#include <cstddef>
 # include <iostream>
 # include <cmath>
 # include <chrono>
 # include <thread>
+# include <queue>
 
+#include "Collider2D.hpp"
+#include "Transform.hpp"
 # include "WindowSystem.hpp"
 # include "Renderer.hpp"
 # include "Shader.hpp"
 # include "Color.hpp"
 # include "Geometry.hpp"
+# include "Object2D.hpp"
 
 
 
@@ -128,137 +133,55 @@ void ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int m
     }
 
 }
-/*
-
-const Shape2DCollection ship( new std::vector<std::unique_ptr<Shape2D>> {
-    // Ship Base 
-    std::unique_ptr<Triangle>{
-        new Triangle{ { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f } } },
-    std::unique_ptr<Triangle>{
-        new Triangle{ { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f } } },
-    std::unique_ptr<Triangle>{
-        new Triangle{ { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f } } },
-    std::unique_ptr<Triangle>{
-        new Triangle{ { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f } } },
-    std::unique_ptr<Triangle>{
-        new Triangle{ { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f } } },
-    std::unique_ptr<Triangle>{
-        new Triangle{ { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f } } },
-    std::unique_ptr<Triangle>{
-        new Triangle{ { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f } } },
-    // Ship Window
-    std::unique_ptr<Triangle>{
-        new Triangle{ { +0.000f, +0.530f }, { -0.194f, -0.074f }, { +0.194f, -0.074f } } },
-    std::unique_ptr<Triangle>{
-        new Triangle{ { +0.000f, -0.290f }, { -0.194f, -0.074f }, { +0.194f, -0.074f } } },
-    // Ship Cannons
-    std::unique_ptr<Quad>{
-        new Quad{ { -0.405f, +0.264f }, { -0.304f, +0.263f }, { -0.405f, -0.196f }, { -0.304f, +0.196f } } },
-    std::unique_ptr<Quad>{
-        new Quad{ { +0.304f, +0.264f }, { +0.405f, +0.263f }, { +0.304f, -0.196f }, { +0.405f, +0.196f } } },
-    // Ship Thruster
-    std::unique_ptr<Quad>{
-        new Quad{ { -0.190f, -0.455f }, { +0.213f, -0.455f }, { -0.150f, -0.728f }, { +0.150f, -0.728f } } },
-    // Ship Circles
-    std::unique_ptr<Circle>{
-        new Circle{ { -0.357f, -0.354f }, 0.156f } },
-    std::unique_ptr<Circle>{
-        new Circle{ { +0.357f, -0.354f }, 0.156f } },
-});*/
-// const std::array<Triangle, 7> shipBase{{
-//     { { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f } },
-//     { { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f } },
-//     { { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f } },
-//     { { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f } },
-//     { { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f } },
-//     { { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f } },
-//     { { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f } },
-// }};
-
-// const std::array<Quad, 2> shipCannons{{
-//     { { -0.405f, +0.264f }, { -0.304f, +0.263f }, { -0.405f, -0.196f }, { -0.304f, +0.196f } },
-//     { { +0.304f, +0.264f }, { +0.405f, +0.263f }, { +0.304f, -0.196f }, { +0.405f, +0.196f } },
-// }};
-
-// GL_TRIANGLE_STRIP FORMAT
-// constexpr Mesh3D shipNose{
-//     { 
-//         { +0.000f, +0.660f, 0.0f},
-//         { -0.231f, +0.048f, 0.0f },
-//         { +0.231f, +0.048f, 0.0f },
-//     }
-// };
-
-// constexpr Mesh3D shipBodyRight{
-//     { 
-//         { -0.231f, +0.048f, 0.0f },
-//         { +0.231f, +0.048f, 0.0f },
-//         { -0.526f, -0.205f, 0.0f },
-//         { +0.526f, -0.205f, 0.0f },
-//         { +0.190f, -0.455f, 0.0f },
-//         { +0.581f, -0.744f, 0.0f },
-//     }
-// };
-
-// constexpr Mesh3D shipBodyLeft{
-//     { 
-//         { +0.000f, +0.660f, 0.0f},
-//         { -0.231f, +0.048f, 0.0f },
-//         { -0.526f, -0.205f, 0.0f },
-//         { -0.581f, -0.744f, 0.0f },
-//         { -0.190f, -0.455f, 0.0f },
-//         { +0.190f, -0.455f, 0.0f },
-//         { +0.581f, -0.744f, 0.0f },
-//         { +0.526f, -0.205f, 0.0f },
-//         { +0.231f, +0.048f, 0.0f },
-//     }
-// };
-
-
-
 
 int main(void) {
 
     Shape2DCollection ship( new std::vector<std::unique_ptr<Shape2D>>{});
     // Ship Base 
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f }
+        { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f }, Color::yellow
     }});
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f }
+        { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f }, Color::yellow
     }});
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f }
+        { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f }, Color::yellow
     }});
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f }
+        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f }, Color::yellow
     }});
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f }
+        { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f }, Color::yellow
     }});
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f }
+        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f }, Color::yellow
     }});
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f }
+        { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f }, Color::yellow
     }});
     // Ship Window
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.000f, +0.530f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }
+        { +0.000f, +0.530f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }, Color::yellow
     }});
     ship.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.000f, -0.290f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }
+        { +0.000f, -0.290f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }, Color::yellow
     }});
     // Ship Cannons
     ship.get()->push_back(std::unique_ptr<Quad>{ new Quad{
-        { -0.405f, +0.264f }, { -0.304f, +0.263f }, { -0.405f, -0.196f }, { -0.304f, +0.196f }
+        { -0.405f, +0.264f }, { -0.304f, +0.263f },
+        { -0.405f, -0.196f }, { -0.304f, -0.196f },
+        Color::blue
     }});
     ship.get()->push_back(std::unique_ptr<Quad>{ new Quad{
-        { +0.304f, +0.264f }, { +0.405f, +0.263f }, { +0.304f, -0.196f }, { +0.405f, +0.196f }
+        { +0.304f, +0.264f }, { +0.405f, +0.263f },
+        { +0.304f, -0.196f }, { +0.405f, -0.196f },
+        Color::blue
     }});
     // Ship Thruster
     ship.get()->push_back(std::unique_ptr<Quad>{ new Quad{
-        { -0.190f, -0.455f }, { +0.213f, -0.455f }, { -0.150f, -0.728f }, { +0.150f, -0.728f }
+        { -0.190f, -0.455f }, { +0.213f, -0.455f },
+        { -0.150f, -0.728f }, { +0.150f, -0.728f },
+        Color::grey
     }});
     // Ship Circles
     ship.get()->push_back(std::unique_ptr<Circle>{ new Circle{
@@ -341,7 +264,7 @@ int main(void) {
     float angle = 0.0f;
 
     // Stores the scale of our pyramid
-    float scale = 1.0f;
+    float scale = 0.3f;
 
     // Sets the callback function for when our windows system detects a mouse button input
     windowSystem.SetMouseButtonCallback(ProcessMouse);
@@ -355,6 +278,25 @@ int main(void) {
     // Duration of the last frame in seconds.
     float deltaTime = 0.0f;
 
+    std::vector<Object2D> objects {
+        // Ship
+        Object2D {
+            Transform2D{},
+            CircleCollider2D { 0.1f },
+            ship,
+        },
+        // Other Ship
+        Object2D {
+            Transform2D{ { 0.6f, 0.6f }, 0, { 0.2f, 0.2f } },
+            CircleCollider2D { 0.1f },
+            ship,
+        }
+    };
+
+    using object_iter = typename decltype(objects)::iterator;
+    std::priority_queue<object_iter, std::vector<object_iter>, std::greater<object_iter>>
+        markedForDeletion;
+
     // While our program isn't closed:
     while (!windowSystem.ShouldClose()) {
 
@@ -367,36 +309,33 @@ int main(void) {
         // Clears our screen with a certain color
         renderer.Clear(Color::black);
 
-        // Calculates the sin and cos of our angle
-        float cosValue = cosf(angle), sinValue = sinf(angle);
+        objects[0].transform.position = { tX, tY };
+        objects[0].transform.rotation = angle;
+        objects[0].transform.scale = { scale, scale };
 
-        // Calculates our transformation matrixes
-        Matrix4 scale_mat =     {
-                                    { scale,        +0.00f,     +0.00f,     +0.00f }, 
-                                    { +0.00f,       scale,      +0.00f,     +0.00f }, 
-                                    { +0.00f,       +0.00f,     scale,      +0.00f }, 
-                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
-                                };
+        for (object_iter i = objects.begin(); i < objects.end(); i++)
+        {
+            for (object_iter j = objects.begin(); j < objects.end(); j++)
+            {
+                if (i != j && i->CheckCollision(*j))
+                {
+                    markedForDeletion.push(i); 
+                    markedForDeletion.push(j); 
+                }
+            }
+        }
 
-        Matrix4 rotation_mat =    {
-                                    { +cosValue, -sinValue,   +0.00f,     +0.00f }, 
-                                    { +sinValue, +cosValue,   +0.00f,     +0.00f }, 
-                                    { +0.00f,       +0.00f,   +1.00f,     +0.00f }, 
-                                    { +0.00f,       +0.00f,   +0.00f,     +1.00f }
-                                };
+        while (!markedForDeletion.empty())
+        {
+            objects.erase(markedForDeletion.top());
+            markedForDeletion.pop();
+        }
 
-        Matrix4 pos_mat =       {
-                                    { 1.00f,        +0.00f,     +0.00f,     +tX }, 
-                                    { +0.00f,       1.00f,      +0.00f,     +tY }, 
-                                    { +0.00f,       +0.00f,     1.00f,      +0.00F }, 
-                                    { +0.00f,       +0.00f,     +0.00f,     +1.00f }
-                                };
-
-        // Calculates the resulting transformation matrix
-        Matrix4 transform = pos_mat * rotation_mat * scale_mat;
-
-        // Draws our ship
-        renderer.DrawShape2DCollection(ship, Color::white, transform);
+        for (Object2D& object: objects)
+        {
+            // Draws our ship
+            renderer.DrawShape2DCollection(object.geometry, Color::white, object.transform.GetTransformationMatrix());
+        }
 
         // Swaps the old buffer for the new one
         windowSystem.SwapBuffers();

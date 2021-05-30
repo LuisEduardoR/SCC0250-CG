@@ -9,8 +9,8 @@
 
 bool Object2D::CheckCollision(const Object2D& other) const
 {
-    int xDistance = transform.position.x - other.transform.position.y;
-    int yDistance = transform.position.y - other.transform.position.y;
+    float xDistance = transform.position.x - other.transform.position.y;
+    float yDistance = transform.position.y - other.transform.position.y;
 
     return collider.radius * collider.radius + other.collider.radius * other.collider.radius
         >= xDistance * xDistance + yDistance * yDistance;

@@ -7,6 +7,9 @@
 
 # include "Transform.hpp"
 
+Transform2D::Transform2D(Vector2 position, float rotation, Vector2 scale)
+    : position(position), rotation(rotation), scale(scale) {}
+
 Matrix4 Transform2D::GetTransformationMatrix() {
 
     Matrix4 scale_mat =     {
