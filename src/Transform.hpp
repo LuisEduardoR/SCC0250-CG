@@ -11,7 +11,7 @@
 # include <cmath>
 # include <list>
 
-# include "adven/Component.hpp"
+# include "Component.hpp"
 # include "Vector.hpp"
 union Matrix4x4;
 

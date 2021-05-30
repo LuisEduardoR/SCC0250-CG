@@ -13,10 +13,10 @@
 # include "Geometry.hpp"
 # include "ShapeRenderer.hpp"
 # include "Transform.hpp"
-# include "adven/Moveable.hpp"
+# include "Moveable.hpp"
 # include "Vector.hpp"
 # include "Matrix4x4.hpp"
-# include "adven/CircleCollider.hpp"
+# include "CircleCollider.hpp"
 # include "Player.hpp"
 # include "PoissonDiscSampling.hpp"
 

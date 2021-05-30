@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "adven/Collider.hpp"
-//#include "adven/RectCollider.hpp"
-#include "adven/CircleCollider.hpp"
-#include "adven/Moveable.hpp"
+#include "Collider.hpp"
+//#include "RectCollider.hpp"
+#include "CircleCollider.hpp"
+#include "Moveable.hpp"
 #include "Transform.hpp"
 #include <algorithm>
 #include <iostream>

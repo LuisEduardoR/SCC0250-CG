@@ -7,7 +7,7 @@
 
 # include "ShapeRenderer.hpp"
 
-# include "adven/GameObject.hpp"
+# include "GameObject.hpp"
 # include "Transform.hpp"
 # include <iostream>
 

@@ -28,20 +28,11 @@
 # include <thread>
 # include <set>
 
-# include "Collider2D.hpp"
-# include "Transform.hpp"
-# include "Vector.hpp"
 # include "WindowSystem.hpp"
 # include "Renderer.hpp"
-# include "Shader.hpp"
-# include "Color.hpp"
-# include "Geometry.hpp"
-# include "Object2D.hpp"
-# include "Matrix4x4.hpp"
 # include "TestScene.hpp"
-# include "adven/Collider.hpp"
 # include "Time.hpp"
-# include "adven/Scene.hpp"
+# include "Collider.hpp"
 
 using namespace Adven;
 

@@ -5,9 +5,12 @@
 //  SCC0250 - Computação Gráfica (2021)
 //  Prof. Ricardo M. Marcacini
 
+# ifndef SHAPERENDERER_HPP
+# define SHAPERENDERER_HPP
+
 #include <memory>
 
-#include "adven/Component.hpp"
+#include "Component.hpp"
 #include "Geometry.hpp"
 #include "Renderer.hpp"
 
@@ -21,3 +24,5 @@ public:
 public:
     void VDrawUpdate() override;
 };
+
+# endif

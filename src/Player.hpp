@@ -8,11 +8,11 @@
 # ifndef PLAYER_HPP
 # define PLAYER_HPP
 
-# include "adven/Component.hpp"
-# include "adven/GameObject.hpp"
+# include "Component.hpp"
+# include "GameObject.hpp"
 # include "Vector.hpp"
 # include "Transform.hpp"
-# include "adven/Moveable.hpp"
+# include "Moveable.hpp"
 # include "Geometry.hpp"
 
 class Player : public Adven::Component

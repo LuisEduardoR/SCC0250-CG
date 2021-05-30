@@ -11,10 +11,10 @@
 # include "Matrix4x4.hpp"
 # include <iostream>
 # include "Input.hpp"
-# include "adven/Scene.hpp"
+# include "Scene.hpp"
 # include "Geometry.hpp"
 # include "TestScene.hpp"
-# include "adven/CircleCollider.hpp"
+# include "CircleCollider.hpp"
 # include "ShapeRenderer.hpp"
 
 using namespace Adven;

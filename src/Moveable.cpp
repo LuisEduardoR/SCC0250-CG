@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "adven/Moveable.hpp"
+#include "Moveable.hpp"
 #include "Transform.hpp"
 #include "Time.hpp"
 #include "Matrix4x4.hpp"

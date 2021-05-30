@@ -8,7 +8,7 @@
 #ifndef TEST_SCENE_HPP
 #define TEST_SCENE_HPP
 
-#include "adven/Scene.hpp"
+#include "Scene.hpp"
 #include "Renderer.hpp"
 
 class TestScene : public Adven::Scene

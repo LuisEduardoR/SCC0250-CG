@@ -10,7 +10,7 @@
 
 #include "Component.hpp"
 #include "GameObject.hpp"
-#include "../Vector.hpp"
+#include "Vector.hpp"
 
 namespace Adven
 {
