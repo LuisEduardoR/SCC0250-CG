@@ -41,3 +41,13 @@ Matrix4 Matrix4::operator*(const Matrix4& m) {
             };
 
 }
+
+[[nodiscard]] auto operator*(const Matrix4& a, Vector4 b) -> Vector4
+{
+    return Vector4{
+        a.i.x * b.x + a.i.y * b.y + a.i.z * b.z + a.i.w * b.w,
+        a.j.x * b.x + a.j.y * b.y + a.j.z * b.z + a.j.w * b.w,
+        a.k.x * b.x + a.k.y * b.y + a.k.z * b.z + a.k.w * b.w,
+        a.l.x * b.x + a.l.y * b.y + a.l.z * b.z + a.l.w * b.w,
+    };
+}

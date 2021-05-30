@@ -2,6 +2,8 @@
 
 # include <cmath>
 
+Vector2::Vector2(const Vector4& vec) : x(vec.x), y(vec.y) {}
+
 auto Vector2::operator+=(Vector2 a) -> Vector2&
 {
     x += a.x;
@@ -141,6 +143,16 @@ auto Vector3::operator-() const -> Vector3
     return {-x, -y, -z};
 }
 
+auto Vector3::Dot(Vector3 a) const -> float
+{
+    return x * a.x + y * a.y + z + a.z;
+}
+
+auto Vector3::Cross(Vector3 a) const -> Vector3
+{
+    return { y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x }; 
+}
+
 auto Vector3::SqrMagnitude() const -> float
 {
     return x * x + y * y + z * z; 
@@ -208,4 +220,119 @@ auto operator==(Vector3 a, Vector3 b) -> bool
 auto operator!=(Vector3 a, Vector3 b) -> bool
 {
     return a.x != b.x || a.y != b.y || a.z != b.z;
+}
+
+auto Vector4::operator+=(Vector4 a) -> Vector4&
+{
+    x += a.x;
+    y += a.y;
+	z += a.z;
+    w += a.w;
+    return *this;
+}
+
+auto Vector4::operator-=(Vector4 a) -> Vector4&
+{
+    x -= a.x;
+    y -= a.y;
+	z -= a.z;
+    w -= a.w;
+    return *this;
+}
+
+auto Vector4::operator*=(float a) -> Vector4&
+{
+    x *= a;
+    y *= a;
+	z *= a;
+    w *= a;
+    return *this;
+}
+
+auto Vector4::operator/=(float a) -> Vector4&
+{
+    x /= a;
+    y /= a;
+	z /= a;
+    w /= a;
+    return *this;
+}
+
+Vector4::Vector4(Vector3 vec) : x(vec.x), y(vec.y), z(vec.z) {}
+Vector4::Vector4(Vector2 vec) : x(vec.x), y(vec.y) {}
+Vector4::Vector4(Vector3 vec, float w) : x(vec.x), y(vec.y), z(vec.z), w(w) {}
+Vector4::Vector4(Vector2 vec, float z, float w) : x(vec.x), y(vec.y), z(z), w(w) {}
+
+auto Vector4::operator-() const -> Vector4
+{
+    return {-x, -y, -z, -w};
+}
+
+auto Vector4::SqrMagnitude() const -> float
+{
+    return x * x + y * y + z * z + w * w; 
+}
+
+auto Vector4::Magnitude() const -> float
+{
+    return std::sqrt(x * x + y * y + z * z + w * w); 
+}
+
+auto Vector4::Normalize() -> Vector4&
+{
+    const float mag = Magnitude();
+
+    if (mag != 0.0f)
+    {
+        *this /= mag;        
+    }
+
+    return *this;
+}
+
+auto Vector4::Normalized() const -> Vector4
+{
+    const float mag = Magnitude();
+
+    if (mag != 0.0f)
+    {
+        return *this / mag;        
+    }
+
+    return {};
+}
+
+auto operator+(Vector4 a, Vector4 b) -> Vector4
+{
+    return {a.x + b.x, a.y + b.y, a.z + b.z, a.w - b.w };
+}
+
+auto operator-(Vector4 a, Vector4 b) -> Vector4
+{
+    return {a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w };
+}
+
+auto operator*(Vector4 a, float b) -> Vector4
+{
+    return {a.x * b, a.y * b, a.z * b, a.w * b};
+}
+
+auto operator*(float a, Vector4 b) -> Vector4
+{
+    return b * a;
+}
+
+auto operator/(Vector4 a, float b) -> Vector4
+{
+    return {a.x / b, a.y / b, a.z / b, a.w / b };
+}
+
+auto operator==(Vector4 a, Vector4 b) -> bool
+{
+    return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
+}
+
+auto operator!=(Vector4 a, Vector4 b) -> bool
+{
+    return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
 }

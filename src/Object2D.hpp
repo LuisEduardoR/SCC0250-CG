@@ -32,6 +32,8 @@ public:
     // Collection of shapes that costitute this 2D object's geometry
     Shape2DCollection geometry;
 
+    Vector2 velocity;
+
     // Constructors
     Object2D(Transform2D transform, CircleCollider2D collider, Shape2DCollection& geometry) {
         this->transform = transform;

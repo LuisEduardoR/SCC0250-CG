@@ -19,9 +19,12 @@ public:
                             { 0.0f, 0.0f, 0.0f, 1.0f }
                         ) {}
 
+    [[nodiscard]] auto MultiplyPoint(const Vector2& point) -> Vector2;
+
     // Operators
     Matrix4 operator*(const Matrix4& m);
-
 };
+
+[[nodiscard]] auto operator*(const Matrix4& a, Vector4 b) -> Vector4;
 
 # endif

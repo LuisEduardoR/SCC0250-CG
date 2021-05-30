@@ -26,16 +26,18 @@
 # include <cmath>
 # include <chrono>
 # include <thread>
-# include <queue>
+# include <set>
 
 # include "Collider2D.hpp"
 # include "Transform.hpp"
+# include "Vector.hpp"
 # include "WindowSystem.hpp"
 # include "Renderer.hpp"
 # include "Shader.hpp"
 # include "Color.hpp"
 # include "Geometry.hpp"
 # include "Object2D.hpp"
+# include "Matrix4x4.hpp"
 
 
 
@@ -79,6 +81,7 @@ static bool leftPressed = false;
 static bool rightPressed = false;
 static bool upPressed = false;
 static bool downPressed = false;
+static bool spacePressed = false;
 
 // Process key input
 void ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int mods) {
@@ -125,6 +128,13 @@ void ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int m
             downPressed = true;
         else if (action == GLFW_RELEASE)
             downPressed = false;
+        break;
+
+    case GLFW_KEY_SPACE:
+        if (action == GLFW_PRESS)
+            spacePressed = true;
+        else
+            spacePressed = false;
         break;
 
     default:
@@ -189,6 +199,11 @@ int main(void) {
     }});
     ship.get()->push_back(std::unique_ptr<Circle>{ new Circle{
         { +0.357f, -0.354f }, 0.125f, 8, Color::blue
+    }});
+
+    Shape2DCollection bullet( new std::vector<std::unique_ptr<Shape2D>>{});
+    bullet->push_back(std::unique_ptr<Line>{ new Line {
+        { 0.0f, 0.0f }, { 0.0f, 1.0f }
     }});
 
     // Shape2DCollection boss( new std::vector<std::unique_ptr<Shape2D>>{});
@@ -294,8 +309,8 @@ int main(void) {
     };
 
     using object_iter = typename decltype(objects)::iterator;
-    std::priority_queue<object_iter, std::vector<object_iter>, std::greater<object_iter>>
-        markedForDeletion;
+
+    std::set<object_iter, std::greater<object_iter>> markedForDeletion;
 
     // While our program isn't closed:
     while (!windowSystem.ShouldClose()) {
@@ -319,20 +334,26 @@ int main(void) {
             {
                 if (i != j && i->CheckCollision(*j))
                 {
-                    markedForDeletion.push(i); 
-                    markedForDeletion.push(j); 
+                    markedForDeletion.insert(i); 
+                    markedForDeletion.insert(j); 
                 }
             }
         }
 
-        while (!markedForDeletion.empty())
+        for (const object_iter& deleteIter : markedForDeletion)
         {
-            objects.erase(markedForDeletion.top());
-            markedForDeletion.pop();
+            objects.erase(deleteIter);
         }
+        markedForDeletion.clear();
 
         for (Object2D& object: objects)
         {
+            object.transform.position += Vector2 { 
+                Matrix4x4::Rotate(object.transform.rotation)
+                * Vector4{ object.velocity, 0.0f, 1.0f }
+                * deltaTime
+            };
+
             // Draws our ship
             renderer.DrawShape2DCollection(object.geometry,
                 object.transform.GetTransformationMatrix());
@@ -348,19 +369,43 @@ int main(void) {
             scale -= 0.50f * deltaTime;
 
         // Updates the angle
-        angle += 2.00f * deltaTime;
+        /* angle += 2.00f * deltaTime; */
 
         // Updates the X position (based on input)
         if(rightPressed)
-            tX += 1.00f * deltaTime;
+            angle += 2.00f * deltaTime;
+            /* tX += 1.00f * deltaTime; */
         else if(leftPressed)
-            tX -= 1.00f * deltaTime;
+            angle -= 2.00f * deltaTime;
+            /* tX -= 1.00f * deltaTime; */
 
         // Updates the Y position (based on input)
         if(upPressed)
             tY += 1.00f * deltaTime;
         else if(downPressed)
             tY -= 1.00f * deltaTime;
+
+        if (spacePressed)
+        {
+            Vector4 spawnPoint = 
+                objects[0].transform.GetTransformationMatrix()
+                    * Vector4 { 0.0f, 0.66f + 0.4f, 0.0f, 1.0f };
+
+            Object2D bulletObj{
+                Transform2D{
+                    Vector2{ spawnPoint.x, spawnPoint.y },
+                    objects[0].transform.rotation,
+                    objects[0].transform.scale,
+                },
+                CircleCollider2D{ 0.0f },
+                bullet
+            };
+            
+            bulletObj.velocity = { 0.0f, 0.5f };
+
+            objects.push_back(std::move(bulletObj));
+        }
+
 
         // Gets the end time.
         uint64_t endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

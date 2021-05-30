@@ -23,6 +23,8 @@ set(COMMON_SOURCES
     "src/Vector.cpp"
     "src/Matrix.hpp"
     "src/Matrix.cpp"
+    "src/Matrix4x4.hpp"
+    "src/Matrix4x4.cpp"
     "src/Shader.hpp"
     "src/Shader.cpp"
     "src/WindowSystem.hpp"
