@@ -9,6 +9,7 @@
 
 # include <memory>
 # include <vector>
+# include <random>
 
 # include "../Components/Player.hpp"
 # include "../Components/Moveable.hpp"
@@ -83,6 +84,147 @@ auto ShipModel() -> Shape2DCollection
     }});
 
     return shipModel;
+}
+
+auto Ship2Model() -> Shape2DCollection
+{
+    Shape2DCollection shipModel( new std::vector<std::unique_ptr<Shape2D>>{});
+
+    // Ship Base
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.000f, +0.694f }, { -0.083f, +0.458f }, { +0.083f, +0.458f }, Color(170, 166, 155)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.083f, +0.458f }, { +0.083f, +0.458f },
+        { -0.073f, -0.099f }, { +0.073f, -0.099f },
+        Color(170, 166, 155)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.073f, -0.099f }, { +0.073f, -0.099f },
+        { -0.144f, -0.417f }, { +0.144f, -0.417f },
+        Color(170, 166, 155)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.144f, -0.417f }, { +0.144f, -0.417f },
+        { -0.084f, -0.489f }, { +0.084f, -0.489f },
+        Color(170, 166, 155)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.084f, -0.489f }, { +0.084f, -0.489f },
+        { -0.066f, -0.604f }, { +0.066f, -0.604f },
+        Color(170, 166, 155)
+    }});
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.066f, -0.604f }, { +0.066f, -0.604f }, { +0.000f, -0.681f }, Color(170, 166, 155)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.014f, -0.640f }, { +0.014f, -0.640f },
+        { -0.014f, -0.713f }, { +0.014f, -0.713f },
+        Color(170, 166, 155)
+    }});
+    // Ship Wings
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.083f, +0.458f }, { -0.347f, -0.246f }, { -0.073f, -0.099f }, Color(87, 46, 47)
+    }});
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.305f, -0.386f }, { -0.347f, -0.246f }, { -0.073f, -0.099f }, Color(87, 46, 47)
+    }});
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { -0.305f, -0.386f }, { -0.144f, -0.417f }, { -0.073f, -0.099f }, Color(87, 46, 47)
+    }});
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.083f, +0.458f }, { +0.347f, -0.246f }, { +0.073f, -0.099f }, Color(87, 46, 47)
+    }});
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.305f, -0.386f }, { +0.347f, -0.246f }, { +0.073f, -0.099f }, Color(87, 46, 47)
+    }});
+    shipModel->push_back(std::unique_ptr<Triangle>{ new Triangle{
+        { +0.305f, -0.386f }, { +0.144f, -0.417f }, { +0.073f, -0.099f }, Color(87, 46, 47)
+    }});
+    // Ship Window
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.040f, -0.297f }, { +0.040f, -0.297f },
+        { -0.064f, -0.346f }, { +0.064f, -0.346f },
+        Color(46, 60, 72)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.064f, -0.346f }, { +0.064f, -0.346f },
+        { -0.064f, -0.443f }, { +0.064f, -0.443f },
+        Color(46, 60, 72)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.064f, -0.443f }, { +0.064f, -0.443f },
+        { -0.040f, -0.499f }, { +0.040f, -0.499f },
+        Color(46, 60, 72)
+    }});
+    // Thruster
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { -0.167f, -0.414f }, { -0.144f, -0.417f },
+        { -0.148f, -0.488f }, { -0.084f, -0.488f },
+        Color(46, 60, 72)
+    }});
+    shipModel->push_back(std::unique_ptr<Quad>{ new Quad{
+        { +0.167f, -0.414f }, { +0.144f, -0.417f },
+        { +0.148f, -0.488f }, { +0.084f, -0.488f },
+        Color(46, 60, 72)
+    }});
+
+    return shipModel;
+}
+
+auto AsteroidModel() -> Shape2DCollection
+{
+    Shape2DCollection asteroidModel( new std::vector<std::unique_ptr<Shape2D>>{});
+
+    //Base
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.179f, -0.241f }, 1.027f / 2.0f, 16, Color(145, 145, 145)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.179f, +0.201f }, 1.060f / 2.0f, 16, Color(145, 145, 145)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.243f, -0.259f }, 0.876f / 2.0f, 16, Color(145, 145, 145)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.599f, -0.025f }, 0.404f / 2.0f, 16, Color(145, 145, 145)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.424f, +0.034f }, 0.600f / 2.0f, 16, Color(145, 145, 145)
+    }});
+    // Craters
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.053f, +0.570f }, 0.108f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.377f, +0.356f }, 0.201f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.029f, +0.262f }, 0.404f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.394f, +0.179f }, 0.166f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.483f, +0.002f }, 0.201f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.574f, -0.004f }, 0.104f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.202f, -0.163f }, 0.297f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { +0.271f, -0.414f }, 0.474f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.483f, -0.344f }, 0.196f / 2.0f, 16, Color(113, 113, 113)
+    }});
+    asteroidModel->push_back(std::unique_ptr<Circle>{ new Circle{
+        { -0.210f, -0.498f }, 0.283f / 2.0f, 16, Color(113, 113, 113)
+    }});
+
+    return asteroidModel;
 }
 
 auto BossModel() -> Shape2DCollection
@@ -296,7 +438,8 @@ TestScene::TestScene()
     Shape2DCollection shipModel = ShipModel();
     Shape2DCollection bossModel = BossModel();
     Shape2DCollection skyModel = SkyModel();
-
+    Shape2DCollection ship2Model = Ship2Model();
+    Shape2DCollection asteroidModel = AsteroidModel();
 
     GameObject& ship = AddGameObject({});
 
@@ -319,6 +462,34 @@ TestScene::TestScene()
     boss.AddComponent<Moveable>();
     boss.AddComponent<CircleCollider>(0.66f * 0.3f, true);
 
+    GameObject& ship2 = AddGameObject({});
+
+    ship2.AddComponent<Transform>(
+        Vector3{ -0.7f, -0.3f, 0.0f },
+        Vector3{},
+        Vector3{ 0.3f, 0.3f, 1.0f });
+    ship2.AddComponent<ShapeRenderer>(ship2Model);
+
+    std::vector<Vector2> asteroidPoints{
+        amn::PoissonDiscSampler::GeneratePoints(0.2f, { 2.0f, 2.0f }, 5)
+    };
+	std::random_device rd;
+	std::mt19937 rng{ rd() };
+    for (const Vector2& point: asteroidPoints)
+    {
+        float angle{ 2.0f * CONST_PI
+                     * std::uniform_real_distribution<float>{ 0.0f, 1.0f }(rng) };
+        float scale{ std::uniform_real_distribution<float>{ 0.02f, 0.07f }(rng) };
+
+        GameObject& asteroid = AddGameObject({});
+        asteroid.AddComponent<Transform>(
+            Vector3{ point } - Vector3{ 1.0f, 1.0f, 0.0f },
+            Vector3{ 0.0f, 0.0f, angle },
+            Vector3{ scale, scale, 1.0f });
+        asteroid.AddComponent<ShapeRenderer>(asteroidModel);
+    }
+
+    // Sky goes last because of render order
     GameObject& sky = AddGameObject({});
     sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
     sky.AddComponent<ShapeRenderer>(skyModel);
