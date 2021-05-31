@@ -11,6 +11,8 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 #find_package(glfw3 3 REQUIRED)
 
 set(COMMON_SOURCES
+    src/Components/Camera.hpp
+    src/Components/Camera.cpp
     src/Components/ShapeRenderer.cpp
     src/Components/GameObject.hpp
     src/Components/GameObject.cpp
@@ -29,12 +31,6 @@ set(COMMON_SOURCES
     src/Scene/GameScene.cpp
     src/Scene/GameScene.hpp
     src/Scene/Scene.cpp
-    src/adven/GameInit.hpp
-    src/adven/Camera.hpp
-    src/adven/Exceptions.hpp
-    src/adven/RectCollider.hpp
-    src/adven/Input.hpp
-    src/adven/Math.hpp
     src/Events/Listener.hpp
     src/Events/Event.hpp
     src/Input/Input.cpp

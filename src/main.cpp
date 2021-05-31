@@ -20,6 +20,8 @@
 /* para compilar no windows: mingw32-make windows */
 
 
+# include "Components/Camera.hpp"
+# include "Math/Matrix4x4.hpp"
 # include "Rendering/Renderer.hpp"
 # include "WindowSystem/WindowSystem.hpp"
 
@@ -60,6 +62,11 @@ int main(void) {
 
         // Checks for collision
         Adven::Collider::Update();
+
+        // Check every frame for camera, because it might change.
+        Camera* camera = Camera::MainCamera();
+        // Set view matrix to camera's or identity in case camera has been deleted.
+        Renderer::SetViewMatrix(camera ? camera->ViewMatrix() : Matrix4x4::Identity);            
 
         // Updates the scene
         Scene::currentScene->VDrawUpdate();

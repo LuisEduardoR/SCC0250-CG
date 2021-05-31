@@ -44,6 +44,9 @@ public:
     // Sets the program our renderer will use based on some shader code
     static void SetProgram(std::string vertex_code, std::string fragment_code);
 
+    // Sets the view matrix for the current program.
+    static void SetViewMatrix(const Matrix4x4& viewMatrix = Matrix4x4::Identity);
+
     // ========================================================
     //
     // 2D

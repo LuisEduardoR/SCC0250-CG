@@ -59,6 +59,12 @@ void Renderer::SetProgram(std::string vertex_code, std::string fragment_code) {
 
 }
 
+void Renderer::SetViewMatrix(const Matrix4x4& viewMatrix)
+{
+    GLint loc = glGetUniformLocation(Renderer::currentProgram, "view");
+    glUniformMatrix4fv(loc, 1, GL_FALSE, viewMatrix.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+}
+
 // Creates an array buffer (if one was already created re-uses it)
 void Renderer::CreateArrayBuffer() {
     

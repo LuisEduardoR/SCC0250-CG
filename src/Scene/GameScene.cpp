@@ -11,6 +11,7 @@
 # include <vector>
 # include <random>
 
+# include "../Components/Camera.hpp"
 # include "../Components/Player.hpp"
 # include "../Components/Moveable.hpp"
 # include "../Components/Transform.hpp"
@@ -419,9 +420,10 @@ TestScene::TestScene()
     std::string vertexCode =
     "attribute vec3 position;\n"
     "uniform mat4 transform;\n"
+    "uniform mat4 view;\n"
     "void main()\n"
     "{\n"
-    "    gl_Position = transform * vec4(position, 1.0);\n"
+    "    gl_Position = view * transform * vec4(position, 1.0);\n"
     "}\n";
 
     // Fragment Shader's GLSL code
@@ -451,6 +453,7 @@ TestScene::TestScene()
     ship.AddComponent<Moveable>();
     ship.AddComponent<CircleCollider>(0.66f * 0.3f, true);
     ship.AddComponent<Player>();
+    ship.AddComponent<Camera>(true);
 
     GameObject& boss = AddGameObject({});
 

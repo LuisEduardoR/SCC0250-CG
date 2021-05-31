@@ -62,7 +62,7 @@ Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRota
 
 [[nodiscard]] auto Transform::WorldPosition() const -> Vector3
 {
-    return Vector3{ WorldMatrix() * Vector4{} };
+    return Vector3{ WorldMatrix() * Vector4{ 0.0f, 0.0f, 0.0f, 1.0f } };
 }
 
 [[nodiscard]] auto Transform::WorldRotation() const -> Vector3

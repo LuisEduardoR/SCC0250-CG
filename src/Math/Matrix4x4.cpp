@@ -20,7 +20,7 @@ auto Matrix4x4::Camera(Vector3 cameraPos, Vector3 rotation, Vector3 viewFront, V
 	Vector3 cameraZ{ dir.x, dir.y, dir.z };
 	Vector4 viewUp4 = (Matrix4x4::Rotate(rotation) * Vector4{ viewUp, 1.0f }).Normalize();
 	Vector3 cameraX = Vector3{ viewUp4.x, viewUp4.y, viewUp4.z }.Cross(cameraZ).Normalized(); // u
-	Vector3 cameraY = cameraZ.Cross(cameraX); // v
+	Vector3 cameraY = cameraZ.Cross(cameraX).Normalize(); // v
 
 	return Matrix4x4{
 		{ cameraX.x, cameraY.x, cameraZ.x, 0 },
