@@ -19,18 +19,29 @@
 # include "../Physics/CircleCollider.hpp"
 
 # include <iostream>
+# include <chrono>
 
 using namespace Adven;
 
 void Player::Start()
 {
+
+    // Gets the player components
     transform = gameObject->GetComponent<Transform>();
     moveable = gameObject->GetComponent<Moveable>();
 
+    // Creates a model for our bullet
     bulletModel = Shape2DCollection{ new std::vector<std::unique_ptr<Shape2D>>{} };
     bulletModel->push_back(std::unique_ptr<Line>{ new Line {
         { 0.0f, 0.0f }, { 0.0f, 1.0f }
     }});
+
+    // Initializes lastShotTime to the start of our clock
+    // (technically if you played at Thursday, 1 January 1970 00:00:00 GMT 
+    // on a UNIX system there's a bug were you would need to wait for the 
+    // delay at the start of the game)
+    lastShotTime = 0;
+
 }
 
 void Player::VDrawUpdate()
@@ -73,13 +84,19 @@ void Player::VDrawUpdate()
 
     Scene* currentScene = Scene::currentScene;
 
-    if(Input::spacePressed)
+    // Calculates how much time has passed since last shot
+    uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    float timeSinceLastShot = (currentTime - lastShotTime) / 1000.0f;
+
+    // Shots if the button is pressed and not currently in the delay time
+    if(Input::spacePressed && timeSinceLastShot > shootingDelay)
     {
+
         GameObject& bullet = currentScene->AddGameObject({});
 
         Vector4 spawnPoint = 
             transform->WorldMatrix()
-                * Vector4 { 0.0f, 0.66f + 0.4f, 0.0f, 1.0f };
+                * Vector4 { 0.0f, 0.66f + 0.2f, 0.0f, 1.0f };
 
         bullet.AddComponent<Transform>(
             Vector3{ spawnPoint },
@@ -91,6 +108,10 @@ void Player::VDrawUpdate()
         bullet.AddComponent<CircleCollider>( 0.02f, true );
 
         bulletRb.speed = { 0.0f, 0.5f, 0.0f };
+
+        // Updates last shot time to calculate the new delay
+        lastShotTime = currentTime;
+
     }
 }
 
