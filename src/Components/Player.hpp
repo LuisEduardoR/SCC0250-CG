@@ -32,6 +32,13 @@ private:
     Transform* transform;
     Adven::Moveable* moveable;
     Shape2DCollection bulletModel;
+
+    // Stores the last time the player shot
+    uint64_t lastShotTime;
+
+    // Delay before player being able to shoot again
+    const float shootingDelay = 0.2f;
+
 };
 
 #endif /* end of include guard: PLAYER_HPP */
