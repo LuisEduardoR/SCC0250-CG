@@ -6,7 +6,7 @@
 //  Prof. Ricardo M. Marcacini
 
 /* para linux, instalar os pacotes libglfw3-dev mesa-common-dev libglew-dev */
-/* para compilar no linux: g++ ./src/*.cpp -lglfw -lGL -lGLEW -lm */
+/* para compilar no linux: make linux */
 
 /* para windows, instalar o MSYS2 e as depedências: 
 
@@ -17,22 +17,17 @@
 
     adicionar "C:\msys64\mingw64\bin" ao PATH (se o MSYS2 foi instalado no local padrão)
 */
-/* para compilar no windows: g++ ./src/*.cpp -lglfw3 -lglew32 -lopengl32 -lm */
+/* para compilar no windows: mingw32-make windows */
 
-# include <GL/glew.h>
 
-# include <cstddef>
-# include <iostream>
-# include <cmath>
+# include "Rendering/Renderer.hpp"
+# include "WindowSystem/WindowSystem.hpp"
+
+# include "Time/Time.hpp"
+# include "Scene/GameScene.hpp"
+# include "Physics/Collider.hpp"
+
 # include <chrono>
-# include <thread>
-# include <set>
-
-# include "WindowSystem.hpp"
-# include "Renderer.hpp"
-# include "TestScene.hpp"
-# include "Time.hpp"
-# include "Collider.hpp"
 
 using namespace Adven;
 
@@ -60,13 +55,17 @@ int main(void) {
         // Polls our window system for events
         WindowSystem::PollEvents();
 
+        // Clears the color buffer
         Renderer::Clear(Color(0x1B, 0x18, 0x30));
 
+        // Checks for collision
         Adven::Collider::Update();
+
+        // Updates the scene
         Scene::currentScene->VDrawUpdate();
         Scene::currentScene->VBlankUpdate();
 
-        // Swaps the old buffer for the new one
+        // Swaps the old buffers for the new ones
         WindowSystem::SwapBuffers();
 
         // Gets the end time.
