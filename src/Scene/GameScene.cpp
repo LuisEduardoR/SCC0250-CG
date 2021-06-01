@@ -29,59 +29,64 @@ namespace
 
 auto ShipModel() -> Shape2DCollection
 {
+    Color cannon{ 73, 76, 88 };
+    Color base{ 47, 50, 59 };
+    Color circle{ 64, 92, 157 };
+    Color window{ 101, 109, 138 };
+
     Shape2DCollection shipModel( new std::vector<std::unique_ptr<Shape2D>>{});
     // Ship Cannons
     shipModel.get()->push_back(std::unique_ptr<Quad>{ new Quad{
         { -0.405f, +0.264f }, { -0.304f, +0.263f },
         { -0.405f, -0.196f }, { -0.304f, -0.196f },
-        Color::blue
+        cannon
     }});
     shipModel.get()->push_back(std::unique_ptr<Quad>{ new Quad{
         { +0.304f, +0.264f }, { +0.405f, +0.263f },
         { +0.304f, -0.196f }, { +0.405f, -0.196f },
-        Color::blue
+        cannon
     }});
     // Ship Thruster
     shipModel.get()->push_back(std::unique_ptr<Quad>{ new Quad{
         { -0.190f, -0.455f }, { +0.213f, -0.455f },
         { -0.150f, -0.728f }, { +0.150f, -0.728f },
-        Color::grey
+        cannon
     }});
     // Ship Base 
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f }, Color::yellow
+        { +0.000f, +0.660f }, { -0.231f, +0.048f }, { +0.231f, +0.048f }, base
     }});
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f }, Color::yellow
+        { -0.231f, +0.048f }, { +0.231f, +0.048f }, { -0.526f, -0.205f }, base
     }});
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f }, Color::yellow
+        { +0.231f, +0.048f }, { -0.526f, -0.205f }, { +0.526f, -0.205f }, base
     }});
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f }, Color::yellow
+        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { +0.190f, -0.455f }, base
     }});
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f }, Color::yellow
+        { -0.526f, -0.205f }, { +0.526f, -0.205f }, { +0.190f, -0.455f }, base
     }});
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f }, Color::yellow
+        { -0.526f, -0.205f }, { -0.190f, -0.455f }, { -0.581f, -0.744f }, base
     }});
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f }, Color::yellow
+        { +0.526f, -0.205f }, { +0.190f, -0.455f }, { +0.581f, -0.744f }, base
     }});
     // Ship Window
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.000f, +0.530f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }, Color::blue
+        { +0.000f, +0.530f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }, window
     }});
     shipModel.get()->push_back(std::unique_ptr<Triangle>{ new Triangle{
-        { +0.000f, -0.290f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }, Color::blue
+        { +0.000f, -0.290f }, { -0.194f, -0.074f }, { +0.194f, -0.074f }, window
     }});
     // Ship Circles
     shipModel.get()->push_back(std::unique_ptr<Circle>{ new Circle{
-        { -0.357f, -0.354f }, 0.125f, 8, Color::blue
+        { -0.357f, -0.354f }, 0.125f, 32, circle
     }});
     shipModel.get()->push_back(std::unique_ptr<Circle>{ new Circle{
-        { +0.357f, -0.354f }, 0.125f, 8, Color::blue
+        { +0.357f, -0.354f }, 0.125f, 32, circle
     }});
 
     return shipModel;
