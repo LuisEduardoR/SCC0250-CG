@@ -8,6 +8,8 @@
 #ifndef DM_ADVEN_COMPONENT_HPP
 #define DM_ADVEN_COMPONENT_HPP
 
+#include <memory>
+
 #include "../Interfaces/IUpdatable.hpp"
 
 namespace Adven
@@ -18,7 +20,23 @@ namespace Adven
     {
         friend class GameObject;
     public:
+        Component() = default;
+        // No copy or move constructors on a virtual class.
+        // It can cause unexpected behaviour, such as copying
+        // an object by a base class reference and "losing"
+        // the derived classes.
+        Component(const Component& other) = delete;
+        Component(Component&& other) = delete;
+        auto operator=(const Component& other) = delete;
+        auto operator=(Component&& other) = delete;
+    public:
+        // Virtual destructor. REQUIRED in all virtual (base and derived) classes.
         ~Component() override = default;
+
+    private:
+        /// Clones an component.
+        /// Meant for making prefab gameobjects.
+        [[nodiscard]] virtual auto Clone() const -> std::unique_ptr<Component> = 0;
     protected:
         GameObject* gameObject;
     };

@@ -19,13 +19,13 @@ namespace Adven
         static bool CheckCollision(const CircleCollider& a, const CircleCollider& b);
     private:
         float radius;
-    private:
-        virtual void Start() override;
-        virtual void VDrawUpdate() override;
-        virtual void VBlankUpdate() override;
     public:
         CircleCollider(float radius, bool isTrigger = false);
         virtual ~CircleCollider();
+    public:
+        /// Clones the transform.
+        /// This function does not clone the transform childs nor parent.
+        [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     };
 }
 

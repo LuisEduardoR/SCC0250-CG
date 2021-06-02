@@ -7,6 +7,7 @@
 
 #include "Moveable.hpp"
 #include "Transform.hpp"
+#include "GameObject.hpp"
 #include "../Time/Time.hpp"
 #include "../Math/Matrix4x4.hpp"
 
@@ -14,7 +15,13 @@
 
 using namespace Adven;
 
-void Moveable::Start() {}
+Moveable::Moveable(Vector3 speed) : speed(speed) {}
+
+auto Moveable::Clone() const -> std::unique_ptr<Component>
+{
+    return std::make_unique<Moveable>(speed);
+}
+
 void Moveable::VDrawUpdate()
 {
     auto* transform = gameObject->GetComponent<Transform>();
@@ -31,4 +38,3 @@ void Moveable::VDrawUpdate()
         * Time::DeltaTime
     };
 }
-void Moveable::VBlankUpdate() {}

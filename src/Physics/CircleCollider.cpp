@@ -29,6 +29,8 @@ CircleCollider::~CircleCollider()
 {
     Unregister(*this);
 }
-void CircleCollider::Start() {}
-void CircleCollider::VDrawUpdate() {}
-void CircleCollider::VBlankUpdate() {}
+
+auto CircleCollider::Clone() const -> std::unique_ptr<Component>
+{
+    return std::make_unique<CircleCollider>(radius, isTrigger);  
+}

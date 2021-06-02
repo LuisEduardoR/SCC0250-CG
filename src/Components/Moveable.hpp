@@ -9,23 +9,22 @@
 #define DM_ADVEN_MOVEABLE_HPP
 
 #include "Component.hpp"
-#include "GameObject.hpp"
 
 #include "../Math/Vector.hpp"
-#include "../Math/Matrix4x4.hpp"
 
 namespace Adven
 {
     class Moveable : public Component
     {
-        friend class GameObject;
     public:
+        Moveable() = default;
+        Moveable(Vector3 speed);
         ~Moveable() override = default;
     public:
-        virtual void Start() override;
-        virtual void VDrawUpdate() override;
-        virtual void VBlankUpdate() override;
-        Vector3 speed;
+        [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
+        void VDrawUpdate() override;
+    public:
+        Vector3 speed{};
     };
 }
 

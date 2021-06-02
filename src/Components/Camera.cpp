@@ -9,6 +9,7 @@
 
 #include "../Math/Matrix4x4.hpp"
 #include "Transform.hpp"
+#include "GameObject.hpp"
 
 namespace Adven
 {
@@ -41,6 +42,11 @@ Camera::~Camera()
     {
         mainCamera = nullptr;
     }
+}
+
+auto Camera::Clone() const -> std::unique_ptr<Component>
+{
+    return std::make_unique<Camera>(false);
 }
 
 Matrix4x4 Camera::ViewMatrix() const

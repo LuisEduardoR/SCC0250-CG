@@ -69,6 +69,7 @@ set(EXE_TARGETS
     main)
 
 foreach(TARGET ${EXE_TARGETS})
+    set_property(TARGET ${TARGET} PROPERTY CXX_STANDARD 17)
     set_property(TARGET ${TARGET} PROPERTY CXX_EXTENSIONS OFF)
     target_compile_features(${TARGET} PUBLIC cxx_std_17)
 

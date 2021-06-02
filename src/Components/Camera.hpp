@@ -9,7 +9,6 @@
 #define DM_ADVEN_CAMERA_HPP
 
 #include "Component.hpp"
-#include "GameObject.hpp"
 
 union Matrix4x4;
 
@@ -26,10 +25,11 @@ namespace Adven
         static void MainCamera(Camera* camera);
     public:
         Camera(bool makeMain = false);
-        Camera(const Camera& camera) = default;
-        Camera& operator=(const Camera& camera) = default;
-
-        virtual ~Camera();
+    public:
+        ~Camera() override;
+    public:
+        /// Clone a camera. Cloning a mainCamera does not make the clone main.
+        [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     public: 
         [[nodiscard]] Matrix4x4 ViewMatrix() const;
     };

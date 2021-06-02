@@ -448,6 +448,22 @@ TestScene::TestScene()
     Shape2DCollection ship2Model = Ship2Model();
     Shape2DCollection asteroidModel = AsteroidModel();
 
+    // Make a prefab. Prefabs are just normal gameobjects.
+    // Though they don't need to be attached to a scene.
+    // Use a shared_ptr so many components can keep a reference to the same prefab.
+    auto bulletPrefab = std::make_shared<GameObject>();
+    {
+        Shape2DCollection bulletModel{ new std::vector<std::unique_ptr<Shape2D>>{} };
+        bulletModel->push_back(std::unique_ptr<Line>{ new Line {
+            { 0.0f, 0.0f }, { 0.0f, 1.0f }
+        }});
+
+        bulletPrefab->AddComponent<Transform>();
+        bulletPrefab->AddComponent<ShapeRenderer>(bulletModel);
+        bulletPrefab->AddComponent<Moveable>();
+        bulletPrefab->AddComponent<CircleCollider>( 0.02f, true );
+    }
+
     GameObject& ship = AddGameObject({});
 
     ship.AddComponent<Transform>(
@@ -457,7 +473,7 @@ TestScene::TestScene()
     ship.AddComponent<ShapeRenderer>(shipModel);
     ship.AddComponent<Moveable>();
     ship.AddComponent<CircleCollider>(0.66f * 0.3f, true);
-    ship.AddComponent<Player>();
+    ship.AddComponent<Player>(bulletPrefab);
     ship.AddComponent<Camera>(true);
 
     GameObject& boss = AddGameObject({});

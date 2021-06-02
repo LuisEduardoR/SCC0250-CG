@@ -7,8 +7,10 @@
 
 # include "Player.hpp"
 
-# include "Transform.hpp"
+# include "GameObject.hpp"
+# include "Moveable.hpp"
 # include "ShapeRenderer.hpp"
+# include "Transform.hpp"
 
 # include "../Time/Time.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -17,31 +19,33 @@
 # include "../Scene/Scene.hpp"
 # include "../Scene/GameScene.hpp"
 # include "../Physics/CircleCollider.hpp"
+# include "../Math/Vector.hpp"
+# include "../Rendering/Geometry2D.hpp"
 
 # include <iostream>
 # include <chrono>
+# include <cassert>
 
 using namespace Adven;
 
+Player::Player(std::shared_ptr<GameObject> bulletPrefab) : bulletPrefab(bulletPrefab) {}
+
+auto Player::Clone() const -> std::unique_ptr<Component>
+{
+    return std::make_unique<Player>(bulletPrefab);
+}
+
 void Player::Start()
 {
-
     // Gets the player components
     transform = gameObject->GetComponent<Transform>();
     moveable = gameObject->GetComponent<Moveable>();
-
-    // Creates a model for our bullet
-    bulletModel = Shape2DCollection{ new std::vector<std::unique_ptr<Shape2D>>{} };
-    bulletModel->push_back(std::unique_ptr<Line>{ new Line {
-        { 0.0f, 0.0f }, { 0.0f, 1.0f }
-    }});
 
     // Initializes lastShotTime to the start of our clock
     // (technically if you played at Thursday, 1 January 1970 00:00:00 GMT 
     // on a UNIX system there's a bug were you would need to wait for the 
     // delay at the start of the game)
     lastShotTime = 0;
-
 }
 
 void Player::VDrawUpdate()
@@ -91,23 +95,21 @@ void Player::VDrawUpdate()
     // Shots if the button is pressed and not currently in the delay time
     if(Input::spacePressed && timeSinceLastShot > shootingDelay)
     {
-
-        GameObject& bullet = currentScene->AddGameObject({});
+        GameObject& bullet = currentScene->AddGameObject(GameObject{ *bulletPrefab });
 
         Vector4 spawnPoint = 
             transform->WorldMatrix()
                 * Vector4 { 0.0f, 0.66f + 0.2f, 0.0f, 1.0f };
 
-        bullet.AddComponent<Transform>(
-            Vector3{ spawnPoint },
-            Vector3{ transform->localRotation },
-            Vector3{ transform->localScale });
+        Transform* bulletTransform = bullet.GetComponent<Transform>();
+        assert(bulletTransform);
+        bulletTransform->localPosition = Vector3{ spawnPoint };
+        bulletTransform->localRotation = transform->localRotation;
+        bulletTransform->localScale = transform->localScale;
 
-        bullet.AddComponent<ShapeRenderer>(bulletModel);
-        Moveable& bulletRb = bullet.AddComponent<Moveable>();
-        bullet.AddComponent<CircleCollider>( 0.02f, true );
-
-        bulletRb.speed = { 0.0f, 0.5f, 0.0f };
+        Moveable* bulletRb = bullet.GetComponent<Moveable>();
+        assert(bulletRb);
+        bulletRb->speed = { 0.0f, 0.5f, 0.0f };
 
         // Updates last shot time to calculate the new delay
         lastShotTime = currentTime;

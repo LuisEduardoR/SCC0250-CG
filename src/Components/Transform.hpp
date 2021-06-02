@@ -20,10 +20,11 @@
 
 union Matrix4x4;
 
+namespace Adven {
+    class Scene;
+}
+
 class Transform : public Adven::Component {
-private:
-    Transform* parent{ nullptr };
-    std::list<Transform*> children{};
 public:
     Vector3 localPosition{};
     Vector3 localRotation{};
@@ -33,14 +34,13 @@ public:
     explicit Transform(Vector3 localPosition);
     Transform(Vector3 localPosition, Vector3 localRotation);
     Transform(Vector3 localPosition, Vector3 localRotation, Vector3 localScale);
-    explicit Transform(Transform* parent);
-    Transform(Transform* parent, Vector3 localPosition);
-    Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation);
-    Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation, Vector3 localScale);
 public:
-    [[nodiscard]] auto GetChildren() const -> const std::list<Transform*>&;
-    [[nodiscard]] auto GetChildren() -> std::list<Transform*>&;
-    [[nodiscard]] auto GetParent() const -> Transform*; 
+    ~Transform() override = default;
+public:
+    /// Clones the transform.
+    /// This function does not clone the transform childs nor parent.
+    [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
+public:
     [[nodiscard]] auto LocalMatrix() const -> Matrix4x4;
     [[nodiscard]] auto WorldMatrix() const -> Matrix4x4;
     [[nodiscard]] auto WorldPosition() const -> Vector3;

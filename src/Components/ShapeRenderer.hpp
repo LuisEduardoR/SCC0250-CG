@@ -25,6 +25,7 @@ public:
     ShapeRenderer(Shape2DCollection geometry);
     ~ShapeRenderer() override = default;
 public:
+    [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     void VDrawUpdate() override;
 };
 

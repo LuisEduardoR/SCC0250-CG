@@ -14,9 +14,12 @@
 
 
 ShapeRenderer::ShapeRenderer(Shape2DCollection geometry)
-    : geometry(geometry)
-{
+    : geometry(geometry) {}
 
+
+auto ShapeRenderer::Clone() const -> std::unique_ptr<Component>
+{
+    return std::make_unique<ShapeRenderer>(geometry);
 }
 
 void ShapeRenderer::VDrawUpdate()

@@ -7,9 +7,12 @@
 
 # include "Transform.hpp"
 
+# include "GameObject.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
 # include "../Rendering/Geometry2D.hpp"
+
+using namespace Adven;
 
 Transform::Transform(Vector3 localPosition) : localPosition(localPosition) {}
 
@@ -19,28 +22,9 @@ Transform::Transform(Vector3 localPosition, Vector3 localRotation)
 Transform::Transform(Vector3 localPosition, Vector3 localRotation, Vector3 localScale)
     : localPosition(localPosition), localRotation(localRotation), localScale(localScale) {}
 
-Transform::Transform(Transform* parent)
-    : parent(parent)
+[[nodiscard]] auto Transform::Clone() const -> std::unique_ptr<Component>
 {
-    parent->children.push_back(this);
-}
-
-Transform::Transform(Transform* parent, Vector3 localPosition)
-    : parent(parent), localPosition(localPosition)
-{
-    parent->children.push_back(this);
-}
-
-Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation)
-    : parent(parent), localPosition(localPosition), localRotation(localRotation)
-{
-    parent->children.push_back(this);
-}
-
-Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRotation, Vector3 localScale)
-    : parent(parent), localPosition(localPosition), localRotation(localRotation), localScale(localScale)
-{
-    parent->children.push_back(this);
+    return std::make_unique<Transform>(localPosition, localRotation, localScale);
 }
 
 [[nodiscard]] auto Transform::LocalMatrix() const -> Matrix4x4
@@ -51,10 +35,13 @@ Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRota
 [[nodiscard]] auto Transform::WorldMatrix() const -> Matrix4x4
 {
     Matrix4x4 world = LocalMatrix();
-    
-    for (const Transform* transform = parent; transform != nullptr; transform=transform->parent)
+
+    for (const GameObject* obj = gameObject->Parent(); obj != nullptr; obj = obj->Parent())
     {
-        world = transform->LocalMatrix() * world;
+        if (const Transform* transform = obj->GetComponent<Transform>())
+        { 
+            world = transform->LocalMatrix() * world;
+        }
     }
 
     return world;
@@ -69,9 +56,12 @@ Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRota
 {
     Vector3 world = localRotation;
     
-    for (const Transform* transform = parent; transform != nullptr; transform=transform->parent)
+    for (const GameObject* obj = gameObject->Parent(); obj != nullptr; obj = obj->Parent())
     {
-        world += localRotation;
+        if (const Transform* transform = obj->GetComponent<Transform>())
+        {
+            world += localRotation;
+        }
     }
 
     return world;
@@ -81,9 +71,12 @@ Transform::Transform(Transform* parent, Vector3 localPosition, Vector3 localRota
 {
     Vector3 world = localScale;
     
-    for (const Transform* transform = parent; transform != nullptr; transform=transform->parent)
+    for (const GameObject* obj = gameObject->Parent(); obj != nullptr; obj = obj->Parent())
     {
-        world += localScale;
+        if (const Transform* transform = obj->GetComponent<Transform>())
+        {
+            world += localScale;
+        }
     }
 
     return world;
