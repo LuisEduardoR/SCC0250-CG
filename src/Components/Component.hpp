@@ -38,7 +38,9 @@ namespace Adven
         /// Meant for making prefab gameobjects.
         [[nodiscard]] virtual auto Clone() const -> std::unique_ptr<Component> = 0;
     protected:
-        GameObject* gameObject;
+        GameObject* gameObject{ nullptr };
+    private:
+        bool startCalled{ false };
     };
 }
 

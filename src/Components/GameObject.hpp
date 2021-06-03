@@ -25,10 +25,14 @@ namespace Adven
     class GameObject final : public IUpdatable
     {
     private:
+        Scene* scene{ nullptr };
         GameObject* parent{ nullptr };
         // No unique_ptr needed because GameObject is final.
         std::list<GameObject> children{};
         // unique_ptr because Component is polymorphic.
+        // Note: This class relies on std::list iterators not
+        // being invalidated on insert, as AddComponent might
+        // be called during component update.
         std::list<std::unique_ptr<Component>> components{};
     public:
         using value_type                = decltype(children)::value_type;
@@ -64,7 +68,7 @@ namespace Adven
         /// but is not removed from it's parent if any.
         GameObject& operator=(GameObject&& other);
 
-        ~GameObject() override = default;
+        ~GameObject() override;
     public:
         void Start() override;
         void VDrawUpdate() override;
@@ -93,12 +97,15 @@ namespace Adven
         T& AddComponent(Args&&... args);
         template<typename T>
         T* GetComponent();
+        auto GetScene() -> Scene*;
+        auto GetScene() const -> const Scene*;
         template<typename T>
         const T* GetComponent() const;
         GameObject* Parent();
         const GameObject* Parent() const;
         void RemoveComponent(const Component& component);
         void RemoveComponent(std::function<bool(const Component&)> compare);
+        auto SetScene(Scene* scene) -> void;
     public: // Container methods.
         auto begin() noexcept -> iterator;
         auto begin() const noexcept -> const_iterator;
@@ -117,11 +124,16 @@ namespace Adven
     template<typename T, typename... Args>
     T& GameObject::AddComponent(Args&&... args)
     {
-        components.push_front(std::make_unique<T>(std::forward<Args>(args)...));
+        // Create new component.
+        auto component = std::make_unique<T>(std::forward<Args>(args)...);
+        // Hold on to a reference.
+        T& componentRef = *component;
+        
+        component->gameObject = this;
 
-        components.front()->gameObject = this;
+        components.push_back(std::move(component));
 
-        return *reinterpret_cast<T*>(components.front().get());
+        return componentRef;
     }
 
     template<typename T>

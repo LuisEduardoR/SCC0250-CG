@@ -10,36 +10,43 @@
 #include <algorithm>
 #include <utility>
 
+#include "../Components/GameObject.hpp"
+
 using namespace Adven;
 
 Scene* Scene::currentScene = nullptr;
 
 void Scene::Start()
 {
-    for (GameObject& gameObject : gameObjects)
+    for (GameObject* gameObject : toUpdateObjects)
     {
-        gameObject.Start();
+        gameObject->Start();
     }
 }
+
 void Scene::VDrawUpdate()
 {
-    for (GameObject& gameObject : gameObjects)
+    for (GameObject* gameObject : toUpdateObjects)
     {
-        gameObject.VDrawUpdate();
+        gameObject->VDrawUpdate();
     }
 }
+
 void Scene::VBlankUpdate()
 {
-    for (GameObject& gameObject : gameObjects)
+    for (GameObject* gameObject : toUpdateObjects)
     {
-        gameObject.VBlankUpdate();
+        gameObject->VBlankUpdate();
     }
 } 
+
 GameObject& Scene::AddGameObject(GameObject&& gameObject)
 {
-    gameObjects.push_front(std::move(gameObject));
-    return gameObjects.front();
+    rootObjects.push_back(std::move(gameObject));
+    rootObjects.back().SetScene(this);
+    return rootObjects.back();
 }
+
 void Scene::RemoveGameObject(const GameObject& gameObject)
 {
     auto compare = [&gameObject](const GameObject& gameObject2)
@@ -48,8 +55,9 @@ void Scene::RemoveGameObject(const GameObject& gameObject)
     };
     RemoveGameObject(compare);
 }
+
 void Scene::RemoveGameObject(std::function<bool(const GameObject& gameObject)> compare)
 {
-    auto i = std::find_if(gameObjects.cbegin(), gameObjects.cend(), compare);
-    gameObjects.erase(i);
+    auto i = std::find_if(rootObjects.cbegin(), rootObjects.cend(), compare);
+    rootObjects.erase(i);
 }
