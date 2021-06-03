@@ -15,6 +15,9 @@
 # include "../Components/Player.hpp"
 # include "../Components/Moveable.hpp"
 # include "../Components/Transform.hpp"
+# include "../Components/Health.hpp"
+# include "../Components/DestroyOnDie.hpp"
+# include "../Components/DamageOnContact.hpp"
 # include "../Components/ShapeRenderer.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -77,6 +80,7 @@ GameScene::GameScene()
         bulletPrefab->AddComponent<ShapeRenderer>(bulletModel);
         bulletPrefab->AddComponent<Moveable>();
         bulletPrefab->AddComponent<CircleCollider>( 0.02f, true );
+        bulletPrefab->AddComponent<DamageOnContact>(10);
     }
 
     GameObject& ship = AddGameObject({});
@@ -85,11 +89,13 @@ GameScene::GameScene()
         Vector3{ 0.0f, -0.3f, 0.0f },
         Vector3{},
         Vector3{ 0.3f, 0.3f, 1.0f });
-    ship.AddComponent<ShapeRenderer>(shipModel);
     ship.AddComponent<Moveable>();
-    ship.AddComponent<CircleCollider>(0.66f * 0.3f, true);
+    ship.AddComponent<ShapeRenderer>(shipModel);
+    ship.AddComponent<CircleCollider>(0.66f * 0.3f, false);
+    ship.AddComponent<Health>(100);
     ship.AddComponent<Player>(bulletPrefab);
     ship.AddComponent<Camera>(true);
+    ship.AddComponent<DestroyOnDie>();
 
     GameObject& boss = AddGameObject({});
 
@@ -97,9 +103,11 @@ GameScene::GameScene()
         Vector3{ 0.0f, 0.4f, 0.0f },
         Vector3{ 0.0f, 0.0f, CONST_PI },
         Vector3{ 0.0025f, 0.0025f, 0.0f });
-    boss.AddComponent<ShapeRenderer>(bossModel);
     boss.AddComponent<Moveable>();
-    boss.AddComponent<CircleCollider>(0.66f * 0.3f, true);
+    boss.AddComponent<ShapeRenderer>(bossModel);
+    boss.AddComponent<Health>(20);
+    boss.AddComponent<CircleCollider>(0.3f, false);
+    boss.AddComponent<DestroyOnDie>();
 
     GameObject& ship2 = AddGameObject({});
 
@@ -107,7 +115,11 @@ GameScene::GameScene()
         Vector3{ -0.7f, -0.3f, 0.0f },
         Vector3{},
         Vector3{ 0.3f, 0.3f, 1.0f });
+    ship2.AddComponent<Moveable>();
     ship2.AddComponent<ShapeRenderer>(ship2Model);
+    ship2.AddComponent<CircleCollider>(0.7f * 0.3f, false);
+    ship2.AddComponent<Health>(50);
+    ship2.AddComponent<DestroyOnDie>();
 
     std::vector<Vector2> asteroidPoints{
         amn::PoissonDiscSampler::GeneratePoints(0.2f, { 2.0f, 2.0f }, 5)
