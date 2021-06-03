@@ -7,6 +7,31 @@
 
 # include "Shader.hpp"
 
+// Creates a program from the source code of a vertex shader and a fragment shader
+Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode) {
+
+    // Creates a new program
+    GLuint program = glCreateProgram();
+
+    // Creates vertex and fragment shaders
+    GLuint vertex = Shader::CreateShader(vertexCode, GL_VERTEX_SHADER);
+    GLuint fragment = Shader::CreateShader(fragmentCode, GL_FRAGMENT_SHADER);
+
+    // Attaches our shaders to our program
+    glAttachShader(program, vertex);
+    glAttachShader(program, fragment);
+
+    // Links our program
+    glLinkProgram(program);
+
+    // Saves our program ID
+    this->programId = program;
+
+}
+
+// Gets the program ID of this shader
+GLuint Shader::GetProgramId() const { return this->programId; }
+
 // Checks a shader for compile errors and prints them if there are any
 void Shader::CheckShaderForCompileError(GLuint shader) {
 
@@ -47,27 +72,6 @@ GLint Shader::CreateShader(const std::string& shaderCode, GLenum shaderType) {
     CheckShaderForCompileError(shader);
 
     return shader;
-
-}
-
-// Creates a program from the source code of a vertex shader and a fragment shader
-GLint Shader::CreateProgram(const std::string& vertexCode, const std::string& fragmentCode) {
-
-    // Creates a new program
-    GLuint program = glCreateProgram();
-
-    // Creates vertex and fragment shaders
-    GLuint vertex = Shader::CreateShader(vertexCode, GL_VERTEX_SHADER);
-    GLuint fragment = Shader::CreateShader(fragmentCode, GL_FRAGMENT_SHADER);
-
-    // Attaches our shaders to our program
-    glAttachShader(program, vertex);
-    glAttachShader(program, fragment);
-
-    // Links our program
-    glLinkProgram(program);
-
-    return program;
 
 }
  

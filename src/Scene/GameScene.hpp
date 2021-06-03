@@ -15,11 +15,11 @@
 #include "Scene.hpp"
 #include "../Rendering/Renderer.hpp"
 
-class TestScene : public Adven::Scene
+class GameScene : public Adven::Scene
 {
 public:
-    TestScene();
-    ~TestScene() override = default;
+    GameScene();
+    ~GameScene() override = default;
 };
 
 #endif /* end of include guard: GAME_SCENE_HPP */

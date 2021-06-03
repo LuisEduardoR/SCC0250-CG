@@ -42,7 +42,10 @@ public:
     static void Clear(const Color& color);
 
     // Sets the program our renderer will use based on some shader code
-    static void SetProgram(std::string vertex_code, std::string fragment_code);
+    static void SetProgram(const std::string& vertexCode, const std::string& fragmentCode);
+
+// Sets the program our renderer will use from a shader
+    static void SetProgram(const Shader& shader);
 
     // Sets the view matrix for the current program.
     static void SetViewMatrix(const Matrix4x4& viewMatrix = Matrix4x4::Identity);

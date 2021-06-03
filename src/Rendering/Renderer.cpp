@@ -49,12 +49,22 @@ void Renderer::Clear(const Color& c) {
 void Renderer::Clear() { Clear(Color::black); }
 
 // Sets the program our renderer will use based on some shader code
-void Renderer::SetProgram(std::string vertex_code, std::string fragment_code) {
+void Renderer::SetProgram(const std::string& vertexCode, const std::string& fragmentCode) {
 
-    // Creates the program we are going to use from our vertex and fragment shader's source code
-    Renderer::currentProgram = Shader::CreateProgram(vertex_code, fragment_code);
+    // Creates our shader from source code
+    Shader shader(vertexCode, fragmentCode);
 
-    // Uses our program
+    // Uses the program from our shader
+    Renderer::currentProgram = shader.GetProgramId();
+    glUseProgram(Renderer::currentProgram);
+
+}
+
+// Sets the program our renderer will use from a shader
+void Renderer::SetProgram(const Shader& shader) {
+
+    // Uses the program from our shader
+    Renderer::currentProgram = shader.GetProgramId();
     glUseProgram(Renderer::currentProgram);
 
 }

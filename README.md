@@ -8,7 +8,7 @@ Made by:
 * Amanda de Moura Peres - NUSP 10734522
 * Luís Eduardo Rozante de Freitas Pereira - NUSP 10734794
 
-Some code comes from dmdmoura's [Adven](https://github.com/dmdemoura/Adven) GBA engine
+Some code comes from dmdmoura's [Adven](https://github.com/dmdemoura/Adven) GBA engine and from LuisEduardoR's [GLGame](https://github.com/LuisEduardoR/GLGame) repository
 
 
 ## How to compile and run:
