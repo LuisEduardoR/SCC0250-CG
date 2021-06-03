@@ -72,6 +72,33 @@ public:
 
 };
 
+// Represents a cluster of points in 2D space
+class PointCluster :  public Shape2D {
+
+public:
+
+    // Constructors
+    PointCluster(std::vector<Vector2> vertices, Color color = Color::white)
+        : Shape2D(color), vertices(std::move(vertices)) {}
+
+    PointCluster() : Shape2D(Color::white) {}
+
+    // Destructors
+    virtual ~PointCluster() = default;
+
+    // Returns the vertices used to represent this shape
+    const VertexData GetVertices() const override;
+
+    // Returns the draw mode of this shape
+    GLenum GetDrawMode() const override;
+
+private:
+
+    // Stores the vertices of the point cluster
+    std::vector<Vector2> vertices{};
+
+};
+
 // Represents a line between 2 points in 2D space
 class Line :  public Shape2D {
 
