@@ -36,23 +36,22 @@ using namespace Adven;
 namespace
 {
 
-auto GenerateSkyModel() -> Shape2DCollection
-{
-    std::vector<Vector2> skyPoints{
-        amn::PoissonDiscSampler::GeneratePoints(0.02f, { 2.0f, 2.0f }, 5)
-    };
-
-    Shape2DCollection skyModel{ new std::vector<std::unique_ptr<Shape2D>>{} };
-
-    for (Vector2 point : skyPoints)
+    auto GenerateSkyModel() -> Shape2DCollection
     {
-        skyModel->push_back(std::unique_ptr<Point>{ new Point{
-            point, Color::white
-        }});
-    }
+        
+        std::vector<Vector2> skyPoints {
+            amn::PoissonDiscSampler::GeneratePoints(0.02f, { 2.0f, 2.0f }, 5)
+        };
 
-    return skyModel;
-}
+        Shape2DCollection skyModel{ new std::vector<std::unique_ptr<Shape2D>>{} };
+
+        skyModel->push_back (std::unique_ptr<PointCluster>{ new PointCluster {
+                                skyPoints, Color::white
+                            }});
+
+        return skyModel;
+
+    }
 
 }
 

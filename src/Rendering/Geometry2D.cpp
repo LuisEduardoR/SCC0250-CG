@@ -20,6 +20,19 @@ const VertexData Point::GetVertices() const {
 // Returns the draw mode of this shape
 GLenum Point::GetDrawMode() const { return GL_POINTS; }
 
+// PointCluster ===============================
+
+// Returns the vertices used to represent this shape
+const VertexData PointCluster::GetVertices() const {
+    VertexData data;
+    data.vertices2D = this->vertices.data();
+    data.vertexCount = this->vertices.size();
+    return data;
+}
+
+// Returns the draw mode of this shape
+GLenum PointCluster::GetDrawMode() const { return GL_POINTS; }
+
 // Line =======================================
 
 // Returns the vertices used to represent this shape
