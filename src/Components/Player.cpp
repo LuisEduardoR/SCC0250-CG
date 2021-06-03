@@ -11,6 +11,7 @@
 # include "Moveable.hpp"
 # include "ShapeRenderer.hpp"
 # include "Transform.hpp"
+# include "Shooter.hpp"
 
 # include "../Time/Time.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -21,6 +22,7 @@
 # include "../Physics/CircleCollider.hpp"
 # include "../Math/Vector.hpp"
 # include "../Rendering/Geometry2D.hpp"
+# include "../WindowSystem/WindowSystem.hpp"
 
 # include <iostream>
 # include <chrono>
@@ -28,12 +30,9 @@
 
 using namespace Adven;
 
-Player::Player(std::shared_ptr<GameObject> bulletPrefab, std::array<Vector3, 2> cannonOffsets)
-    : bulletPrefab(bulletPrefab), cannonOffsets(cannonOffsets) {}
-
 auto Player::Clone() const -> std::unique_ptr<Component>
 {
-    return std::make_unique<Player>(bulletPrefab, cannonOffsets);
+    return std::make_unique<Player>();
 }
 
 void Player::Start()
@@ -41,12 +40,7 @@ void Player::Start()
     // Gets the player components
     transform = GetGameObject()->GetComponent<Transform>();
     moveable = GetGameObject()->GetComponent<Moveable>();
-
-    // Initializes lastShotTime to the start of our clock
-    // (technically if you played at Thursday, 1 January 1970 00:00:00 GMT 
-    // on a UNIX system there's a bug were you would need to wait for the 
-    // delay at the start of the game)
-    lastShotTime = 0;
+    
 }
 
 void Player::VDrawUpdate()
@@ -71,6 +65,17 @@ void Player::VDrawUpdate()
 
     GetGameObject()->GetComponent<CircleCollider>()->radius *= transform->localScale.x;
 
+    Vector2 targetPos   {
+                            (Input::mousePosition.x - WINDOW_WIDTH  / 2.0f) / (WINDOW_WIDTH  / 2.0f),                            
+                            (Input::mousePosition.y - WINDOW_HEIGHT / 2.0f) / (WINDOW_HEIGHT / 2.0f)
+                        };
+
+    // Aim ship at cursor
+    Vector2 pos =  Vector2{ transform->WorldPosition() } - targetPos;
+    Vector2 aimDirection = (Vector2{ transform->WorldPosition() } - targetPos).Normalized();
+    float aimAngle = std::atan2(aimDirection.y, aimDirection.x) + (CONST_PI / 2.0f);
+    transform->localRotation = Vector3{ 0.0f, 0.0f, aimAngle };
+
     Vector2 input = Vector2();
     float speed = 1.00f;
 
@@ -91,38 +96,11 @@ void Player::VDrawUpdate()
 
     Scene* currentScene = Scene::currentScene;
 
-    // Calculates how much time has passed since last shot
-    uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    float timeSinceLastShot = (currentTime - lastShotTime) / 1000.0f;
+    // Gets the shooters and sets if they're active based on Input
+    std::vector<Shooter*> shooters = GetGameObject()->GetComponents<Shooter>();
+    for(Shooter* shooter : shooters)
+        shooter->active = Input::spacePressed;
 
-    // Shots if the button is pressed and not currently in the delay time
-    if(Input::spacePressed && timeSinceLastShot > shootingDelay)
-    {
-        for (Vector3 cannonOffset : cannonOffsets)
-        {
-            GameObject& bullet = currentScene->AddGameObject(GameObject{ *bulletPrefab });
-
-            Vector4 spawnPoint = 
-                transform->WorldMatrix()
-                    * Vector4 { cannonOffset, 1.0f };
-
-            Transform* bulletTransform = bullet.GetComponent<Transform>();
-            assert(bulletTransform);
-            bulletTransform->localPosition = Vector3{ spawnPoint };
-            bulletTransform->localRotation = transform->localRotation;
-            bulletTransform->localScale = transform->localScale;
-
-            CircleCollider* bulletCollider = bullet.GetComponent<CircleCollider>();
-            bulletCollider->radius *= bulletTransform->localScale.x;
-
-            Moveable* bulletRb = bullet.GetComponent<Moveable>();
-            assert(bulletRb);
-            bulletRb->speed = { 0.0f, 0.5f, 0.0f };
-
-            // Updates last shot time to calculate the new delay
-            lastShotTime = currentTime;
-        }
-    }
 }
 
 void Player::VBlankUpdate() {}

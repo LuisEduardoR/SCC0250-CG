@@ -80,7 +80,7 @@ private:
     // Current program being used by the renderer
     static GLuint currentProgram;
 
-    //Current array buffer bound to the renderer
+    // Current array buffer bound to the renderer
     static GLuint arrayBuffer;
 
     // Creates an array buffer (if one was already created re-uses it)

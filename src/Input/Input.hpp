@@ -12,6 +12,8 @@
 # ifndef INPUT_HPP
 # define INPUT_HPP
 
+# include "../Math/Vector.hpp"
+
 struct GLFWwindow;
 
 class Input {
@@ -20,6 +22,7 @@ public:
     // Process inputs
     static void ProcessMouse(GLFWwindow *window, int button, int action, int mods);
     static void ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int mods);
+    static void ProcessCursor(GLFWwindow *window, double x, double y);
 
     // Stores mouse buttons
     static bool leftMousePressed;
@@ -34,6 +37,9 @@ public:
     static bool upPressed;
     static bool downPressed;
     static bool spacePressed;
+    static bool shiftPressed;
+
+    static Vector2 mousePosition;
 
 private:
     // Disallow any instances

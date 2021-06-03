@@ -107,6 +107,11 @@ namespace Adven
         template<typename T>
         const T* GetComponent() const;
 
+        template<typename T>
+        std::vector<T*> GetComponents();
+        template<typename T>
+        std::vector<const T*> GetComponents() const;
+
         auto GetScene() -> Scene*;
         auto GetScene() const -> const Scene*;
 
@@ -178,6 +183,36 @@ namespace Adven
             }
         }
         return nullptr;
+    }
+
+    template<typename T>
+    std::vector<T*> GameObject::GetComponents()
+    {
+        std::vector<T*> results{};
+        for (auto& c : components)
+        {
+            T* component = dynamic_cast<T*>(c.get());
+            if (component != nullptr)
+            {
+                results.push_back(component);
+            }
+        }
+        return results;
+    }
+
+    template<typename T>
+    std::vector<const T*> GameObject::GetComponents() const
+    {
+        std::vector<const T*> results{};
+        for (auto& c : components)
+        {
+            const T* component = dynamic_cast<const T*>(c.get());
+            if (component != nullptr)
+            {
+                results.push_back(component);
+            }
+        }
+        return results;
     }
 }
 

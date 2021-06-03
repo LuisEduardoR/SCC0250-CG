@@ -9,8 +9,8 @@
     This file contains the Player component
 */
 
-# ifndef PLAYER_HPP
-# define PLAYER_HPP
+# ifndef SHOOTER_HPP
+# define SHOOTER_HPP
 
 # include <array>
 # include <cstdint>
@@ -26,21 +26,36 @@ namespace Adven {
 
 class Transform;
 
-class Player : public Adven::Component
+class Shooter : public Adven::Component
 {
+
 public:
-    Player() = default;
-public:
-    ~Player() override = default;
-public:
+    Shooter(std::shared_ptr<Adven::GameObject> bulletPrefab, Vector3 cannonOffset, float startingDelay, float shootingDelay);
+    ~Shooter() override = default;
+
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     void Start() override;
     void VDrawUpdate() override;
     void VBlankUpdate() override;
 
+    bool active;
+
 private:
     Transform* transform;
     Adven::Moveable* moveable;
+    std::shared_ptr<Adven::GameObject> bulletPrefab;
+
+    Vector3 cannonOffset;
+
+    // Stores the last time a shot was made
+    float currentTime;
+
+    // Delay before the first shot
+    const float startingDelay = 0.1f;
+
+    // Delay before being able to shoot again
+    const float shootingDelay = 0.2f;
+
 };
 
-#endif /* end of include guard: PLAYER_HPP */
+#endif /* end of include guard: SHOOTER_HPP */

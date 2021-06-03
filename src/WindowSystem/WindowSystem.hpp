@@ -56,7 +56,9 @@ public:
 
     // Sets a callback function for when a mouse button input is detected
     static void SetMouseButtonCallback(GLFWmousebuttonfun callback);
-
+    
+    // Sets a callback function for when the cursor moves
+    static void SetCursorPosCallback(GLFWcursorposfun callback);
 };
 
 # endif /* end of include guard: WINDOW_SYSTEM_HPP */

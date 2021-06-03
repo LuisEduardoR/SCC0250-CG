@@ -33,6 +33,8 @@
 
 # include <chrono>
 
+# define DISPLAY_DELTA_TIME false
+
 using namespace Adven;
 
 int main(void) {
@@ -40,7 +42,7 @@ int main(void) {
     // Creates our window system (initializes GLFW)
     WindowSystem::Init();
 
-    // Initializes the renderer (initializes GLEW)
+    // Creates our renderer (initializes GLEW)
     Renderer::Init();
 
     // Shows our window
@@ -68,7 +70,7 @@ int main(void) {
         Scene::currentScene->Start();
 
         // Checks for collision
-        Adven::Collider::Update();
+        Collider::Update();
 
         // Check every frame for camera, because it might change.
         Camera* camera = Camera::MainCamera();
@@ -87,7 +89,9 @@ int main(void) {
         
         // Calculates our frame time delta
         Time::DeltaTime = (endTime - startTime) / 1000.0f;
-        std::cout << "DeltaTime: " << Time::DeltaTime << " FPS: " << 1.0f / Time::DeltaTime << "\n"; 
+        # if DISPLAY_DELTA_TIME
+            std::cout << "DeltaTime: " << Time::DeltaTime << " FPS: " << 1.0f / Time::DeltaTime << "\n"; 
+        # endif
     }
 
     // Finishes the program

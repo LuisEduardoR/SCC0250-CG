@@ -58,6 +58,7 @@
         "thread": "cpp",
         "stop_token": "cpp",
         "forward_list": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "unordered_set": "cpp"
     }
 }

@@ -18,10 +18,10 @@ Color::Color(float r, float g, float b, float a) {
 }
 
 Color::Color(int r, int g, int b, int a) {
-    this->r = r/255.0f;
-    this->g = g/255.0f;
-    this->b = b/255.0f;
-    this->a = a/255.0f;
+    this->r = r / 255.0f;
+    this->g = g / 255.0f;
+    this->b = b / 255.0f;
+    this->a = a / 255.0f;
 }
 
 // Some default colors constants:
@@ -37,11 +37,11 @@ const Color Color::yellow   = { 1.0f, 1.0f, 0.0f };
 
 // Returns a random color (but always with alpha set to 1.0f)
 Color Color::random(unsigned seed) {
-    std::minstd_rand rng(seed);
+    std::mt19937 rng{};
     return Color(   
-                    (float)rng() / 2147483646.0f, 
-                    (float)rng() / 2147483646.0f, 
-                    (float)rng() / 2147483646.0f, 
+                    std::uniform_real_distribution<float>{ 0.0f, 1.0f }(rng), 
+                    std::uniform_real_distribution<float>{ 0.0f, 1.0f }(rng), 
+                    std::uniform_real_distribution<float>{ 0.0f, 1.0f }(rng), 
                     1.0f
                 );
 }

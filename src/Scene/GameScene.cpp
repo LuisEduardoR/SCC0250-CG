@@ -19,6 +19,7 @@
 # include "../Components/DestroyOnDie.hpp"
 # include "../Components/DamageOnContact.hpp"
 # include "../Components/ShapeRenderer.hpp"
+# include "../Components/Shooter.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
 # include "../Physics/CircleCollider.hpp"
@@ -54,7 +55,7 @@ auto GenerateSkyModel() -> Shape2DCollection
 GameScene::GameScene()
 {
     // Loads vertex and fragment shader's GLSL code 
-    std::string vertexCode = AssetLoader<std::string>::LoadAsset("./assets/vertex.glsl");
+    std::string vertexCode   = AssetLoader<std::string>::LoadAsset("./assets/vertex.glsl");
     std::string fragmentCode = AssetLoader<std::string>::LoadAsset("./assets/fragment.glsl");
 
     // Creates our shader from code
@@ -63,11 +64,12 @@ GameScene::GameScene()
     // Set the render program to our shader
     Renderer::SetProgram(shader);
 
-    Shape2DCollection shipModel = AssetLoader<Shape2DCollection>::LoadAsset("./assets/ship.asset");
-    Shape2DCollection bossModel = AssetLoader<Shape2DCollection>::LoadAsset("./assets/boss.asset");
-    Shape2DCollection ship2Model = AssetLoader<Shape2DCollection>::LoadAsset("./assets/ship2.asset");
+    // Loads the models that will be used
+    Shape2DCollection shipModel     = AssetLoader<Shape2DCollection>::LoadAsset("./assets/ship.asset");
+    Shape2DCollection ship2Model    = AssetLoader<Shape2DCollection>::LoadAsset("./assets/ship2.asset");
+    Shape2DCollection bossModel     = AssetLoader<Shape2DCollection>::LoadAsset("./assets/boss.asset");
     Shape2DCollection asteroidModel = AssetLoader<Shape2DCollection>::LoadAsset("./assets/asteroid.asset");
-    Shape2DCollection bulletModel = AssetLoader<Shape2DCollection>::LoadAsset("./assets/bullet.asset");
+    Shape2DCollection bulletModel   = AssetLoader<Shape2DCollection>::LoadAsset("./assets/bullet.asset");
     
     Shape2DCollection skyModel = GenerateSkyModel();
 
@@ -78,34 +80,44 @@ GameScene::GameScene()
     {
         bulletPrefab->AddComponent<Transform>(Vector3(), Vector3());
         bulletPrefab->AddComponent<ShapeRenderer>(bulletModel);
-        bulletPrefab->AddComponent<Moveable>();
+        bulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 0.5f, 0.0f });
         bulletPrefab->AddComponent<CircleCollider>( 0.09f, true );
         bulletPrefab->AddComponent<DamageOnContact>(10);
     }
 
-    GameObject& sky = AddGameObject({});
-    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
-    sky.AddComponent<ShapeRenderer>(skyModel);
-
+    // Gets random points for the asteroids
     std::vector<Vector2> asteroidPoints{
-        amn::PoissonDiscSampler::GeneratePoints(0.2f, { 2.0f, 2.0f }, 5)
+        amn::PoissonDiscSampler::GeneratePoints(0.3f, { 2.0f, 2.0f }, 5)
     };
 	std::random_device rd;
 	std::mt19937 rng{ rd() };
     for (const Vector2& point: asteroidPoints)
     {
+
+        // Gets a random angle and scale
         float angle{ 2.0f * CONST_PI
                      * std::uniform_real_distribution<float>{ 0.0f, 1.0f }(rng) };
         float scale{ std::uniform_real_distribution<float>{ 0.02f, 0.07f }(rng) };
+        Vector3 speed
+        {
+            std::uniform_real_distribution<float>{ -0.05f, 0.05f }(rng),
+            std::uniform_real_distribution<float>{ -0.05f, 0.05f }(rng),
+            0.0f,
+        };
 
+        // Creates an asteroid
         GameObject& asteroid = AddGameObject({});
         asteroid.AddComponent<Transform>(
             Vector3{ point } - Vector3{ 1.0f, 1.0f, 0.0f },
             Vector3{ 0.0f, 0.0f, angle },
             Vector3{ scale, scale, 1.0f });
         asteroid.AddComponent<ShapeRenderer>(asteroidModel);
+        asteroid.AddComponent<Moveable>(speed);
+        asteroid.AddComponent<CircleCollider>(scale, true);
+        asteroid.AddComponent<DamageOnContact>(10);
     }
 
+    // Creates the player
     GameObject& player = AddGameObject({});
 
     player.AddComponent<Transform>(
@@ -116,13 +128,20 @@ GameScene::GameScene()
     player.AddComponent<ShapeRenderer>(ship2Model);
     player.AddComponent<CircleCollider>(0.66f * 0.3f, false);
     player.AddComponent<Health>(100);
-    player.AddComponent<Player>(
-        bulletPrefab,
-        std::array<Vector3, 2>{{ { -0.1f, 0.86f, 0.0f }, { 0.1f, 0.86f, 0.0f } }}
-    );
-    player.AddComponent<Camera>(true);
+    player.AddComponent<Player>();
+    //player.AddComponent<Camera>(true);
     player.AddComponent<DestroyOnDie>();
+    player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
+    player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
 
+    // Creates the sky
+    GameObject sky{};
+    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
+    sky.AddComponent<ShapeRenderer>(skyModel);
+    
+    player.AddChild(std::move(sky));
+
+    // Creates the boss
     GameObject& boss = AddGameObject({});
 
     boss.AddComponent<Transform>(
@@ -131,10 +150,11 @@ GameScene::GameScene()
         Vector3{ 0.0025f, 0.0025f, 0.0f });
     boss.AddComponent<Moveable>();
     boss.AddComponent<ShapeRenderer>(bossModel);
-    boss.AddComponent<Health>(20);
-    boss.AddComponent<CircleCollider>(0.3f, false);
+    boss.AddComponent<Health>(1000);
+    boss.AddComponent<CircleCollider>(0.3f, true);
     boss.AddComponent<DestroyOnDie>();
 
+    // Creates the second ship
     GameObject& ship2 = AddGameObject({});
 
     ship2.AddComponent<Transform>(
@@ -143,7 +163,8 @@ GameScene::GameScene()
         Vector3{ 0.3f, 0.3f, 1.0f });
     ship2.AddComponent<Moveable>();
     ship2.AddComponent<ShapeRenderer>(shipModel);
-    ship2.AddComponent<CircleCollider>(0.7f * 0.3f, false);
+    ship2.AddComponent<CircleCollider>(0.7f * 0.3f, true);
     ship2.AddComponent<Health>(50);
     ship2.AddComponent<DestroyOnDie>();
+    
 }

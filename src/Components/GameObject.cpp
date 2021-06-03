@@ -170,7 +170,7 @@ void GameObject::AddChild(const GameObject& gameObject)
     children.push_back(gameObject);
     auto& child = children.back();
     child.parent = this;
-    child.scene = scene;
+    child.SetScene(scene);
 }
 
 void GameObject::AddChild(GameObject&& gameObject)
@@ -178,7 +178,7 @@ void GameObject::AddChild(GameObject&& gameObject)
     children.push_back(std::move(gameObject)); 
     auto& child = children.back();
     child.parent = this;
-    child.scene = scene;
+    child.SetScene(scene);
 }
 
 auto GameObject::EraseChild(const GameObject& gameObject) -> std::optional<iterator>

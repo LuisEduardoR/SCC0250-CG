@@ -36,7 +36,7 @@ void WindowSystem::Init() {
     // Binds input
     SetKeyCallback(Input::ProcessKey);
     SetMouseButtonCallback(Input::ProcessMouse);
-
+    SetCursorPosCallback(Input::ProcessCursor);
 }
 
 // Destroys the windows system
@@ -73,4 +73,9 @@ void WindowSystem::SetKeyCallback(GLFWkeyfun callback) {
 // Sets a callback function for when a mouse button input is detected
 void WindowSystem::SetMouseButtonCallback(GLFWmousebuttonfun callback) {
     glfwSetMouseButtonCallback(mainWindow, callback);
+}
+
+// Sets a callback function for when the cursor moves
+void WindowSystem::SetCursorPosCallback(GLFWcursorposfun callback) {
+    glfwSetCursorPosCallback(mainWindow, callback);
 }

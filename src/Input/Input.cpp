@@ -40,6 +40,22 @@ void Input::ProcessMouse(GLFWwindow *window, int button, int action, int mods) {
 
 }
 
+/// (0, 0) is the bottom left corner.
+Vector2 Input::mousePosition{};
+
+void Input::ProcessCursor(GLFWwindow *window, double x, double y)
+{
+    int width{};
+    int height{};
+    glfwGetWindowSize(window, &width, &height);
+
+    mousePosition = Vector2
+    {
+        static_cast<float>(x),
+        static_cast<float>(height) - static_cast<float>(y)
+    };
+}
+
 // Stores what keys are pressed:
 
 bool Input::leftArrowPressed = false;
@@ -50,6 +66,7 @@ bool Input::rightPressed = false;
 bool Input::upPressed = false;
 bool Input::downPressed = false;
 bool Input::spacePressed = false;
+bool Input::shiftPressed = false;
 
 // Process key input
 void Input::ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int mods) {
@@ -101,8 +118,15 @@ void Input::ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action
     case GLFW_KEY_SPACE:
         if (action == GLFW_PRESS)
             spacePressed = true;
-        else
+        else if (action == GLFW_RELEASE)
             spacePressed = false;
+        break;
+
+    case GLFW_KEY_LEFT_SHIFT:
+        if (action == GLFW_PRESS)
+            shiftPressed = true;
+        else if (action == GLFW_RELEASE)
+            shiftPressed = false;
         break;
 
     default:
