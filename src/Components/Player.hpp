@@ -12,10 +12,12 @@
 # ifndef PLAYER_HPP
 # define PLAYER_HPP
 
+# include <array>
 # include <cstdint>
 # include <memory>
 
 # include "Component.hpp"
+# include "../Math/Vector.hpp"
 
 namespace Adven {
     class GameObject;
@@ -27,7 +29,7 @@ class Transform;
 class Player : public Adven::Component
 {
 public:
-    Player(std::shared_ptr<Adven::GameObject> bulletPrefab);
+    Player(std::shared_ptr<Adven::GameObject> bulletPrefab, std::array<Vector3, 2> cannonOffsets);
 public:
     ~Player() override = default;
 public:
@@ -40,6 +42,8 @@ private:
     Transform* transform;
     Adven::Moveable* moveable;
     std::shared_ptr<Adven::GameObject> bulletPrefab;
+
+    std::array<Vector3, 2> cannonOffsets;
 
     // Stores the last time the player shot
     std::uint64_t lastShotTime;

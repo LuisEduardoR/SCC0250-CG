@@ -76,50 +76,16 @@ GameScene::GameScene()
     // Use a shared_ptr so many components can keep a reference to the same prefab.
     auto bulletPrefab = std::make_shared<GameObject>();
     {
-        bulletPrefab->AddComponent<Transform>();
+        bulletPrefab->AddComponent<Transform>(Vector3(), Vector3());
         bulletPrefab->AddComponent<ShapeRenderer>(bulletModel);
         bulletPrefab->AddComponent<Moveable>();
-        bulletPrefab->AddComponent<CircleCollider>( 0.02f, true );
+        bulletPrefab->AddComponent<CircleCollider>( 0.09f, true );
         bulletPrefab->AddComponent<DamageOnContact>(10);
     }
 
-    GameObject& ship = AddGameObject({});
-
-    ship.AddComponent<Transform>(
-        Vector3{ 0.0f, -0.3f, 0.0f },
-        Vector3{},
-        Vector3{ 0.3f, 0.3f, 1.0f });
-    ship.AddComponent<Moveable>();
-    ship.AddComponent<ShapeRenderer>(shipModel);
-    ship.AddComponent<CircleCollider>(0.66f * 0.3f, false);
-    ship.AddComponent<Health>(100);
-    ship.AddComponent<Player>(bulletPrefab);
-    ship.AddComponent<Camera>(true);
-    ship.AddComponent<DestroyOnDie>();
-
-    GameObject& boss = AddGameObject({});
-
-    boss.AddComponent<Transform>(
-        Vector3{ 0.0f, 0.4f, 0.0f },
-        Vector3{ 0.0f, 0.0f, CONST_PI },
-        Vector3{ 0.0025f, 0.0025f, 0.0f });
-    boss.AddComponent<Moveable>();
-    boss.AddComponent<ShapeRenderer>(bossModel);
-    boss.AddComponent<Health>(20);
-    boss.AddComponent<CircleCollider>(0.3f, false);
-    boss.AddComponent<DestroyOnDie>();
-
-    GameObject& ship2 = AddGameObject({});
-
-    ship2.AddComponent<Transform>(
-        Vector3{ -0.7f, -0.3f, 0.0f },
-        Vector3{},
-        Vector3{ 0.3f, 0.3f, 1.0f });
-    ship2.AddComponent<Moveable>();
-    ship2.AddComponent<ShapeRenderer>(ship2Model);
-    ship2.AddComponent<CircleCollider>(0.7f * 0.3f, false);
-    ship2.AddComponent<Health>(50);
-    ship2.AddComponent<DestroyOnDie>();
+    GameObject& sky = AddGameObject({});
+    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
+    sky.AddComponent<ShapeRenderer>(skyModel);
 
     std::vector<Vector2> asteroidPoints{
         amn::PoissonDiscSampler::GeneratePoints(0.2f, { 2.0f, 2.0f }, 5)
@@ -140,8 +106,44 @@ GameScene::GameScene()
         asteroid.AddComponent<ShapeRenderer>(asteroidModel);
     }
 
-    // Sky goes last because of render order
-    GameObject& sky = AddGameObject({});
-    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
-    sky.AddComponent<ShapeRenderer>(skyModel);
+    GameObject& player = AddGameObject({});
+
+    player.AddComponent<Transform>(
+        Vector3{ 0.0f, -0.3f, 0.0f },
+        Vector3{},
+        Vector3{ 0.3f, 0.3f, 1.0f });
+    player.AddComponent<Moveable>();
+    player.AddComponent<ShapeRenderer>(ship2Model);
+    player.AddComponent<CircleCollider>(0.66f * 0.3f, false);
+    player.AddComponent<Health>(100);
+    player.AddComponent<Player>(
+        bulletPrefab,
+        std::array<Vector3, 2>{{ { -0.1f, 0.86f, 0.0f }, { 0.1f, 0.86f, 0.0f } }}
+    );
+    player.AddComponent<Camera>(true);
+    player.AddComponent<DestroyOnDie>();
+
+    GameObject& boss = AddGameObject({});
+
+    boss.AddComponent<Transform>(
+        Vector3{ 0.0f, 0.4f, 0.0f },
+        Vector3{ 0.0f, 0.0f, CONST_PI },
+        Vector3{ 0.0025f, 0.0025f, 0.0f });
+    boss.AddComponent<Moveable>();
+    boss.AddComponent<ShapeRenderer>(bossModel);
+    boss.AddComponent<Health>(20);
+    boss.AddComponent<CircleCollider>(0.3f, false);
+    boss.AddComponent<DestroyOnDie>();
+
+    GameObject& ship2 = AddGameObject({});
+
+    ship2.AddComponent<Transform>(
+        Vector3{ -0.7f, -0.3f, 0.0f },
+        Vector3{},
+        Vector3{ 0.3f, 0.3f, 1.0f });
+    ship2.AddComponent<Moveable>();
+    ship2.AddComponent<ShapeRenderer>(shipModel);
+    ship2.AddComponent<CircleCollider>(0.7f * 0.3f, false);
+    ship2.AddComponent<Health>(50);
+    ship2.AddComponent<DestroyOnDie>();
 }

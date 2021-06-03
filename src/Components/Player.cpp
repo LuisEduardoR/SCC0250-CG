@@ -28,11 +28,12 @@
 
 using namespace Adven;
 
-Player::Player(std::shared_ptr<GameObject> bulletPrefab) : bulletPrefab(bulletPrefab) {}
+Player::Player(std::shared_ptr<GameObject> bulletPrefab, std::array<Vector3, 2> cannonOffsets)
+    : bulletPrefab(bulletPrefab), cannonOffsets(cannonOffsets) {}
 
 auto Player::Clone() const -> std::unique_ptr<Component>
 {
-    return std::make_unique<Player>(bulletPrefab);
+    return std::make_unique<Player>(bulletPrefab, cannonOffsets);
 }
 
 void Player::Start()
@@ -97,28 +98,30 @@ void Player::VDrawUpdate()
     // Shots if the button is pressed and not currently in the delay time
     if(Input::spacePressed && timeSinceLastShot > shootingDelay)
     {
-        GameObject& bullet = currentScene->AddGameObject(GameObject{ *bulletPrefab });
+        for (Vector3 cannonOffset : cannonOffsets)
+        {
+            GameObject& bullet = currentScene->AddGameObject(GameObject{ *bulletPrefab });
 
-        Vector4 spawnPoint = 
-            transform->WorldMatrix()
-                * Vector4 { 0.0f, 0.66f + 0.2f, 0.0f, 1.0f };
+            Vector4 spawnPoint = 
+                transform->WorldMatrix()
+                    * Vector4 { cannonOffset, 1.0f };
 
-        Transform* bulletTransform = bullet.GetComponent<Transform>();
-        assert(bulletTransform);
-        bulletTransform->localPosition = Vector3{ spawnPoint };
-        bulletTransform->localRotation = transform->localRotation;
-        bulletTransform->localScale = transform->localScale;
+            Transform* bulletTransform = bullet.GetComponent<Transform>();
+            assert(bulletTransform);
+            bulletTransform->localPosition = Vector3{ spawnPoint };
+            bulletTransform->localRotation = transform->localRotation;
+            bulletTransform->localScale = transform->localScale;
 
-        CircleCollider* bulletCollider = bullet.GetComponent<CircleCollider>();
-        bulletCollider->radius *= bulletTransform->localScale.x;
+            CircleCollider* bulletCollider = bullet.GetComponent<CircleCollider>();
+            bulletCollider->radius *= bulletTransform->localScale.x;
 
-        Moveable* bulletRb = bullet.GetComponent<Moveable>();
-        assert(bulletRb);
-        bulletRb->speed = { 0.0f, 0.5f, 0.0f };
+            Moveable* bulletRb = bullet.GetComponent<Moveable>();
+            assert(bulletRb);
+            bulletRb->speed = { 0.0f, 0.5f, 0.0f };
 
-        // Updates last shot time to calculate the new delay
-        lastShotTime = currentTime;
-
+            // Updates last shot time to calculate the new delay
+            lastShotTime = currentTime;
+        }
     }
 }
 
