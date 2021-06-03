@@ -59,6 +59,9 @@ int main(void) {
         // Clears the color buffer
         Renderer::Clear(Color(0x1B, 0x18, 0x30));
 
+        // Delete GameObjects marked for destruction.
+        GameObject::DeletePending();
+
         // Run Start for all new GameObjects.
         Scene::currentScene->Start();
 
@@ -82,7 +85,7 @@ int main(void) {
         
         // Calculates our frame time delta
         Time::DeltaTime = (endTime - startTime) / 1000.0f;
-
+        std::cout << "DeltaTime: " << Time::DeltaTime << " FPS: " << 1.0f / Time::DeltaTime << "\n"; 
     }
 
     // Finishes the program

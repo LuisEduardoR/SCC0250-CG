@@ -24,7 +24,7 @@ auto Moveable::Clone() const -> std::unique_ptr<Component>
 
 void Moveable::VDrawUpdate()
 {
-    auto* transform = gameObject->GetComponent<Transform>();
+    auto* transform = GetGameObject()->GetComponent<Transform>();
 
     if (!transform)
     {

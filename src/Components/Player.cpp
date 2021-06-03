@@ -38,8 +38,8 @@ auto Player::Clone() const -> std::unique_ptr<Component>
 void Player::Start()
 {
     // Gets the player components
-    transform = gameObject->GetComponent<Transform>();
-    moveable = gameObject->GetComponent<Moveable>();
+    transform = GetGameObject()->GetComponent<Transform>();
+    moveable = GetGameObject()->GetComponent<Moveable>();
 
     // Initializes lastShotTime to the start of our clock
     // (technically if you played at Thursday, 1 January 1970 00:00:00 GMT 
@@ -67,6 +67,8 @@ void Player::VDrawUpdate()
         transform->localScale += 0.50f * Time::DeltaTime;
     else if(Input::rightMousePressed)
         transform->localScale -= 0.50f * Time::DeltaTime;
+
+    GetGameObject()->GetComponent<CircleCollider>()->radius *= transform->localScale.x;
 
     Vector2 input = Vector2();
     float speed = 1.00f;
@@ -106,6 +108,9 @@ void Player::VDrawUpdate()
         bulletTransform->localPosition = Vector3{ spawnPoint };
         bulletTransform->localRotation = transform->localRotation;
         bulletTransform->localScale = transform->localScale;
+
+        CircleCollider* bulletCollider = bullet.GetComponent<CircleCollider>();
+        bulletCollider->radius *= bulletTransform->localScale.x;
 
         Moveable* bulletRb = bullet.GetComponent<Moveable>();
         assert(bulletRb);

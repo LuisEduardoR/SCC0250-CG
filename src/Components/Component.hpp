@@ -32,12 +32,14 @@ namespace Adven
     public:
         // Virtual destructor. REQUIRED in all virtual (base and derived) classes.
         ~Component() override = default;
-
+    public:
+        [[nodiscard]] auto GetGameObject() const -> const GameObject*;
+        [[nodiscard]] auto GetGameObject() -> GameObject*;
     private:
         /// Clones an component.
         /// Meant for making prefab gameobjects.
         [[nodiscard]] virtual auto Clone() const -> std::unique_ptr<Component> = 0;
-    protected:
+    private:
         GameObject* gameObject{ nullptr };
     private:
         bool startCalled{ false };

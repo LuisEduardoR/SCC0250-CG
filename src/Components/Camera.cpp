@@ -51,7 +51,7 @@ auto Camera::Clone() const -> std::unique_ptr<Component>
 
 Matrix4x4 Camera::ViewMatrix() const
 {
-    auto* transform = gameObject->GetComponent<Transform>();
+    auto* transform = GetGameObject()->GetComponent<Transform>();
     return Matrix4x4::Camera(transform->WorldPosition(), transform->WorldRotation(),
         { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
 }

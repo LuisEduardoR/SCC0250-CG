@@ -17,6 +17,7 @@
 #include <memory>
 #include <list>
 #include <optional>
+#include <unordered_set>
 
 namespace Adven
 {
@@ -24,6 +25,11 @@ namespace Adven
 
     class GameObject final : public IUpdatable
     {
+    private:
+        static std::unordered_set<GameObject*> markedForDelete;
+        static bool markedForDeleteLock;
+    public:
+        static auto DeletePending() -> void;
     private:
         Scene* scene{ nullptr };
         GameObject* parent{ nullptr };
@@ -80,6 +86,9 @@ namespace Adven
         /// Moves gameobject, and adds it as a child.
         void AddChild(GameObject&& gameObject);
 
+        template<typename T, typename ... Args>
+        T& AddComponent(Args&&... args);
+
         /// Erases this exact gameobject (pointer comparsion).
         /// If object is found:
         /// Returns an iterator following the object that was removed.
@@ -93,18 +102,25 @@ namespace Adven
         /// Returns an iterator following the object that was removed.
         auto EraseChild(const_iterator pos) -> iterator;
 
-        template<typename T, typename ... Args>
-        T& AddComponent(Args&&... args);
         template<typename T>
         T* GetComponent();
-        auto GetScene() -> Scene*;
-        auto GetScene() const -> const Scene*;
         template<typename T>
         const T* GetComponent() const;
+
+        auto GetScene() -> Scene*;
+        auto GetScene() const -> const Scene*;
+
+        /// Attempts to Destroy this gameObject by removing it from
+        /// it's parent or scene.
+        /// If it's not attached to a parent or scene, an exception is thrown.
+        auto MarkForDestroy() -> void;
+
         GameObject* Parent();
         const GameObject* Parent() const;
+
         void RemoveComponent(const Component& component);
         void RemoveComponent(std::function<bool(const Component&)> compare);
+
         auto SetScene(Scene* scene) -> void;
     public: // Container methods.
         auto begin() noexcept -> iterator;

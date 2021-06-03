@@ -7,11 +7,37 @@
 
 #include "GameObject.hpp"
 #include "../Scene/Scene.hpp"
+#include "Component.hpp"
 
 #include <algorithm>
 #include <cassert>
+#include <stdexcept>
 
 using namespace Adven;
+
+std::unordered_set<GameObject*> GameObject::markedForDelete{}; 
+bool GameObject::markedForDeleteLock{ false };
+
+auto GameObject::DeletePending() -> void
+{
+    markedForDeleteLock = true;
+
+    for (GameObject* gameObject : markedForDelete)
+    {
+        if (gameObject->parent != nullptr)
+        {
+            gameObject->parent->EraseChild(*gameObject);
+        }
+        else if (gameObject->scene != nullptr)
+        {
+            gameObject->scene->RemoveGameObject(*gameObject);
+        }
+    }
+
+    markedForDelete.clear();
+
+    markedForDeleteLock = false;
+}
 
 GameObject::GameObject(const GameObject& other)
 {
@@ -97,6 +123,11 @@ GameObject& GameObject::operator=(GameObject&& other)
 
 GameObject::~GameObject()
 {
+    if (!markedForDeleteLock)
+    {
+        markedForDelete.erase(this);
+    }
+
     if (scene != nullptr)
     {
         auto comparePtr = [this](const GameObject* value)
@@ -136,14 +167,18 @@ void GameObject::VBlankUpdate()
 
 void GameObject::AddChild(const GameObject& gameObject)
 {
-    GameObject copy{ gameObject };
-    copy.parent = this;
-    children.push_back(copy);
+    children.push_back(gameObject);
+    auto& child = children.back();
+    child.parent = this;
+    child.scene = scene;
 }
 
 void GameObject::AddChild(GameObject&& gameObject)
 {
     children.push_back(std::move(gameObject)); 
+    auto& child = children.back();
+    child.parent = this;
+    child.scene = scene;
 }
 
 auto GameObject::EraseChild(const GameObject& gameObject) -> std::optional<iterator>
@@ -172,6 +207,16 @@ auto GameObject::EraseChild(const_iterator pos) -> iterator
 {
     // No need to set parent to nullptr because the child will be destroyed.
     return children.erase(pos);
+}
+
+auto GameObject::MarkForDestroy() -> void
+{
+    if (scene == nullptr)
+    {
+        throw std::logic_error("MarkForDestroy called on an GameObject with no scene");
+    }
+
+    markedForDelete.insert(this);
 }
 
 auto GameObject::Parent() -> GameObject* { return parent; }

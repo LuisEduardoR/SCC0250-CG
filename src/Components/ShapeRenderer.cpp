@@ -24,7 +24,7 @@ auto ShapeRenderer::Clone() const -> std::unique_ptr<Component>
 
 void ShapeRenderer::VDrawUpdate()
 {
-    auto* transform = gameObject->GetComponent<Transform>();
+    auto* transform = GetGameObject()->GetComponent<Transform>();
     Matrix4x4 world = transform != nullptr ? transform->WorldMatrix()
         : Matrix4x4::Identity;
 

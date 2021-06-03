@@ -10,6 +10,7 @@
 #include "CircleCollider.hpp"
 #include "../Components/Moveable.hpp"
 #include "../Components/Transform.hpp"
+#include "../Time/Time.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -30,34 +31,42 @@ void Collider::Unregister(Collider& collider)
 }
 void Collider::Update()
 {
-    Collider* last = nullptr;
-    for (auto& collider :  colliders)
+    for (auto i = colliders.begin(); i != colliders.end(); ++i)
     {
-        if (last && CheckCollision(*collider, *last))
+        for (auto j = ++colliders.begin(); j != colliders.end(); ++j)
         {
-            last->onCollision.Raise(last, collider);
-            collider->onCollision.Raise(last, collider);
-            
-            if (!last->isTrigger && !collider->isTrigger)
-            {
-                Moveable* mc = collider->gameObject->GetComponent<Moveable>();
-                Transform* tc = collider->gameObject->GetComponent<Transform>();
-                if (mc)
-                {
-                    tc->localPosition -= mc->speed;
-                    mc->speed = -mc->speed;
-                }
+            if (i == j) continue;
 
-                Moveable* ml = last->gameObject->GetComponent<Moveable>();
-                Transform* tl = last->gameObject->GetComponent<Transform>();
-                if (ml)
+            auto* colliderI = *i;
+            auto* colliderJ = *j;
+
+            if (CheckCollision(*colliderI, *colliderJ))
+            {
+                std::cout << "Trigger\n";
+                colliderI->onCollision.Raise(colliderI, colliderJ);
+                colliderJ->onCollision.Raise(colliderJ, colliderI);
+                
+                if (!colliderJ->isTrigger && !colliderI->isTrigger)
                 {
-                    tl->localPosition -= ml->speed;
-                    ml->speed = -mc->speed;
+                    std::cout << "Collision\n";
+                    Moveable* mc = colliderI->GetGameObject()->GetComponent<Moveable>();
+                    Transform* tc = colliderI->GetGameObject()->GetComponent<Transform>();
+                    if (mc)
+                    {
+                        tc->localPosition -= mc->speed * Time::DeltaTime;
+                        mc->speed = Vector3();
+                    }
+
+                    Moveable* ml = colliderJ->GetGameObject()->GetComponent<Moveable>();
+                    Transform* tl = colliderJ->GetGameObject()->GetComponent<Transform>();
+                    if (ml)
+                    {
+                        tl->localPosition -= ml->speed * Time::DeltaTime;
+                        ml->speed = Vector3();
+                    }
                 }
             }
         }
-        last = collider;
     }
 }
 bool Collider::CheckCollision(const Collider& a, const Collider& b)

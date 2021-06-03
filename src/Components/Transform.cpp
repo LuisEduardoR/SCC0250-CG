@@ -36,7 +36,7 @@ Transform::Transform(Vector3 localPosition, Vector3 localRotation, Vector3 local
 {
     Matrix4x4 world = LocalMatrix();
 
-    for (const GameObject* obj = gameObject->Parent(); obj != nullptr; obj = obj->Parent())
+    for (const GameObject* obj = GetGameObject()->Parent(); obj != nullptr; obj = obj->Parent())
     {
         if (const Transform* transform = obj->GetComponent<Transform>())
         { 
@@ -56,7 +56,7 @@ Transform::Transform(Vector3 localPosition, Vector3 localRotation, Vector3 local
 {
     Vector3 world = localRotation;
     
-    for (const GameObject* obj = gameObject->Parent(); obj != nullptr; obj = obj->Parent())
+    for (const GameObject* obj = GetGameObject()->Parent(); obj != nullptr; obj = obj->Parent())
     {
         if (const Transform* transform = obj->GetComponent<Transform>())
         {
@@ -71,7 +71,7 @@ Transform::Transform(Vector3 localPosition, Vector3 localRotation, Vector3 local
 {
     Vector3 world = localScale;
     
-    for (const GameObject* obj = gameObject->Parent(); obj != nullptr; obj = obj->Parent())
+    for (const GameObject* obj = GetGameObject()->Parent(); obj != nullptr; obj = obj->Parent())
     {
         if (const Transform* transform = obj->GetComponent<Transform>())
         {

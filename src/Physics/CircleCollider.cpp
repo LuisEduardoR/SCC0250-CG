@@ -13,12 +13,12 @@ using namespace Adven;
 
 bool CircleCollider::CheckCollision(const CircleCollider& a, const CircleCollider& b)
 {
-    const auto* aTransform = a.gameObject->GetComponent<Transform>();
-    const auto* bTransform = b.gameObject->GetComponent<Transform>();
+    const auto* aTransform = a.GetGameObject()->GetComponent<Transform>();
+    const auto* bTransform = b.GetGameObject()->GetComponent<Transform>();
     Vector3 distance = aTransform->WorldPosition() - bTransform->WorldPosition();
 
     return std::pow(a.radius + b.radius, 2)
-        >= std::pow(distance.x, 2) + std::pow(distance.y, 2);
+        > (std::pow(distance.x, 2) + std::pow(distance.y, 2));
 }
 
 CircleCollider::CircleCollider(float radius, bool isTrigger) : Collider(isTrigger), radius(radius)

@@ -22,8 +22,15 @@ set(COMMON_SOURCES
     src/Components/Transform.cpp
     src/Components/Player.hpp
     src/Components/Component.hpp
+    src/Components/Component.cpp
     src/Components/ShapeRenderer.hpp
     src/Components/Moveable.cpp
+    src/Components/Health.hpp
+    src/Components/Health.cpp
+    src/Components/DestroyOnDie.hpp
+    src/Components/DestroyOnDie.cpp
+    src/Components/DamageOnContact.hpp
+    src/Components/DamageOnContact.cpp
     src/WindowSystem/WindowSystem.cpp
     src/WindowSystem/WindowSystem.hpp
     src/Interfaces/IUpdatable.hpp

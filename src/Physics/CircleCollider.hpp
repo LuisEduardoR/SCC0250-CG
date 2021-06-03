@@ -17,7 +17,7 @@ namespace Adven
         friend class GameObject;
     public:
         static bool CheckCollision(const CircleCollider& a, const CircleCollider& b);
-    private:
+    public:
         float radius;
     public:
         CircleCollider(float radius, bool isTrigger = false);
