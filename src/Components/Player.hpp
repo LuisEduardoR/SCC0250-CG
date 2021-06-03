@@ -22,6 +22,7 @@
 namespace Adven {
     class GameObject;
     class Moveable;
+    class CircleCollider;
 };
 
 class Transform;
@@ -36,11 +37,23 @@ public:
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     void Start() override;
     void VDrawUpdate() override;
-    void VBlankUpdate() override;
 
 private:
+    enum class Size
+    {
+        Small,
+        Normal,
+        Big
+    };
+
+    auto SetSize(Size size) -> void;
+
     Transform* transform;
     Adven::Moveable* moveable;
+    Adven::CircleCollider* collider;
+    Size size;
+    float maxSpeed{ 1.0f };
+    std::uint32_t damage{ 10 };
 };
 
 #endif /* end of include guard: PLAYER_HPP */

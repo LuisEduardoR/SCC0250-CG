@@ -42,13 +42,11 @@ void Collider::Update()
 
             if (CheckCollision(*colliderI, *colliderJ))
             {
-                std::cout << "Trigger\n";
                 colliderI->onCollision.Raise(colliderI, colliderJ);
                 colliderJ->onCollision.Raise(colliderJ, colliderI);
                 
                 if (!colliderJ->isTrigger && !colliderI->isTrigger)
                 {
-                    std::cout << "Collision\n";
                     Moveable* mc = colliderI->GetGameObject()->GetComponent<Moveable>();
                     Transform* tc = colliderI->GetGameObject()->GetComponent<Transform>();
                     if (mc)

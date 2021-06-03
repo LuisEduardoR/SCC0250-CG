@@ -13,6 +13,17 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 set(COMMON_SOURCES
     src/Assets/AssetLoader.hpp
     src/Assets/AssetLoader.cpp
+    src/Components/FollowObject.hpp
+    src/Components/FollowObject.cpp
+    src/Components/PlayerDeath.hpp
+    src/Components/PlayerDeath.cpp
+    src/Components/DestroyArea.hpp
+    src/Components/DestroyArea.cpp
+    src/Components/WrapAround.hpp
+    src/Components/WrapAround.cpp
+    src/Components/BaseEnemy.hpp
+    src/Components/Shooter.hpp
+    src/Components/Shooter.cpp
     src/Components/Camera.hpp
     src/Components/Camera.cpp
     src/Components/ShapeRenderer.cpp

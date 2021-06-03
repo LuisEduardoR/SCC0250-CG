@@ -17,9 +17,13 @@
 # include "../Components/Transform.hpp"
 # include "../Components/Health.hpp"
 # include "../Components/DestroyOnDie.hpp"
+# include "../Components/DestroyArea.hpp"
 # include "../Components/DamageOnContact.hpp"
 # include "../Components/ShapeRenderer.hpp"
 # include "../Components/Shooter.hpp"
+# include "../Components/WrapAround.hpp"
+# include "../Components/FollowObject.hpp"
+# include "../Components/PlayerDeath.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
 # include "../Physics/CircleCollider.hpp"
@@ -80,9 +84,17 @@ GameScene::GameScene()
     {
         bulletPrefab->AddComponent<Transform>(Vector3(), Vector3());
         bulletPrefab->AddComponent<ShapeRenderer>(bulletModel);
-        bulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 0.5f, 0.0f });
+        bulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
         bulletPrefab->AddComponent<CircleCollider>( 0.09f, true );
         bulletPrefab->AddComponent<DamageOnContact>(10);
+        /* bulletPrefab->AddComponent<DestroyArea>( */
+        /*     Vector3{ -1.0f, -1.0f, -1.0f }, */
+        /*     Vector3{ 1.0f, 1.0f, 1.0f} */
+        /* ); */
+        bulletPrefab->AddComponent<DestroyArea>(
+            Vector3{ -100.0f, -100.0f, -100.0f },
+            Vector3{ 100.0f, 100.0f, 100.0f}
+        );
     }
 
     // Gets random points for the asteroids
@@ -115,31 +127,37 @@ GameScene::GameScene()
         asteroid.AddComponent<Moveable>(speed);
         asteroid.AddComponent<CircleCollider>(scale, true);
         asteroid.AddComponent<DamageOnContact>(10);
+        /* asteroid.AddComponent<WrapAround>(); */
     }
+
+    GameObject& camera = AddGameObject({});
+    camera.AddComponent<Transform>();
+    camera.AddComponent<Camera>(true);
+
+    // Creates the sky
+    GameObject sky{};
+    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
+    sky.AddComponent<ShapeRenderer>(skyModel);
+    camera.AddChild(std::move(sky));
 
     // Creates the player
     GameObject& player = AddGameObject({});
 
-    player.AddComponent<Transform>(
+    auto& playerTransform = player.AddComponent<Transform>(
         Vector3{ 0.0f, -0.3f, 0.0f },
         Vector3{},
         Vector3{ 0.3f, 0.3f, 1.0f });
     player.AddComponent<Moveable>();
     player.AddComponent<ShapeRenderer>(ship2Model);
     player.AddComponent<CircleCollider>(0.66f * 0.3f, false);
-    player.AddComponent<Health>(100);
+    auto& playerHealth = player.AddComponent<Health>(100);
     player.AddComponent<Player>();
-    //player.AddComponent<Camera>(true);
-    player.AddComponent<DestroyOnDie>();
+    player.AddComponent<PlayerDeath>();
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
+    /* player.AddComponent<WrapAround>(); */
 
-    // Creates the sky
-    GameObject sky{};
-    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
-    sky.AddComponent<ShapeRenderer>(skyModel);
-    
-    player.AddChild(std::move(sky));
+    camera.AddComponent<FollowObject>(&playerTransform);
 
     // Creates the boss
     GameObject& boss = AddGameObject({});
@@ -166,5 +184,6 @@ GameScene::GameScene()
     ship2.AddComponent<CircleCollider>(0.7f * 0.3f, true);
     ship2.AddComponent<Health>(50);
     ship2.AddComponent<DestroyOnDie>();
+    /* ship2.AddComponent<WrapAround>(); */
     
 }

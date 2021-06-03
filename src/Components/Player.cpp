@@ -40,7 +40,41 @@ void Player::Start()
     // Gets the player components
     transform = GetGameObject()->GetComponent<Transform>();
     moveable = GetGameObject()->GetComponent<Moveable>();
-    
+    collider = GetGameObject()->GetComponent<CircleCollider>();    
+
+    SetSize(Size::Normal);
+}
+
+auto Player::SetSize(Size size) -> void
+{
+    switch (size)
+    {
+    case Size::Small:
+    {
+        transform->localScale = Vector3{ 0.075f, 0.075f, 1.0f };
+        maxSpeed = 1.0f;
+        damage = 10;
+        collider->radius = 0.66f * 0.075f;
+    }
+    break;
+    case Size::Normal:
+    {
+        transform->localScale = Vector3{ 0.15f, 0.15f, 1.0f };
+        maxSpeed = 0.6f;
+        damage = 20;
+        collider->radius = 0.66f * 0.15f;
+    }
+    break;
+    case Size::Big:
+    {
+        transform->localScale = Vector3{ 0.3f, 0.3f, 1.0f };
+        maxSpeed = 0.3f;
+        damage = 30;
+        collider->radius = 0.66f * 0.3f;
+    }
+    break;
+    };
+    this->size = size;
 }
 
 void Player::VDrawUpdate()
@@ -58,26 +92,53 @@ void Player::VDrawUpdate()
     }
 
     // Updates the scale (based on input)
-    if(Input::leftMousePressed)
-        transform->localScale += 0.50f * Time::DeltaTime;
-    else if(Input::rightMousePressed)
-        transform->localScale -= 0.50f * Time::DeltaTime;
+    if (Input::spacePressed)
+    {
+        switch (size)
+        {
+            case Size::Small:
+                SetSize(Size::Normal);
+            break;
+            case Size::Normal:
+                SetSize(Size::Big);
+            break;
+            default:
+            {}
+        }
+    }
+    else if (Input::shiftPressed)
+    {
+        switch (size)
+        {
+            case Size::Normal:
+                SetSize(Size::Small);
+            break;
+            case Size::Big:
+                SetSize(Size::Normal);
+            break;
+            default:
+            {}
+        }
+    }
 
-    GetGameObject()->GetComponent<CircleCollider>()->radius *= transform->localScale.x;
-
-    Vector2 targetPos   {
-                            (Input::mousePosition.x - WINDOW_WIDTH  / 2.0f) / (WINDOW_WIDTH  / 2.0f),                            
-                            (Input::mousePosition.y - WINDOW_HEIGHT / 2.0f) / (WINDOW_HEIGHT / 2.0f)
-                        };
+    Vector2 targetPos
+    {
+        (Input::mousePosition.x - WINDOW_WIDTH  / 2.0f) / (WINDOW_WIDTH  / 2.0f),                            
+        (Input::mousePosition.y - WINDOW_HEIGHT / 2.0f) / (WINDOW_HEIGHT / 2.0f)
+    };
 
     // Aim ship at cursor
-    Vector2 pos =  Vector2{ transform->WorldPosition() } - targetPos;
-    Vector2 aimDirection = (Vector2{ transform->WorldPosition() } - targetPos).Normalized();
-    float aimAngle = std::atan2(aimDirection.y, aimDirection.x) + (CONST_PI / 2.0f);
-    transform->localRotation = Vector3{ 0.0f, 0.0f, aimAngle };
+    Vector2 pos = Vector2{ transform->WorldPosition() } - targetPos;
+    if (pos.Magnitude() >= 0.005f)
+    {
+        targetPos.Normalize();
+        float shipAngle = std::atan2(1.0f, 0.0f);
+        float aimAngle = std::atan2(targetPos.y, targetPos.x);
+
+        transform->localRotation = Vector3{ 0.0f, 0.0f, aimAngle - shipAngle };
+    }
 
     Vector2 input = Vector2();
-    float speed = 1.00f;
 
     // Updates the X position (based on input)
     if(Input::rightPressed)
@@ -91,16 +152,18 @@ void Player::VDrawUpdate()
     else if(Input::downPressed)
         input.y = -1.00f;
 
-    Vector2 velocity = input * speed;
-    moveable->speed = Vector3{ velocity };
+    /* moveable->speed = Vector3{ */ 
+    /*     0.0f, */
+    /*     std::clamp(moveable->speed.y + input.y * Time::DeltaTime, -1.0f, 1.0f), */ 
+        /* 0.0f, */
+    /* }; */
 
-    Scene* currentScene = Scene::currentScene;
+    /* transform->localRotation.z += input.x * 3.0f * Time::DeltaTime; */
+
+    moveable->speed = Vector3{ input * maxSpeed };
 
     // Gets the shooters and sets if they're active based on Input
     std::vector<Shooter*> shooters = GetGameObject()->GetComponents<Shooter>();
     for(Shooter* shooter : shooters)
-        shooter->active = Input::spacePressed;
-
+        shooter->active = Input::leftMousePressed;
 }
-
-void Player::VBlankUpdate() {}

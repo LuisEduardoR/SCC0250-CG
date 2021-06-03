@@ -43,7 +43,7 @@ public:
 
 	[[nodiscard]] auto SqrMagnitude() const -> float;
 	[[nodiscard]] auto Magnitude() const -> float;
-	[[nodiscard]] auto Normalize() -> Vector2&;
+	auto Normalize() -> Vector2&;
 	[[nodiscard]] auto Normalized() const -> Vector2;
 };
 
@@ -86,7 +86,7 @@ public:
 	[[nodiscard]] auto Cross(Vector3 a) const -> Vector3;
 	[[nodiscard]] auto SqrMagnitude() const -> float;
 	[[nodiscard]] auto Magnitude() const -> float;
-	[[nodiscard]] auto Normalize() -> Vector3&;
+	auto Normalize() -> Vector3&;
 	[[nodiscard]] auto Normalized() const -> Vector3;
 };
 
@@ -128,7 +128,7 @@ public:
 
 	[[nodiscard]] auto SqrMagnitude() const -> float;
 	[[nodiscard]] auto Magnitude() const -> float;
-	[[nodiscard]] auto Normalize() -> Vector4&;
+	auto Normalize() -> Vector4&;
 	[[nodiscard]] auto Normalized() const -> Vector4;
 };
 
