@@ -95,10 +95,33 @@ GameObject& GameObject::operator=(GameObject&& other)
     return *this;
 }
 
+GameObject::~GameObject()
+{
+    if (scene != nullptr)
+    {
+        auto comparePtr = [this](const GameObject* value)
+        {
+            return value == this;
+        };
+
+        if (auto iter = std::find_if(
+                scene->toUpdateObjects.cbegin(),
+                scene->toUpdateObjects.cend(), comparePtr);
+            iter != scene->toUpdateObjects.cend())
+        {
+            scene->toUpdateObjects.erase(iter);
+        }
+    }
+}
+
 void GameObject::Start()
 {
     for (auto& component : components)
-        component->Start();
+        if (!component->startCalled)
+        {
+            component->Start();
+            component->startCalled = true;
+        }
 }
 void GameObject::VDrawUpdate()
 {
@@ -169,6 +192,17 @@ void GameObject::RemoveComponent(std::function<bool(const Component&)> compare)
     auto i = std::find_if(components.cbegin(), components.cend(),
         [&compare](const std::unique_ptr<Component>& component) { return compare(*component);});
     components.erase(i);
+}
+
+auto GameObject::GetScene() -> Scene* { return scene; }
+
+auto GameObject::GetScene() const -> const Scene* { return scene; }
+
+auto GameObject::SetScene(Scene* scene) -> void
+{
+    this->scene = scene;
+
+    scene->toUpdateObjects.push_back(this);
 }
 
 auto GameObject::begin() noexcept -> iterator

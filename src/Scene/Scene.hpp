@@ -13,12 +13,14 @@
 #define DM_ADVEN_SCENE_HPP
 
 #include "../Interfaces/IUpdatable.hpp"
-#include "../Components/GameObject.hpp"
 
+#include <functional>
 #include <list>
 
 namespace Adven
 {
+    class GameObject;
+
     class Scene : IUpdatable
     {
         friend class GameObject;
@@ -33,7 +35,8 @@ namespace Adven
             currentScene->Start();
         }
     private:
-        std::list<GameObject> gameObjects;
+        std::list<GameObject> rootObjects;
+        std::list<GameObject*> toUpdateObjects;
     public:
         virtual ~Scene() = default;
         virtual void Start() final override;

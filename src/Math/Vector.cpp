@@ -128,7 +128,7 @@ auto operator!=(Vector2 a, Vector2 b) -> bool
     return a.x != b.x || a.y != b.y;
 }
 
-Vector3::Vector3(const Vector2& vec) : x(vec.x), y(vec.y) {}
+Vector3::Vector3(const Vector2& vec) : x(vec.x), y(vec.y), z(0.0f) {}
 Vector3::Vector3(const Vector4& vec) : x(vec.x), y(vec.y), z(vec.z) {}
 
 auto Vector3::operator+=(Vector3 a) -> Vector3&
@@ -317,8 +317,8 @@ auto Vector4::operator/=(float a) -> Vector4&
     return *this;
 }
 
-Vector4::Vector4(Vector3 vec) : x(vec.x), y(vec.y), z(vec.z) {}
-Vector4::Vector4(Vector2 vec) : x(vec.x), y(vec.y) {}
+Vector4::Vector4(Vector3 vec) : x(vec.x), y(vec.y), z(vec.z), w(0.0f) {}
+Vector4::Vector4(Vector2 vec) : x(vec.x), y(vec.y), z(0.0f), w(0.0f) {}
 Vector4::Vector4(Vector3 vec, float w) : x(vec.x), y(vec.y), z(vec.z), w(w) {}
 Vector4::Vector4(Vector2 vec, float z, float w) : x(vec.x), y(vec.y), z(z), w(w) {}
 

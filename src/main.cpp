@@ -48,7 +48,6 @@ int main(void) {
 
     // Loads our scene (the scene handles most of the program)
     Scene::LoadScene<GameScene>();
-    Scene::currentScene->Start();
 
     // While our program isn't closed:
     while (!WindowSystem::ShouldClose()) {
@@ -61,6 +60,9 @@ int main(void) {
 
         // Clears the color buffer
         Renderer::Clear(Color(0x1B, 0x18, 0x30));
+
+        // Run Start for all new GameObjects.
+        Scene::currentScene->Start();
 
         // Checks for collision
         Adven::Collider::Update();
