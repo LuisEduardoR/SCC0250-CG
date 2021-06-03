@@ -11,6 +11,8 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 #find_package(glfw3 3 REQUIRED)
 
 set(COMMON_SOURCES
+    src/Assets/AssetLoader.hpp
+    src/Assets/AssetLoader.cpp
     src/Components/Camera.hpp
     src/Components/Camera.cpp
     src/Components/ShapeRenderer.cpp
