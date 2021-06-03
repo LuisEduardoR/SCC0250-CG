@@ -5,6 +5,7 @@ CC = g++ -std=c++17
 #	- Source code directory
 SRC_DIR = ./src
 #	- Sub-directories (leave blank if there's a directory with only .hpp)
+SRC_ASSETS			= $(SRC_DIR)/Assets/*.cpp
 SRC_COMPONENTS		= $(SRC_DIR)/Components/*.cpp
 SRC_EVENTS			= #$(SRC_DIR)/Events/*.cpp
 SRC_INPUT			= $(SRC_DIR)/Input/*.cpp
@@ -16,7 +17,7 @@ SRC_SCENE			= $(SRC_DIR)/Scene/*.cpp
 SRC_TIME			= $(SRC_DIR)/Time/*.cpp
 SRC_WINDOWSYSTEM	= $(SRC_DIR)/WindowSystem/*.cpp
 #	- Complete source code
-SRC = ./src/*.cpp $(SRC_COMPONENTS) $(SRC_EVENTS) $(SRC_INPUT) $(SRC_INTERFACES) $(SRC_MATH) $(SRC_PHYSICS) $(SRC_RENDERING) $(SRC_SCENE) $(SRC_TIME) $(SRC_WINDOWSYSTEM)
+SRC = ./src/*.cpp $(SRC_ASSETS) $(SRC_COMPONENTS) $(SRC_EVENTS) $(SRC_INPUT) $(SRC_INTERFACES) $(SRC_MATH) $(SRC_PHYSICS) $(SRC_RENDERING) $(SRC_SCENE) $(SRC_TIME) $(SRC_WINDOWSYSTEM)
 
 # Name of the output program
 OUTPUT = Trabalho-CG.exe

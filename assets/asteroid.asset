@@ -1,0 +1,20 @@
+# Circle: { center = { {%f, %f} }, radius = %f, precision = %d, color = {%f, %f, %f, %f} }
+
+# Base
+Circle: { center = {-0.179, -0.241}, radius = 0.5135, precision = 16, color = {145, 145, 145, 255} }
+Circle: { center = {+0.179, +0.201}, radius = 0.5300, precision = 16, color = {145, 145, 145, 255} }
+Circle: { center = {+0.243, -0.259}, radius = 0.4380, precision = 16, color = {145, 145, 145, 255} }
+Circle: { center = {+0.599, -0.025}, radius = 0.2020, precision = 16, color = {145, 145, 145, 255} }
+Circle: { center = {+0.424, +0.034}, radius = 0.3000, precision = 16, color = {145, 145, 145, 255} }
+
+# Craters
+Circle: { center = {+0.053, +0.570}, radius = 0.0540, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {+0.377, +0.356}, radius = 0.1005, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {-0.029, +0.262}, radius = 0.0402, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {-0.394, +0.179}, radius = 0.0830, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {+0.483, +0.002}, radius = 0.1005, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {-0.574, -0.004}, radius = 0.0520, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {-0.202, -0.163}, radius = 0.1485, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {+0.271, -0.414}, radius = 0.2370, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {-0.483, -0.344}, radius = 0.0980, precision = 16, color = {113, 113, 113, 255} }
+Circle: { center = {-0.210, -0.498}, radius = 0.1415, precision = 16, color = {113, 113, 113, 255} }

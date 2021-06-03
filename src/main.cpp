@@ -29,6 +29,8 @@
 # include "Scene/GameScene.hpp"
 # include "Physics/Collider.hpp"
 
+# include "Assets/AssetLoader.hpp"
+
 # include <chrono>
 
 using namespace Adven;
@@ -45,7 +47,7 @@ int main(void) {
     WindowSystem::Show();
 
     // Loads our scene (the scene handles most of the program)
-    Scene::LoadScene<TestScene>();
+    Scene::LoadScene<GameScene>();
 
     // While our program isn't closed:
     while (!WindowSystem::ShouldClose()) {
