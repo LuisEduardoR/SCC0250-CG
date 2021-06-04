@@ -119,22 +119,22 @@ void Player::VDrawUpdate()
         }
     }
 
-    Vector2 targetPos
-    {
-        (Input::mousePosition.x - WINDOW_WIDTH  / 2.0f) / (WINDOW_WIDTH  / 2.0f),                            
-        (Input::mousePosition.y - WINDOW_HEIGHT / 2.0f) / (WINDOW_HEIGHT / 2.0f)
-    };
+    // Vector2 targetPos
+    // {
+    //     (Input::mousePosition.x - WINDOW_WIDTH  / 2.0f) / (WINDOW_WIDTH  / 2.0f),                            
+    //     (Input::mousePosition.y - WINDOW_HEIGHT / 2.0f) / (WINDOW_HEIGHT / 2.0f)
+    // };
 
     // Aim ship at cursor
-    Vector2 pos = Vector2{ transform->WorldPosition() } - targetPos;
-    if (pos.Magnitude() >= 0.005f)
-    {
-        targetPos.Normalize();
-        float shipAngle = std::atan2(1.0f, 0.0f);
-        float aimAngle = std::atan2(targetPos.y, targetPos.x);
+    // Vector2 pos = Vector2{ transform->WorldPosition() } - targetPos;
+    // if (pos.Magnitude() >= 0.005f)
+    // {
+    //     targetPos.Normalize();
+    //     float shipAngle = std::atan2(1.0f, 0.0f);
+    //     float aimAngle = std::atan2(targetPos.y, targetPos.x);
 
-        transform->localRotation = Vector3{ 0.0f, 0.0f, aimAngle - shipAngle };
-    }
+    //     transform->localRotation = Vector3{ 0.0f, 0.0f, aimAngle - shipAngle };
+    // }
 
     Vector2 input = Vector2();
 
@@ -150,15 +150,15 @@ void Player::VDrawUpdate()
     else if(Input::downPressed)
         input.y = -1.00f;
 
-    /* moveable->speed = Vector3{ */ 
-    /*     0.0f, */
-    /*     std::clamp(moveable->speed.y + input.y * Time::DeltaTime, -1.0f, 1.0f), */ 
-        /* 0.0f, */
-    /* }; */
+    moveable->speed = Vector3{ 
+        0.0f,
+        std::clamp(moveable->speed.y + input.y * Time::DeltaTime, -maxSpeed, +maxSpeed),
+        0.0f,
+    };
 
-    /* transform->localRotation.z += input.x * 3.0f * Time::DeltaTime; */
+    transform->localRotation.z += input.x * 3.0f * Time::DeltaTime;
 
-    moveable->speed = Vector3{ input * maxSpeed };
+    // moveable->speed = Vector3{ input * maxSpeed };
 
     // Gets the shooters and sets if they're active based on Input
     std::vector<Shooter*> shooters = GetGameObject()->GetComponents<Shooter>();

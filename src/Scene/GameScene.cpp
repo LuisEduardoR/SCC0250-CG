@@ -15,6 +15,7 @@
 # include "../Components/Health.hpp"
 # include "../Components/Camera.hpp"
 # include "../Components/Player.hpp"
+# include "../Components/Boss.hpp"
 # include "../Components/Moveable.hpp"
 # include "../Components/Transform.hpp"
 # include "../Components/WrapAround.hpp"
@@ -77,6 +78,7 @@ GameScene::GameScene()
     ShapeCollection bossModel     = AssetLoader<ShapeCollection>::LoadAsset("./assets/boss.asset");
     ShapeCollection asteroidModel = AssetLoader<ShapeCollection>::LoadAsset("./assets/asteroid.asset");
     ShapeCollection bulletModel   = AssetLoader<ShapeCollection>::LoadAsset("./assets/bullet.asset");
+    ShapeCollection bBulletModel    = AssetLoader<ShapeCollection>::LoadAsset("./assets/bossBullet.asset");
     
     // Generates the sky and batchs it's shapes for performance
     ShapeBatch skyBatch(GenerateSkyModel());
@@ -91,14 +93,31 @@ GameScene::GameScene()
         bulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
         bulletPrefab->AddComponent<CircleCollider>( 0.09f, true );
         bulletPrefab->AddComponent<DamageOnContact>(10);
-        /* bulletPrefab->AddComponent<DestroyArea>( */
-        /*     Vector3{ -1.0f, -1.0f, -1.0f }, */
-        /*     Vector3{ 1.0f, 1.0f, 1.0f} */
-        /* ); */
         bulletPrefab->AddComponent<DestroyArea>(
-            Vector3{ -100.0f, -100.0f, -100.0f },
-            Vector3{ 100.0f, 100.0f, 100.0f}
+            Vector3{ -1.0f, -1.0f, -1.0f },
+            Vector3{ 1.0f, 1.0f, 1.0f}
         );
+        // bulletPrefab->AddComponent<DestroyArea>(
+        //     Vector3{ -100.0f, -100.0f, -100.0f },
+        //     Vector3{ 100.0f, 100.0f, 100.0f}
+        // );
+    }
+
+    auto bossBulletPrefab = std::make_shared<GameObject>();
+    {
+        bossBulletPrefab->AddComponent<Transform>(Vector3(), Vector3());
+        bossBulletPrefab->AddComponent<RendererComponent<ShapeBatch>>(bBulletModel);
+        bossBulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
+        bossBulletPrefab->AddComponent<CircleCollider>( 0.05f, true );
+        bossBulletPrefab->AddComponent<DamageOnContact>(10);
+        bossBulletPrefab->AddComponent<DestroyArea>(
+            Vector3{ -1.0f, -1.0f, -1.0f },
+            Vector3{ 1.0f, 1.0f, 1.0f}
+        );
+        // bossBulletPrefab->AddComponent<DestroyArea>(
+        //     Vector3{ -100.0f, -100.0f, -100.0f },
+        //     Vector3{ 100.0f, 100.0f, 100.0f}
+        // );
     }
 
     GameObject& camera = AddGameObject({});
@@ -124,11 +143,11 @@ GameScene::GameScene()
     auto& playerHealth = player.AddComponent<Health>(100);
     player.AddComponent<Player>();
     player.AddComponent<PlayerDeath>();
-    player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
-    player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
-    /* player.AddComponent<WrapAround>(); */
+    player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
+    player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
+    player.AddComponent<WrapAround>();
 
-    camera.AddComponent<FollowObject>(&playerTransform);
+    // camera.AddComponent<FollowObject>(&playerTransform);
 
     // Gets random points for the asteroids
     std::vector<Vector2> asteroidPoints{
@@ -160,7 +179,7 @@ GameScene::GameScene()
         asteroid.AddComponent<Moveable>(speed);
         asteroid.AddComponent<CircleCollider>(scale, true);
         asteroid.AddComponent<DamageOnContact>(10);
-        /* asteroid.AddComponent<WrapAround>(); */
+        asteroid.AddComponent<WrapAround>();
     }
 
     // Creates the boss
@@ -174,6 +193,9 @@ GameScene::GameScene()
     boss.AddComponent<RendererComponent<ShapeCollection>>(bossModel);
     boss.AddComponent<Health>(1000);
     boss.AddComponent<CircleCollider>(0.3f, true);
+    boss.AddComponent<Shooter>(bossBulletPrefab, Vector3{ 268.0f, 140.0f, 0.0f }, 0.0f, 2.0f);
+    boss.AddComponent<Shooter>(bossBulletPrefab, Vector3{ -268.0f, 140.0f, 0.0f }, 1.0f, 2.0f);
+    boss.AddComponent<Boss>(0.7f, 0.1f);
     boss.AddComponent<DestroyOnDie>();
 
     // Creates the second ship
@@ -189,5 +211,5 @@ GameScene::GameScene()
     ship2.AddComponent<Health>(50);
     ship2.AddComponent<DestroyOnDie>();
     /* ship2.AddComponent<WrapAround>(); */
-    
+
 }

@@ -27,7 +27,7 @@
 using namespace Adven;
 
 Shooter::Shooter(std::shared_ptr<Adven::GameObject> bulletPrefab, Vector3 cannonOffset, float startingDelay, float shootingDelay)
-    : bulletPrefab(bulletPrefab), cannonOffset(cannonOffset), active(true) {}
+    : bulletPrefab(bulletPrefab), cannonOffset(cannonOffset), active(true), startingDelay(startingDelay), shootingDelay(shootingDelay) {}
 
 auto Shooter::Clone() const -> std::unique_ptr<Component>
 {
@@ -38,7 +38,6 @@ void Shooter::Start()
 {
     // Gets the Shooter components
     transform = GetGameObject()->GetComponent<Transform>();
-    moveable = GetGameObject()->GetComponent<Moveable>();
 
     currentTime = startingDelay;
 }
@@ -48,12 +47,6 @@ void Shooter::VDrawUpdate()
     if (!transform)
     {
         std::cout << "Shooter expects a Transform";
-        return;
-    }
-
-    if (!moveable)
-    {
-        std::cout << "Shooter expects a Moveable component";
         return;
     }
 
