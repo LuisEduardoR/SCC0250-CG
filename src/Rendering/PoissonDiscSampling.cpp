@@ -7,7 +7,7 @@
 
 #include "PoissonDiscSampling.hpp"
 
-#include "Geometry2D.hpp"
+#include "Geometry.hpp"
 
 #include <cmath>
 #include <iostream>

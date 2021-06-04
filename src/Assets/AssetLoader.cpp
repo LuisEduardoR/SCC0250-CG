@@ -56,18 +56,19 @@ std::string AssetLoader<std::string>::LoadAsset(const std::string& path) {
 }
 
 // Functions for reading data.
-void ReadPoint(Shape2DCollection& collection, const std::string& lineBuffer);
-void ReadLine(Shape2DCollection& collection, const std::string& lineBuffer);
-void ReadPolyline(Shape2DCollection& collection, const std::string& lineBuffer);
-void ReadTriangle(Shape2DCollection& collection, const std::string& lineBuffer);
-void ReadQuad(Shape2DCollection& collection, const std::string& lineBuffer);
-void ReadCircle(Shape2DCollection& collection, const std::string& lineBuffer);
+void ReadPoint(ShapeCollection& collection, const std::string& lineBuffer);
+void ReadPointCluster(ShapeCollection& collection, const std::string& lineBuffer);
+void ReadLine(ShapeCollection& collection, const std::string& lineBuffer);
+void ReadPolyline(ShapeCollection& collection, const std::string& lineBuffer);
+void ReadTriangle(ShapeCollection& collection, const std::string& lineBuffer);
+void ReadQuad(ShapeCollection& collection, const std::string& lineBuffer);
+void ReadCircle(ShapeCollection& collection, const std::string& lineBuffer);
 
 template<>
-Shape2DCollection AssetLoader<Shape2DCollection>::LoadAsset(const std::string& path) {
+ShapeCollection AssetLoader<ShapeCollection>::LoadAsset(const std::string& path) {
 
     // Creates our collection
-    Shape2DCollection collection( new std::vector<std::unique_ptr<Shape2D>>{});
+    ShapeCollection collection( new std::vector<std::unique_ptr<Shape>>{});
 
     // Tries to open the file
     std::ifstream file = AssetLoader::OpenFile(path);
@@ -112,6 +113,8 @@ Shape2DCollection AssetLoader<Shape2DCollection>::LoadAsset(const std::string& p
             ReadLine(collection, shapeBody);
         } else if(shapeType.compare("Point") == 0) {
             ReadPoint(collection, shapeBody);
+        } else if(shapeType.compare("PointCluster") == 0) {
+            ReadPoint(collection, shapeBody);
         } else {
             std::cout << "Invalid Shape2D (" << shapeType << ") at line " << currentLine << " of " << path << std::endl;
         }
@@ -127,7 +130,7 @@ Shape2DCollection AssetLoader<Shape2DCollection>::LoadAsset(const std::string& p
 }
 
 // Interprets our shapeBody as a Point and adds it to the collection
-void ReadPoint(Shape2DCollection& collection, const std::string& shapeBody) {
+void ReadPoint(ShapeCollection& collection, const std::string& shapeBody) {
 
     float verticeData[2];
     int colorData[4];
@@ -148,8 +151,13 @@ void ReadPoint(Shape2DCollection& collection, const std::string& shapeBody) {
 
 }
 
+// TODO: Interprets our shapeBody as a PointCluster and adds it to the collection
+void ReadPointCluster(ShapeCollection& collection, const std::string& lineBuffer) {
+    std::cout << "PointCluster: not implemented!" << std::endl;
+}
+
 // Interprets our shapeBody as a Line and adds it to the collection
-void ReadLine(Shape2DCollection& collection, const std::string& shapeBody) {
+void ReadLine(ShapeCollection& collection, const std::string& shapeBody) {
 
     float verticeData[4];
     int colorData[4];
@@ -172,12 +180,12 @@ void ReadLine(Shape2DCollection& collection, const std::string& shapeBody) {
 }
 
 // TODO: Interprets our shapeBody as a Polyline and adds it to the collection
-void ReadPolyline(Shape2DCollection& collection, const std::string& lineBuffer) {
+void ReadPolyline(ShapeCollection& collection, const std::string& lineBuffer) {
     std::cout << "ReadPolyline: not implemented!" << std::endl;
 }
 
 // Interprets our shapeBody as a Triangle and adds it to the collection
-void ReadTriangle(Shape2DCollection& collection, const std::string& shapeBody) {
+void ReadTriangle(ShapeCollection& collection, const std::string& shapeBody) {
 
     float verticeData[6];
     int colorData[4];
@@ -201,7 +209,7 @@ void ReadTriangle(Shape2DCollection& collection, const std::string& shapeBody) {
 }
 
 // Interprets our shapeBody as a Quad and adds it to the collection
-void ReadQuad(Shape2DCollection& collection, const std::string& shapeBody) {
+void ReadQuad(ShapeCollection& collection, const std::string& shapeBody) {
 
     float verticeData[8];
     int colorData[4];
@@ -226,7 +234,7 @@ void ReadQuad(Shape2DCollection& collection, const std::string& shapeBody) {
 }
 
 // Interprets our shapeBody as a Circle and adds it to the collection
-void ReadCircle(Shape2DCollection& collection, const std::string& shapeBody) {
+void ReadCircle(ShapeCollection& collection, const std::string& shapeBody) {
 
     float centerData[2];
     float radiusData;

@@ -17,7 +17,7 @@
 # include "../Scene/Scene.hpp"
 # include "../Scene/GameScene.hpp"
 # include "../Math/Vector.hpp"
-# include "../Rendering/Geometry2D.hpp"
+# include "../Rendering/Geometry.hpp"
 # include "../Physics/CircleCollider.hpp"
 
 # include <iostream>

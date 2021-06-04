@@ -13,7 +13,7 @@
 # include <iostream>
 
 
-ShapeRenderer::ShapeRenderer(Shape2DCollection geometry)
+ShapeRenderer::ShapeRenderer(ShapeCollection geometry)
     : geometry(geometry) {}
 
 
@@ -28,5 +28,5 @@ void ShapeRenderer::VDrawUpdate()
     Matrix4x4 world = transform != nullptr ? transform->WorldMatrix()
         : Matrix4x4::Identity;
 
-    Renderer::DrawShape2DCollection(geometry, world);
+    Renderer::Draw<ShapeCollection>(geometry, world);
 }

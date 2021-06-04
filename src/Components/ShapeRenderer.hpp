@@ -15,14 +15,14 @@
 # include "Component.hpp"
 
 # include "../Rendering/Renderer.hpp"
-# include "../Rendering/Geometry2D.hpp"
+# include "../Rendering/Geometry.hpp"
 
 class ShapeRenderer : public Adven::Component
 {
 public:
-    Shape2DCollection geometry;
+    ShapeCollection geometry;
 public:
-    ShapeRenderer(Shape2DCollection geometry);
+    ShapeRenderer(ShapeCollection geometry);
     ~ShapeRenderer() override = default;
 public:
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;

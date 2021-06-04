@@ -10,7 +10,7 @@
 # include "GameObject.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
-# include "../Rendering/Geometry2D.hpp"
+# include "../Rendering/Geometry.hpp"
 
 using namespace Adven;
 

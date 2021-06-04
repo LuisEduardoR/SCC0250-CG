@@ -7,6 +7,8 @@
 
 # include "Renderer.hpp"
 
+# include "RenderStateChange.hpp"
+
 GLuint Renderer::currentProgram{ 0 };
 
     //Current array buffer bound to the renderer
@@ -29,24 +31,11 @@ void Renderer::Destroy() {
     glDeleteBuffers(1, &(Renderer::arrayBuffer));
 }
 
-// Enables or disables 3D rendering (enables or disables depth buffer testing)  
-void Renderer::Set3D(bool enabled) {
-
-    if(enabled)
-        glEnable(GL_DEPTH_TEST);
-    else
-        glDisable(GL_DEPTH_TEST);
-
-}
-
 // Clears our color program with a certain color
 void Renderer::Clear(const Color& c) {
     glClearColor(c.r, c.g, c.b, c.a);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
-
-// Clears our color buffer with a default color
-void Renderer::Clear() { Clear(Color::black); }
 
 // Sets the program our renderer will use based on some shader code
 void Renderer::SetProgram(const std::string& vertexCode, const std::string& fragmentCode) {
@@ -69,6 +58,7 @@ void Renderer::SetProgram(const Shader& shader) {
 
 }
 
+// Sets the view matrix for the current program
 void Renderer::SetViewMatrix(const Matrix4x4& viewMatrix)
 {
     GLint loc = glGetUniformLocation(Renderer::currentProgram, "view");
@@ -92,13 +82,8 @@ void Renderer::CreateArrayBuffer() {
 
 }
 
-// 2D =====================================
-
-// Draws a basic 2D shape (uses the default transform matrix)
-void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color) { DrawBasic2D(data, data_size, count, mode, color, Matrix4x4::Identity); }
-
-// Draws a basic 2D shape
-void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
+// Draws an object directly interacting with our graphics API
+void Renderer::DrawInternal(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
 
     // Creates our array buffer
     CreateArrayBuffer();
@@ -127,92 +112,36 @@ void Renderer::DrawBasic2D(float* data, size_t data_size, size_t count, GLenum m
 
 }
 
-// Draws a Shape2D applying a transformation matrix
-void Renderer::DrawShape2D(const Shape2D& shape, const Matrix4x4& transform) {
+// Draws a Shape applying a transformation matrix
+template<>
+void Renderer::Draw<Shape>(const Shape& shape, const Matrix4x4& transform ) {
+
     // Gets the vertices of our shape
-    VertexData data = shape.GetVertices();
+    RenderData data = shape.GetRenderData();
 
     // Performs the drawing
-    DrawBasic2D((float*)data.vertices2D, data.vertexCount * sizeof(Vector2), data.vertexCount, shape.GetDrawMode(), shape.color, transform);
+    DrawInternal((float*)data.vertices, data.vertexCount * sizeof(Vector2), data.vertexCount, data.drawMode, Color(*data.color), transform);
 
 }
 
-// Draws a Shape2DCollection applying a transformation matrix
-void Renderer::DrawShape2DCollection(const Shape2DCollection& shapes, const Matrix4x4& transform) {
+// Draws a ShapeCollection applying a transformation matrix
+template<>
+void Renderer::Draw<ShapeCollection>(const ShapeCollection& shapes, const Matrix4x4& transform) {
 
     // Performs the drawing of each shape
-    /* for (auto iter = (*shapes).cbegin(); iter != (*shapes).cend(); iter++) */
-    /*     DrawShape2D(*(*iter).get(), transform); */
-    for (const std::unique_ptr<Shape2D>& shape : *shapes.get())
-        DrawShape2D(*shape.get(), transform);
+    for (const std::unique_ptr<Shape>& shape : *shapes.get())
+        Draw<Shape>(*shape.get(), transform);
 
 }
 
-// 3D =====================================
+// Draws a ShapeBatch applying a transformation matrix
+template<>
+void Renderer::Draw<ShapeBatch>(const ShapeBatch& shapeBatch, const Matrix4x4& transform) {
 
-// Draws a basic 3D shape (uses the default transform matrix)
-void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color) { DrawBasic3D(data, data_size, count, mode, color, Matrix4x4::Identity); }
+    std::cout << "Complex shape has " << shapeBatch.stateChanges.size() << " states" << std::endl;
 
-// Draws a basic 3D shape applying a transformation matrix
-void Renderer::DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
-
-    // Creates our array buffer
-    CreateArrayBuffer();
-
-    // Sends our data to the array buffer
-    glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_DYNAMIC_DRAW);
-
-    // Associates the variables from our program with our data:
-    GLint loc;
-
-    // Associates the positions of our geometry
-    loc = glGetAttribLocation(Renderer::currentProgram, "position");
-    glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
-
-    // Associates our color
-    loc = glGetUniformLocation(Renderer::currentProgram, "color");
-    glUniform4f(loc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
-
-    // Associates our transform matrix
-    loc = glGetUniformLocation(Renderer::currentProgram, "transform");
-    glUniformMatrix4fv(loc, 1, GL_TRUE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
-
-    // Performs the drawing
-    glDrawArrays(mode, 0, count);
-
-}
-
-// Functions to draw some of our basic geometry (uses the default transform matrix):
-
-void Renderer::DrawMesh3D(const Mesh3D& mesh, const Color& color) { DrawMesh3D(mesh, color, Matrix4x4::Identity); }
-
-// Functions to draw some of our basic geometry applying transformation matrixes:
-
-void Renderer::DrawMesh3D(const Mesh3D& mesh, const Color& color, const Matrix4x4& transform) {
-
-    // Gets the triangles of our mesh.
-    std::vector<Triangle3D> triangles = mesh.GetTriangles();
-
-    // Color for each face
-    Color faceColor = color;
-
-    // Performs the drawing of each face of the cube
-    for(Triangle3D tri : triangles) {
-
-        // Breaks the current triangle data into a simple array
-        float data[9] = {
-                            tri.a.x, tri.a.y, tri.a.z,
-                            tri.b.x, tri.b.y, tri.b.z,
-                            tri.c.x, tri.c.y, tri.c.z
-                        };
-
-        // Performs the drawing
-        DrawBasic3D(data, sizeof(data), 3, GL_TRIANGLE_STRIP, faceColor, transform);
-
-        // Darkens the color for each face so they look different
-        faceColor = Color(faceColor.r * 0.85f, faceColor.g * 0.85f, faceColor.b * 0.85f, faceColor.a);
-        
-    }
+    // Performs the drawing of each state
+    for(RenderStateChange state : shapeBatch.stateChanges)
+        DrawInternal((float*)(shapeBatch.vertexBuffer.data() + state.index), state.vertexCount * sizeof(Vector2), state.vertexCount, state.drawMode, state.color, transform);
 
 }

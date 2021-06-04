@@ -15,8 +15,7 @@
 # include <GL/glew.h>
 
 # include "Shader.hpp"
-# include "Geometry2D.hpp"
-# include "Geometry3D.hpp"
+# include "Geometry.hpp"
 # include "Color.hpp"
 
 # include "../Math/Vector.hpp"
@@ -32,48 +31,21 @@ public:
     // Destroy the render
     static void Destroy();
 
-    // Enables or disables 3D rendering    
-    static void Set3D(bool enabled);
-    
-    // Clears our color buffer with a default color
-    static void Clear();
-
     // Clears our color program with a certain color
-    static void Clear(const Color& color);
+    static void Clear(const Color& color = Color::black);
 
     // Sets the program our renderer will use based on some shader code
     static void SetProgram(const std::string& vertexCode, const std::string& fragmentCode);
 
-// Sets the program our renderer will use from a shader
+    // Sets the program our renderer will use from a shader
     static void SetProgram(const Shader& shader);
 
-    // Sets the view matrix for the current program.
+    // Sets the view matrix for the current program
     static void SetViewMatrix(const Matrix4x4& viewMatrix = Matrix4x4::Identity);
 
-    // ========================================================
-    //
-    // 2D
-    //
-    // ========================================================
-
-    // Draws a Shape2D applying a transformation matrix
-    static void DrawShape2D(const Shape2D& shape, const Matrix4x4& transform = Matrix4x4::Identity);
-
-    // Draws a Shape2D applying a transformation matrix
-    static void DrawShape2DCollection(const Shape2DCollection& shapes,
-        const Matrix4x4& transform = Matrix4x4::Identity);
-
-    // ========================================================
-    //
-    // 3D
-    //
-    // ========================================================
-
-    // Draws a Mesh3D (uses the default transform matrix)
-    static void DrawMesh3D(const Mesh3D& mesh, const Color& color);
-
-    // Draws a Mesh3D applying a transformation matrix
-    static void DrawMesh3D(const Mesh3D& mesh, const Color& color, const Matrix4x4& transform);
+    // Draws an object of type T applying a transformation matrix
+    template<typename T>
+    static void Draw(const T& object, const Matrix4x4& transform = Matrix4x4::Identity);
 
 private:
 
@@ -86,29 +58,8 @@ private:
     // Creates an array buffer (if one was already created re-uses it)
     static void CreateArrayBuffer();
 
-    // ========================================================
-    //
-    // 2D
-    //
-    // ========================================================
-
-    // Draws a basic 2D shape (uses the default transform matrix)
-    static void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
-
-    // Draws a basic 2D shape applying a transformation matrix
-    static void DrawBasic2D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform);
-
-    // ========================================================
-    //
-    // 3D
-    //
-    // ========================================================
-
-    // Draws a basic 3D shape (uses the default transform matrix)
-    static void DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color);
-
-    // Draws a basic 3D shape applying a transformation matrix
-    static void DrawBasic3D(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform);
+    // Draws an object directly interacting with our graphics API
+    static void DrawInternal(float* data, size_t data_size, size_t count, GLenum mode, const Color& color = Color::white, const Matrix4x4& transform = Matrix4x4::Identity);
 
 }; 
 

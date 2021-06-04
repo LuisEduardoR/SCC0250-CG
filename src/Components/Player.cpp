@@ -16,12 +16,11 @@
 # include "../Time/Time.hpp"
 # include "../Math/Matrix4x4.hpp"
 # include "../Input/Input.hpp"
-# include "../Rendering/Geometry2D.hpp"
 # include "../Scene/Scene.hpp"
 # include "../Scene/GameScene.hpp"
 # include "../Physics/CircleCollider.hpp"
 # include "../Math/Vector.hpp"
-# include "../Rendering/Geometry2D.hpp"
+# include "../Rendering/Geometry.hpp"
 # include "../WindowSystem/WindowSystem.hpp"
 
 # include <iostream>

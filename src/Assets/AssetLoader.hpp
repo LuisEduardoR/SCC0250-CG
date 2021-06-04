@@ -13,7 +13,7 @@
 # define ASSET_LOADER_HPP
 
 # include "../Rendering/Shader.hpp"
-# include "../Rendering/Geometry2D.hpp"
+# include "../Rendering/Geometry.hpp"
 
 # include <string>
 
@@ -43,6 +43,6 @@ template<>
 std::string AssetLoader<std::string>::LoadAsset(const std::string& path);
 
 template<>
-Shape2DCollection AssetLoader<Shape2DCollection>::LoadAsset(const std::string& path);
+ShapeCollection AssetLoader<ShapeCollection>::LoadAsset(const std::string& path);
 
 # endif /* end of include guard: ASSET_LOADER_HPP */

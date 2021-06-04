@@ -9,54 +9,52 @@
     This file contains the base classes to represent 2D geometry
 */
 
-# ifndef GEOMETRY2D_HPP
-# define GEOMETRY2D_HPP
+# ifndef GEOMETRY_HPP
+# define GEOMETRY_HPP
 
 # define CONST_PI 3.14159265358979323846f
 
 
 # include "Color.hpp"
-# include "VertexData.hpp"
+# include "RenderData.hpp"
+# include "RenderStateChange.hpp"
 # include "../Math/Vector.hpp"
 
 # include <GL/glew.h>
 # include <cmath>
 # include <vector>
 # include <memory>
+# include <algorithm>
 
-class Shape2D {
+class Shape {
 
 public:
 
     Color color;
 
     // Constructors
-    Shape2D(Color color) {
+    Shape(Color color) {
         this->color = color;
     }
-    Shape2D() : Shape2D(Color::white) {}
+    Shape() : Shape(Color::white) {}
 
     // Destructors
-    virtual ~Shape2D() = default;
+    virtual ~Shape() = default;
 
-    // Returns the vertices used to represent this shape
-    virtual const VertexData GetVertices() const = 0;
-
-    // Returns the draw mode of this shape
-    virtual GLenum GetDrawMode() const = 0;
+    // Returns te data necessary to render this shape
+    virtual const RenderData GetRenderData() const = 0;
 
 };
 
 // Represents a point in 2D space
-class Point :  public Shape2D {
+class Point :  public Shape {
 
 public:
-
 
     Vector2 a;
 
     // Constructors
-    Point(Vector2 a, Color color = Color::white) : Shape2D(color) {
+    Point(Vector2 a, Color color = Color::white) : Shape(color) {
         this->a = a;
     }
     Point() : Point(Vector2()) {}
@@ -64,50 +62,52 @@ public:
     // Destructors
     virtual ~Point() = default;
 
-    // Returns the vertices used to represent this shape
-    const VertexData GetVertices() const override;
+    // Returns the data necessary to render this shape
+    const RenderData GetRenderData() const override;
 
-    // Returns the draw mode of this shape
-    GLenum GetDrawMode() const override;
+private:
+
+    // The draw mode to be used for this shape
+    GLuint drawMode = GL_POINTS;
 
 };
 
 // Represents a cluster of points in 2D space
-class PointCluster :  public Shape2D {
+class PointCluster :  public Shape {
 
 public:
 
     // Constructors
     PointCluster(std::vector<Vector2> vertices, Color color = Color::white)
-        : Shape2D(color), vertices(std::move(vertices)) {}
+        : Shape(color), vertices(std::move(vertices)) {}
 
-    PointCluster() : Shape2D(Color::white) {}
+    PointCluster() : Shape(Color::white) {}
 
     // Destructors
     virtual ~PointCluster() = default;
 
-    // Returns the vertices used to represent this shape
-    const VertexData GetVertices() const override;
-
-    // Returns the draw mode of this shape
-    GLenum GetDrawMode() const override;
+    // Returns the data necessary to render this shape
+    const RenderData GetRenderData() const override;
 
 private:
 
     // Stores the vertices of the point cluster
     std::vector<Vector2> vertices{};
 
+    // The draw mode to be used for this shape
+    GLuint drawMode = GL_POINTS;
+
 };
 
 // Represents a line between 2 points in 2D space
-class Line :  public Shape2D {
+class Line :  public Shape {
 
 public:
 
     Vector2 a, b;
 
     // Constructors
-    Line(Vector2 a, Vector2 b, Color color = Color::white) : Shape2D(color) {
+    Line(Vector2 a, Vector2 b, Color color = Color::white) : Shape(color) {
         this->a = a;
         this->b = b;
     }
@@ -116,51 +116,53 @@ public:
     // Destructors
     virtual ~Line() = default;
 
-    // Returns the vertices used to represent this shape
-    const VertexData GetVertices() const override;
+    // Returns the data necessary to render this shape
+    const RenderData GetRenderData() const override;
 
-    // Returns the draw mode of this shape
-    GLenum GetDrawMode() const override;
+private:
+
+    // The draw mode to be used for this shape
+    GLuint drawMode = GL_LINES;
 
 };
 
 // Represents a line composed by connecting multiple points in 2D space
-class Polyline : public Shape2D {
+class Polyline : public Shape {
 
 public:
 
     // Constructors
     Polyline(std::vector<Vector2> vertices, Color color = Color::white)
-        : Shape2D(color), vertices(std::move(vertices)) {
+        : Shape(color), vertices(std::move(vertices)) {
     }
     Polyline(Vector2 a, Vector2 b, Color color = Color::white) : Polyline({a, b}, color) {}
-    Polyline() : Shape2D(Color::white) {}
+    Polyline() : Shape(Color::white) {}
 
     // Destructors
     virtual ~Polyline() = default;
 
-    // Returns the vertices used to represent this shape
-    const VertexData GetVertices() const override;
-
-    // Returns the draw mode of this shape
-    GLenum GetDrawMode() const override;
+    // Returns the data necessary to render this shape
+    const RenderData GetRenderData() const override;
 
 private:
 
     // Stores the vertices of the polyline
     std::vector<Vector2> vertices{};
 
+    // The draw mode to be used for this shape
+    GLuint drawMode = GL_LINE_STRIP;
+
 };
 
 // Represents a triangle in 2D space
-class Triangle :  public Shape2D {
+class Triangle :  public Shape {
 
 public:
 
     Vector2 a, b, c;
 
     // Constructors
-    Triangle(Vector2 a, Vector2 b, Vector2 c, Color color = Color::white) : Shape2D(color) {
+    Triangle(Vector2 a, Vector2 b, Vector2 c, Color color = Color::white) : Shape(color) {
         this->a = a;
         this->b = b;
         this->c = c;
@@ -176,23 +178,25 @@ public:
     // Destructors
     virtual ~Triangle() = default;
 
-    // Returns the vertices used to represent this shape
-    const VertexData GetVertices() const override;
+    // Returns the data necessary to render this shape
+    const RenderData GetRenderData() const override;
 
-    // Returns the draw mode of this shape
-    GLenum GetDrawMode() const override;
+private:
+
+    // The draw mode to be used for this shape
+    GLuint drawMode = GL_TRIANGLES;
 
 };
 
 // Represents any shape with 4 sides in 2D space
-class Quad :  public Shape2D {
+class Quad :  public Shape {
 
 public:
 
     Vector2 a, b, c, d;
 
     // Constructors
-    Quad(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color = Color::white) : Shape2D(color) {
+    Quad(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color = Color::white) : Shape(color) {
         this->a = a;
         this->b = b;
         this->c = c;
@@ -203,16 +207,18 @@ public:
     // Destructors
     virtual ~Quad() = default;
 
-    // Returns the vertices used to represent this shape
-    const VertexData GetVertices() const override;
+    // Returns the data necessary to render this shape
+    const RenderData GetRenderData() const override;
 
-    // Returns the draw mode of this shape
-    GLenum GetDrawMode() const override;
+private:
+
+    // The draw mode to be used for this shape
+    GLuint drawMode = GL_TRIANGLE_STRIP;
 
 };
 
 // Represents a circle in 2D space
-class Circle :  public Shape2D {
+class Circle :  public Shape {
 
 public:
 
@@ -227,21 +233,14 @@ public:
     float radius;    
 
     // Constructors
-    Circle(Vector2 center, float radius, int precision, Color color = Color::white) : Shape2D(color) {
+    Circle(Vector2 center, float radius, int precision, Color color = Color::white) : Shape(color) {
 
         this->center = center;
         this->radius = radius;
         this->precision = precision;
 
         // Calculates some points to represent the circle
-        this->vertices.reserve(precision);
-        float angle = 0.0;
-        for(int i = 0; i < this->precision; i++){
-            angle += (2.0f * CONST_PI) / this->precision;
-            float x = this->center.x + std::cos(angle) * this->radius;
-            float y = this->center.y + std::sin(angle) * this->radius;
-            this->vertices.push_back({ x, y });
-        }
+        GeneratePoints();
         
     }
     Circle(Vector2 center, float radius) : Circle(center, radius, this->default_precision) {} 
@@ -250,19 +249,39 @@ public:
     // Destructors
     virtual ~Circle() = default;
 
-    // Returns the vertices used to represent this shape (an approximation of the Circle represented by a certain number of vertices)
-    const VertexData GetVertices() const override;
-
-    // Returns the draw mode of this shape
-    GLenum GetDrawMode() const override;
+    // Returns the data necessary to render this shape (an approximation of the Circle represented by a certain number of vertices is used)
+    const RenderData GetRenderData() const override;
 
 private:
 
     // Stores the vertices of the circle
     std::vector<Vector2> vertices{};
 
+    // The draw mode to be used for this shape
+    GLuint drawMode = GL_TRIANGLE_FAN;
+
+    // Generates a number of points to represent an approximation of the circle based on precision
+    // and saves them to vertices
+    void GeneratePoints();
+
 };
 
-using Shape2DCollection = std::shared_ptr<std::vector<std::unique_ptr<Shape2D>>>;
+// Used to hold multiple Shapes together
+using ShapeCollection = std::shared_ptr<std::vector<std::unique_ptr<Shape>>>;
 
-# endif /* end of include guard: GEOMETRY2D_HPP */
+// Used to batch lots of shapes together in order to render faster
+class ShapeBatch {
+    
+public:
+
+    ShapeBatch(ShapeCollection collection);
+
+    // Stores the vertices of all Shapes batched together
+    std::vector<Vector2> vertexBuffer;
+
+    // Stores the data of all state changes that must happen when rendering
+    std::vector<RenderStateChange> stateChanges;
+
+};
+
+# endif /* end of include guard: GEOMETRY_HPP */

@@ -27,7 +27,7 @@
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
 # include "../Physics/CircleCollider.hpp"
-# include "../Rendering/Geometry2D.hpp"
+# include "../Rendering/Geometry.hpp"
 # include "../Rendering/PoissonDiscSampling.hpp"
 # include "../Assets/AssetLoader.hpp"
 
@@ -36,14 +36,14 @@ using namespace Adven;
 namespace
 {
 
-    auto GenerateSkyModel() -> Shape2DCollection
+    auto GenerateSkyModel() -> ShapeCollection
     {
         
         std::vector<Vector2> skyPoints {
             amn::PoissonDiscSampler::GeneratePoints(0.02f, { 2.0f, 2.0f }, 5)
         };
 
-        Shape2DCollection skyModel{ new std::vector<std::unique_ptr<Shape2D>>{} };
+        ShapeCollection skyModel{ new std::vector<std::unique_ptr<Shape>>{} };
 
         skyModel->push_back (std::unique_ptr<PointCluster>{ new PointCluster {
                                 skyPoints, Color::white
@@ -68,13 +68,13 @@ GameScene::GameScene()
     Renderer::SetProgram(shader);
 
     // Loads the models that will be used
-    Shape2DCollection shipModel     = AssetLoader<Shape2DCollection>::LoadAsset("./assets/ship.asset");
-    Shape2DCollection ship2Model    = AssetLoader<Shape2DCollection>::LoadAsset("./assets/ship2.asset");
-    Shape2DCollection bossModel     = AssetLoader<Shape2DCollection>::LoadAsset("./assets/boss.asset");
-    Shape2DCollection asteroidModel = AssetLoader<Shape2DCollection>::LoadAsset("./assets/asteroid.asset");
-    Shape2DCollection bulletModel   = AssetLoader<Shape2DCollection>::LoadAsset("./assets/bullet.asset");
+    ShapeCollection shipModel     = AssetLoader<ShapeCollection>::LoadAsset("./assets/ship.asset");
+    ShapeCollection ship2Model    = AssetLoader<ShapeCollection>::LoadAsset("./assets/ship2.asset");
+    ShapeCollection bossModel     = AssetLoader<ShapeCollection>::LoadAsset("./assets/boss.asset");
+    ShapeCollection asteroidModel = AssetLoader<ShapeCollection>::LoadAsset("./assets/asteroid.asset");
+    ShapeCollection bulletModel   = AssetLoader<ShapeCollection>::LoadAsset("./assets/bullet.asset");
     
-    Shape2DCollection skyModel = GenerateSkyModel();
+    ShapeCollection skyModel = GenerateSkyModel();
 
     // Make a prefab. Prefabs are just normal gameobjects.
     // Though they don't need to be attached to a scene.
