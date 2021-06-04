@@ -139,8 +139,6 @@ void Renderer::Draw<ShapeCollection>(const ShapeCollection& shapes, const Matrix
 template<>
 void Renderer::Draw<ShapeBatch>(const ShapeBatch& shapeBatch, const Matrix4x4& transform) {
 
-    std::cout << "Complex shape has " << shapeBatch.stateChanges.size() << " states" << std::endl;
-
     // Performs the drawing of each state
     for(RenderStateChange state : shapeBatch.stateChanges)
         DrawInternal((float*)(shapeBatch.vertexBuffer.data() + state.index), state.vertexCount * sizeof(Vector2), state.vertexCount, state.drawMode, state.color, transform);

@@ -23,18 +23,6 @@ const RenderData Point::GetRenderData() const {
             };
 }
 
-// PointCluster ===============================
-
-// Returns the data necessary to render this shape
-const RenderData PointCluster::GetRenderData() const {
-    return {
-                this->vertices.data(),
-                this->vertices.size(),
-                &(this->color),
-                this->drawMode
-            };
-}
-
 // Line =======================================
 
 // Returns the data necessary to render this shape
@@ -139,7 +127,7 @@ ShapeBatch::ShapeBatch(ShapeCollection collection) {
 
     // Sorts the render data
     // !FIX: using Sort causes lots of weird C++ errors
-    // std::sort(renderData.begin(), renderData.end());
+    std::sort(renderData.begin(), renderData.end());
 
     // Allocates memory for the vertices
     vertexBuffer.reserve(totalVertices);
@@ -157,9 +145,9 @@ ShapeBatch::ShapeBatch(ShapeCollection collection) {
     for(uint64_t curIndex = 1; curIndex < renderData.size(); curIndex++) {
 
         // Tries to keep on the same stage
-        if (renderData[curIndex].drawMode == renderData[curIndex - 1].drawMode // For this, both shapes RenderData must have the same drawMode
-            &&  renderData[curIndex].color == renderData[curIndex - 1].color   // and the same color
-            &&  (   renderData[curIndex].drawMode == GL_TRIANGLES // Also only some drawModes allow this
+        if (renderData[curIndex].drawMode == renderData[curIndex - 1].drawMode      // For this, both shapes RenderData must have the same drawMode
+            &&  *(renderData[curIndex].color) == *(renderData[curIndex - 1].color)  // and the same color
+            &&  (   renderData[curIndex].drawMode == GL_TRIANGLES                   // Also only some drawModes allow this
                     || renderData[curIndex].drawMode == GL_POINTS 
                     || renderData[curIndex].drawMode == GL_LINES
                 ) 

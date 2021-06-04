@@ -72,33 +72,6 @@ private:
 
 };
 
-// Represents a cluster of points in 2D space
-class PointCluster :  public Shape {
-
-public:
-
-    // Constructors
-    PointCluster(std::vector<Vector2> vertices, Color color = Color::white)
-        : Shape(color), vertices(std::move(vertices)) {}
-
-    PointCluster() : Shape(Color::white) {}
-
-    // Destructors
-    virtual ~PointCluster() = default;
-
-    // Returns the data necessary to render this shape
-    const RenderData GetRenderData() const override;
-
-private:
-
-    // Stores the vertices of the point cluster
-    std::vector<Vector2> vertices{};
-
-    // The draw mode to be used for this shape
-    GLuint drawMode = GL_POINTS;
-
-};
-
 // Represents a line between 2 points in 2D space
 class Line :  public Shape {
 
