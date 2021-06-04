@@ -7,11 +7,12 @@
 
 # include "Renderer.hpp"
 
+# include "RenderData.hpp"
 # include "RenderStateChange.hpp"
 
 GLuint Renderer::currentProgram{ 0 };
 
-    //Current array buffer bound to the renderer
+//Current array buffer bound to the renderer
 GLuint Renderer::arrayBuffer{ 0 };
 
 // Initializes the renderer

@@ -44,7 +44,7 @@ public:
     static void SetViewMatrix(const Matrix4x4& viewMatrix = Matrix4x4::Identity);
 
     // Draws an object of type T applying a transformation matrix
-    template<typename T>
+    template<class T>
     static void Draw(const T& object, const Matrix4x4& transform = Matrix4x4::Identity);
 
 private:

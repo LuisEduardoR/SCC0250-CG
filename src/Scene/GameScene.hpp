@@ -13,7 +13,6 @@
 #define GAME_SCENE_HPP
 
 #include "Scene.hpp"
-#include "../Rendering/Renderer.hpp"
 
 class GameScene : public Adven::Scene
 {

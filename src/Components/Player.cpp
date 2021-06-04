@@ -9,7 +9,6 @@
 
 # include "GameObject.hpp"
 # include "Moveable.hpp"
-# include "ShapeRenderer.hpp"
 # include "Transform.hpp"
 # include "Shooter.hpp"
 

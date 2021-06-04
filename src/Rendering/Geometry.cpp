@@ -158,7 +158,6 @@ ShapeBatch::ShapeBatch(ShapeCollection collection) {
 
         // Tries to keep on the same stage
         if (renderData[curIndex].drawMode == renderData[curIndex - 1].drawMode // For this, both shapes RenderData must have the same drawMode
-            // !FIX: float colors are never equal
             &&  renderData[curIndex].color == renderData[curIndex - 1].color   // and the same color
             &&  (   renderData[curIndex].drawMode == GL_TRIANGLES // Also only some drawModes allow this
                     || renderData[curIndex].drawMode == GL_POINTS 

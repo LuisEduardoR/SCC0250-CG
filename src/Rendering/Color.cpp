@@ -8,6 +8,7 @@
 # include "Color.hpp"
 
 # include <random>
+# include <cmath>
 
 // Constructors
 Color::Color(float r, float g, float b, float a) {
@@ -44,4 +45,13 @@ Color Color::random(unsigned seed) {
                     std::uniform_real_distribution<float>{ 0.0f, 1.0f }(rng), 
                     1.0f
                 );
+}
+
+// Compares colors by converting their components to int to avoid float precision errors
+auto operator==(const Color& a, const Color& b) -> bool
+{
+    return  static_cast<int32_t>(roundf(a.r * 255.0f)) == static_cast<int32_t>(roundf(b.r * 255.0f))
+            && static_cast<int32_t>(roundf(a.g * 255.0f)) == static_cast<int32_t>(roundf(b.g * 255.0f))
+            && static_cast<int32_t>(roundf(a.b * 255.0f)) == static_cast<int32_t>(roundf(b.b * 255.0f))
+            && static_cast<int32_t>(roundf(a.a * 255.0f)) == static_cast<int32_t>(roundf(b.a * 255.0f));
 }
