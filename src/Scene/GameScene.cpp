@@ -78,26 +78,8 @@ GameScene::GameScene()
     ShapeCollection asteroidModel = AssetLoader<ShapeCollection>::LoadAsset("./assets/asteroid.asset");
     ShapeCollection bulletModel   = AssetLoader<ShapeCollection>::LoadAsset("./assets/bullet.asset");
     
-    // Generates the sky
-    ShapeCollection skyModel = GenerateSkyModel();
-
-    // Converts them to ShapeBatchs for optimization
-    ShapeBatch shipBatch(shipModel);
-    ShapeBatch ship2Batch(ship2Model);
-    ShapeBatch bossBatch(bossModel);
-    ShapeBatch asteroidBatch(asteroidModel);
-    ShapeBatch bulletBatch(bulletModel);
-    ShapeBatch skyBatch(skyModel);
-
-    // Used to check if ShapeBatch is working
-    # if DEBUG_BATCHING
-        std::cout << "Batching ShapeCollection (shipModel): reduced " << shipModel.get()->size() << " to " << shipBatch.stateChanges.size() << " drawCalls" << std::endl;
-        std::cout << "Batching ShapeCollection (ship2Model): reduced " << ship2Model.get()->size() << " to " << ship2Batch.stateChanges.size() << " drawCalls" << std::endl;
-        std::cout << "Batching ShapeCollection (bossModel): reduced " << bossModel.get()->size() << " to " << bossBatch.stateChanges.size() << " drawCalls" << std::endl;
-        std::cout << "Batching ShapeCollection (asteroidModel): reduced " << asteroidModel.get()->size() << " to " << asteroidBatch.stateChanges.size() << " drawCalls" << std::endl;
-        std::cout << "Batching ShapeCollection (bulletModel): reduced " << bulletModel.get()->size() << " to " << bulletBatch.stateChanges.size() << " drawCalls" << std::endl;
-        std::cout << "Batching ShapeCollection (skyModel): reduced " << skyModel.get()->size() << " to " << skyBatch.stateChanges.size() << " drawCalls" << std::endl;
-    # endif
+    // Generates the sky and batchs it's shapes for performance
+    ShapeBatch skyBatch(GenerateSkyModel());
 
     // Make a prefab. Prefabs are just normal gameobjects.
     // Though they don't need to be attached to a scene.
@@ -118,6 +100,35 @@ GameScene::GameScene()
             Vector3{ 100.0f, 100.0f, 100.0f}
         );
     }
+
+    GameObject& camera = AddGameObject({});
+    camera.AddComponent<Transform>();
+    camera.AddComponent<Camera>(true);
+
+    // Creates the sky
+    GameObject sky{};
+    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
+    sky.AddComponent<RendererComponent<ShapeBatch>>(skyBatch);
+    camera.AddChild(std::move(sky));
+
+    // Creates the player
+    GameObject& player = AddGameObject({});
+
+    auto& playerTransform = player.AddComponent<Transform>(
+        Vector3{ 0.0f, -0.3f, 0.0f },
+        Vector3{},
+        Vector3{ 0.3f, 0.3f, 1.0f });
+    player.AddComponent<Moveable>();
+    player.AddComponent<RendererComponent<ShapeCollection>>(ship2Model);
+    player.AddComponent<CircleCollider>(0.66f * 0.3f, false);
+    auto& playerHealth = player.AddComponent<Health>(100);
+    player.AddComponent<Player>();
+    player.AddComponent<PlayerDeath>();
+    player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
+    player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
+    /* player.AddComponent<WrapAround>(); */
+
+    camera.AddComponent<FollowObject>(&playerTransform);
 
     // Gets random points for the asteroids
     std::vector<Vector2> asteroidPoints{
@@ -145,41 +156,12 @@ GameScene::GameScene()
             Vector3{ point } - Vector3{ 1.0f, 1.0f, 0.0f },
             Vector3{ 0.0f, 0.0f, angle },
             Vector3{ scale, scale, 1.0f });
-        asteroid.AddComponent<RendererComponent<ShapeBatch>>(asteroidModel);
+        asteroid.AddComponent<RendererComponent<ShapeCollection>>(asteroidModel);
         asteroid.AddComponent<Moveable>(speed);
         asteroid.AddComponent<CircleCollider>(scale, true);
         asteroid.AddComponent<DamageOnContact>(10);
         /* asteroid.AddComponent<WrapAround>(); */
     }
-
-    GameObject& camera = AddGameObject({});
-    camera.AddComponent<Transform>();
-    camera.AddComponent<Camera>(true);
-
-    // Creates the sky
-    GameObject sky{};
-    sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 0.0f });
-    sky.AddComponent<RendererComponent<ShapeBatch>>(skyModel);
-    camera.AddChild(std::move(sky));
-
-    // Creates the player
-    GameObject& player = AddGameObject({});
-
-    auto& playerTransform = player.AddComponent<Transform>(
-        Vector3{ 0.0f, -0.3f, 0.0f },
-        Vector3{},
-        Vector3{ 0.3f, 0.3f, 1.0f });
-    player.AddComponent<Moveable>();
-    player.AddComponent<RendererComponent<ShapeBatch>>(ship2Model);
-    player.AddComponent<CircleCollider>(0.66f * 0.3f, false);
-    auto& playerHealth = player.AddComponent<Health>(100);
-    player.AddComponent<Player>();
-    player.AddComponent<PlayerDeath>();
-    player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
-    player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.1f);
-    /* player.AddComponent<WrapAround>(); */
-
-    camera.AddComponent<FollowObject>(&playerTransform);
 
     // Creates the boss
     GameObject& boss = AddGameObject({});
@@ -189,7 +171,7 @@ GameScene::GameScene()
         Vector3{ 0.0f, 0.0f, CONST_PI },
         Vector3{ 0.0025f, 0.0025f, 0.0f });
     boss.AddComponent<Moveable>();
-    boss.AddComponent<RendererComponent<ShapeBatch>>(bossModel);
+    boss.AddComponent<RendererComponent<ShapeCollection>>(bossModel);
     boss.AddComponent<Health>(1000);
     boss.AddComponent<CircleCollider>(0.3f, true);
     boss.AddComponent<DestroyOnDie>();
@@ -202,7 +184,7 @@ GameScene::GameScene()
         Vector3{},
         Vector3{ 0.3f, 0.3f, 1.0f });
     ship2.AddComponent<Moveable>();
-    ship2.AddComponent<RendererComponent<ShapeBatch>>(shipModel);
+    ship2.AddComponent<RendererComponent<ShapeCollection>>(shipModel);
     ship2.AddComponent<CircleCollider>(0.7f * 0.3f, true);
     ship2.AddComponent<Health>(50);
     ship2.AddComponent<DestroyOnDie>();

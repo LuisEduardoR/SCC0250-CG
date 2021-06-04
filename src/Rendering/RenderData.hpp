@@ -58,23 +58,23 @@ public:
                 && this->drawMode == other.drawMode;
     }
 
-    bool operator>(const RenderData& other)
+    bool operator<(const RenderData& other)
     {
         // First sorts by drawMode
         if(this->drawMode != other.drawMode)
-            return this->drawMode > other.drawMode;
+            return this->drawMode < other.drawMode;
 
         // Then by color
         if(this->color != other.color)
-            return this->color > other.color;
+            return *(this->color) < *(other.color);
 
         // By size
         if(this->vertexCount != other.vertexCount)
-            return this->vertexCount > other.vertexCount;
+            return this->vertexCount < other.vertexCount;
 
         // Finally by the position in memory simply 
         // because we don't have other option
-        return this->vertices > other.vertices;
+        return this->vertices < other.vertices;
 
     }
 

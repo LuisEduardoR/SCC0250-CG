@@ -99,34 +99,6 @@ private:
 
 };
 
-// Represents a line composed by connecting multiple points in 2D space
-class Polyline : public Shape {
-
-public:
-
-    // Constructors
-    Polyline(std::vector<Vector2> vertices, Color color = Color::white)
-        : Shape(color), vertices(std::move(vertices)) {
-    }
-    Polyline(Vector2 a, Vector2 b, Color color = Color::white) : Polyline({a, b}, color) {}
-    Polyline() : Shape(Color::white) {}
-
-    // Destructors
-    virtual ~Polyline() = default;
-
-    // Returns the data necessary to render this shape
-    const RenderData GetRenderData() const override;
-
-private:
-
-    // Stores the vertices of the polyline
-    std::vector<Vector2> vertices{};
-
-    // The draw mode to be used for this shape
-    GLuint drawMode = GL_LINE_STRIP;
-
-};
-
 // Represents a triangle in 2D space
 class Triangle :  public Shape {
 

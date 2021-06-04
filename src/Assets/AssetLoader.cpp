@@ -57,9 +57,7 @@ std::string AssetLoader<std::string>::LoadAsset(const std::string& path) {
 
 // Functions for reading data.
 void ReadPoint(ShapeCollection& collection, const std::string& lineBuffer);
-void ReadPointCluster(ShapeCollection& collection, const std::string& lineBuffer);
 void ReadLine(ShapeCollection& collection, const std::string& lineBuffer);
-void ReadPolyline(ShapeCollection& collection, const std::string& lineBuffer);
 void ReadTriangle(ShapeCollection& collection, const std::string& lineBuffer);
 void ReadQuad(ShapeCollection& collection, const std::string& lineBuffer);
 void ReadCircle(ShapeCollection& collection, const std::string& lineBuffer);
@@ -107,13 +105,9 @@ ShapeCollection AssetLoader<ShapeCollection>::LoadAsset(const std::string& path)
             ReadQuad(collection, shapeBody);
         } else if(shapeType.compare("Triangle") == 0) {
             ReadTriangle(collection, shapeBody);
-        } else if(shapeType.compare("Polyline") == 0) {
-            ReadPolyline(collection, shapeBody);
         } else if(shapeType.compare("Line") == 0) {
             ReadLine(collection, shapeBody);
         } else if(shapeType.compare("Point") == 0) {
-            ReadPoint(collection, shapeBody);
-        } else if(shapeType.compare("PointCluster") == 0) {
             ReadPoint(collection, shapeBody);
         } else {
             std::cout << "Invalid Shape2D (" << shapeType << ") at line " << currentLine << " of " << path << std::endl;
@@ -151,11 +145,6 @@ void ReadPoint(ShapeCollection& collection, const std::string& shapeBody) {
 
 }
 
-// TODO: Interprets our shapeBody as a PointCluster and adds it to the collection
-void ReadPointCluster(ShapeCollection& collection, const std::string& lineBuffer) {
-    std::cout << "PointCluster: not implemented!" << std::endl;
-}
-
 // Interprets our shapeBody as a Line and adds it to the collection
 void ReadLine(ShapeCollection& collection, const std::string& shapeBody) {
 
@@ -177,11 +166,6 @@ void ReadLine(ShapeCollection& collection, const std::string& shapeBody) {
                                                                     Color(colorData[0], colorData[1], colorData[2], colorData[3])
                                                                 }});
 
-}
-
-// TODO: Interprets our shapeBody as a Polyline and adds it to the collection
-void ReadPolyline(ShapeCollection& collection, const std::string& lineBuffer) {
-    std::cout << "ReadPolyline: not implemented!" << std::endl;
 }
 
 // Interprets our shapeBody as a Triangle and adds it to the collection

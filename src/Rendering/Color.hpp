@@ -41,6 +41,9 @@ public:
 
 };
 
+// Operators
 [[nodiscard]] auto operator==(const Color& a, const Color& b) -> bool;
+[[nodiscard]] auto operator<(const Color& a, const Color& b) -> bool;
+[[nodiscard]] auto operator>(const Color& a, const Color& b) -> bool;
 
 # endif /* end of include guard: COLOR_HPP */

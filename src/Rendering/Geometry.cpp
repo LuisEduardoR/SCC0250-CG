@@ -7,6 +7,9 @@
 
 # include "Geometry.hpp"
 
+# include <iostream>
+# include <unordered_set>
+
 // Point ======================================
 
 // Returns the data necessary to render this shape
@@ -34,18 +37,6 @@ const RenderData Line::GetRenderData() const {
                 // work
                 &(this->a),
                 2,
-                &(this->color),
-                this->drawMode
-            };
-}
-
-// Polyline ===================================
-
-// Returns the data necessary to render this shape
-const RenderData Polyline::GetRenderData() const {
-    return {
-                this->vertices.data(),
-                this->vertices.size(),
                 &(this->color),
                 this->drawMode
             };
@@ -110,9 +101,14 @@ const RenderData Circle::GetRenderData() const {
             };
 }
 
+
 // ShapeBatch ===============================
-// TODO: use ShapeBatch for most ShapeRenderers
+// # define LOG_BATCHING
 ShapeBatch::ShapeBatch(ShapeCollection collection) {
+
+    # ifdef LOG_BATCHING
+        std::cout << "START_BATCHING" << std::endl;
+    # endif
 
     // Stores the total number of vertices
     uint64_t totalVertices = 0;
@@ -125,8 +121,11 @@ ShapeBatch::ShapeBatch(ShapeCollection collection) {
         totalVertices += data.vertexCount;
     }
 
+    # ifdef LOG_BATCHING
+        std::cout << "\tFound " << renderData.size() << " shapes containing " << totalVertices << " vertices" << std::endl;
+    # endif
+
     // Sorts the render data
-    // !FIX: using Sort causes lots of weird C++ errors
     std::sort(renderData.begin(), renderData.end());
 
     // Allocates memory for the vertices
@@ -141,16 +140,25 @@ ShapeBatch::ShapeBatch(ShapeCollection collection) {
     // Adds the first state
     stateChanges.push_back(RenderStateChange(0, renderData[0].vertexCount, Color(*renderData[0].color), renderData[0].drawMode));
 
+    std::unordered_set<GLuint> batchableDrawModes {GL_TRIANGLES, GL_POINTS, GL_LINES};
+
+    # ifdef LOG_BATCHING
+        std::cout << "\tInitial state: color={" << renderData[0].color->r << "," << renderData[0].color->g << "," << renderData[0].color->b << "," << renderData[0].color->r << " drawMode=" << renderData[0].drawMode << std::endl;
+        std::cout << "\tDraw modes that can be batched: ";
+        for(GLuint mode : batchableDrawModes)
+            std::cout << mode << " ";
+        std::cout << std::endl;
+    # endif
+
     // Detects state changes
     for(uint64_t curIndex = 1; curIndex < renderData.size(); curIndex++) {
 
-        // Tries to keep on the same stage
-        if (renderData[curIndex].drawMode == renderData[curIndex - 1].drawMode      // For this, both shapes RenderData must have the same drawMode
-            &&  *(renderData[curIndex].color) == *(renderData[curIndex - 1].color)  // and the same color
-            &&  (   renderData[curIndex].drawMode == GL_TRIANGLES                   // Also only some drawModes allow this
-                    || renderData[curIndex].drawMode == GL_POINTS 
-                    || renderData[curIndex].drawMode == GL_LINES
-                ) 
+        // Tries to keep on the same state
+        // For this, both shapes RenderData must have the same drawMode
+        // and the same Color, also only some drawModes are possible to batch
+        if (renderData[curIndex].drawMode == renderData[curIndex - 1].drawMode      
+            &&  *(renderData[curIndex].color) == *(renderData[curIndex - 1].color)
+            &&  batchableDrawModes.find(renderData[curIndex].drawMode) != batchableDrawModes.end() 
         ) {
             // Keeps on the same state
             stateChanges.back().vertexCount += renderData[curIndex].vertexCount;
@@ -160,8 +168,16 @@ ShapeBatch::ShapeBatch(ShapeCollection collection) {
             // Gets the index that starts the new state
             uint64_t index = stateChanges.back().index + stateChanges.back().vertexCount;
             stateChanges.push_back(RenderStateChange(index, renderData[curIndex].vertexCount, Color(*renderData[curIndex].color), renderData[curIndex].drawMode));
+            # ifdef LOG_BATCHING
+                std::cout << "\tNew state: drawMode=" << renderData[curIndex].drawMode << " color={" << renderData[curIndex].color->r << "," << renderData[curIndex].color->g << "," << renderData[curIndex].color->b << "," << renderData[curIndex].color->r << "}" << std::endl;
+            # endif
         }
 
     }
+
+    # ifdef LOG_BATCHING
+        std::cout << "\tBatched to " << stateChanges.size() << " draw calls" << std::endl;
+        std::cout << "END_BATCHING" << std::endl;
+    # endif
 
 }

@@ -55,3 +55,34 @@ auto operator==(const Color& a, const Color& b) -> bool
             && static_cast<int32_t>(roundf(a.b * 255.0f)) == static_cast<int32_t>(roundf(b.b * 255.0f))
             && static_cast<int32_t>(roundf(a.a * 255.0f)) == static_cast<int32_t>(roundf(b.a * 255.0f));
 }
+
+
+auto operator<(const Color& a, const Color& b) -> bool
+{
+    if(static_cast<int32_t>(roundf(a.r * 255.0f)) != static_cast<int32_t>(roundf(b.r * 255.0f)))
+        return a.r < b.r;
+
+    if(static_cast<int32_t>(roundf(a.g * 255.0f)) != static_cast<int32_t>(roundf(b.g * 255.0f)))
+        return a.g < b.g;
+
+    if(static_cast<int32_t>(roundf(a.b * 255.0f)) == static_cast<int32_t>(roundf(b.b * 255.0f)))
+        return a.b < b.b;
+
+    return a.a < b.a;
+
+}
+
+auto operator>(const Color& a, const Color& b) -> bool
+{
+    if(static_cast<int32_t>(roundf(a.r * 255.0f)) != static_cast<int32_t>(roundf(b.r * 255.0f)))
+        return a.r > b.r;
+
+    if(static_cast<int32_t>(roundf(a.g * 255.0f)) != static_cast<int32_t>(roundf(b.g * 255.0f)))
+        return a.g > b.g;
+
+    if(static_cast<int32_t>(roundf(a.b * 255.0f)) == static_cast<int32_t>(roundf(b.b * 255.0f)))
+        return a.b > b.b;
+
+    return a.a > b.a;
+    
+}
