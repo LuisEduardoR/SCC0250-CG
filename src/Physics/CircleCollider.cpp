@@ -21,14 +21,7 @@ bool CircleCollider::CheckCollision(const CircleCollider& a, const CircleCollide
         > (std::pow(distance.x, 2) + std::pow(distance.y, 2));
 }
 
-CircleCollider::CircleCollider(float radius, bool isTrigger) : Collider(isTrigger), radius(radius)
-{
-    Register(*this);
-}
-CircleCollider::~CircleCollider()
-{
-    Unregister(*this);
-}
+CircleCollider::CircleCollider(float radius, bool isTrigger) : Collider(isTrigger), radius(radius) {}
 
 auto CircleCollider::Clone() const -> std::unique_ptr<Component>
 {

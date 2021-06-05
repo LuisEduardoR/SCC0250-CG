@@ -11,6 +11,7 @@
 #include "../Components/GameObject.hpp"
 #include "../Components/Component.hpp"
 #include "../Events/Event.hpp"
+#include <unordered_map>
 #include <forward_list>
 
 namespace Adven
@@ -19,7 +20,7 @@ namespace Adven
     {
         friend class GameObject;
     private: //Static variables
-        static std::forward_list<Collider*> colliders;
+        static std::unordered_map<Scene*, std::forward_list<Collider*>> collidersPerScene;
     protected: //Static methods
         static void Register(Collider& collider);
         static void Unregister(Collider& collider);
@@ -28,8 +29,9 @@ namespace Adven
         static bool CheckCollision(const Collider& a, const Collider& b);
     public:
         Collider(bool isTrigger = false);
-        ~Collider() override = default;
+        ~Collider() override;
     public:
+        void Start() override; 
         Event<void(Collider*, Collider*)>& OnCollision();
     private:
         Event<void(Collider*, Collider*)> onCollision;

@@ -17,50 +17,68 @@
 
 using namespace Adven;
 
-std::forward_list<Collider*> Collider::colliders;
+std::unordered_map<Scene*, std::forward_list<Collider*>> Collider::collidersPerScene;
 /*
     Static methods
 */
 void Collider::Register(Collider& collider)
 {
-    colliders.push_front(&collider);
+    if (Scene* scene = collider.GetGameObject()->GetScene())
+    {
+        // If there's no list for this scene insert it.
+        // Otherwise do nothing.
+        collidersPerScene.insert({});
+
+        collidersPerScene[scene].push_front(&collider);
+    }
 }
+
 void Collider::Unregister(Collider& collider)
 {
-    colliders.remove(&collider);
+    if (Scene* scene = collider.GetGameObject()->GetScene())
+    {
+        if (const auto& iter = collidersPerScene.find(scene); iter != collidersPerScene.end())
+        {
+            iter->second.remove(&collider);
+        }
+    }
 }
+
 void Collider::Update()
 {
-    for (auto i = colliders.begin(); i != colliders.end(); ++i)
+    for (auto& [scene, colliders] : collidersPerScene)
     {
-        for (auto j = ++colliders.begin(); j != colliders.end(); ++j)
+        for (auto i = colliders.begin(); i != colliders.end(); ++i)
         {
-            if (i == j) continue;
-
-            auto* colliderI = *i;
-            auto* colliderJ = *j;
-
-            if (CheckCollision(*colliderI, *colliderJ))
+            for (auto j = ++colliders.begin(); j != colliders.end(); ++j)
             {
-                colliderI->onCollision.Raise(colliderI, colliderJ);
-                colliderJ->onCollision.Raise(colliderJ, colliderI);
-                
-                if (!colliderJ->isTrigger && !colliderI->isTrigger)
-                {
-                    Moveable* mc = colliderI->GetGameObject()->GetComponent<Moveable>();
-                    Transform* tc = colliderI->GetGameObject()->GetComponent<Transform>();
-                    if (mc)
-                    {
-                        tc->localPosition -= mc->speed * Time::DeltaTime;
-                        mc->speed = Vector3();
-                    }
+                if (i == j) continue;
 
-                    Moveable* ml = colliderJ->GetGameObject()->GetComponent<Moveable>();
-                    Transform* tl = colliderJ->GetGameObject()->GetComponent<Transform>();
-                    if (ml)
+                auto* colliderI = *i;
+                auto* colliderJ = *j;
+
+                if (CheckCollision(*colliderI, *colliderJ))
+                {
+                    colliderI->onCollision.Raise(colliderI, colliderJ);
+                    colliderJ->onCollision.Raise(colliderJ, colliderI);
+                    
+                    if (!colliderJ->isTrigger && !colliderI->isTrigger)
                     {
-                        tl->localPosition -= ml->speed * Time::DeltaTime;
-                        ml->speed = Vector3();
+                        Moveable* mc = colliderI->GetGameObject()->GetComponent<Moveable>();
+                        Transform* tc = colliderI->GetGameObject()->GetComponent<Transform>();
+                        if (mc)
+                        {
+                            tc->localPosition -= mc->speed * Time::DeltaTime;
+                            mc->speed = Vector3();
+                        }
+
+                        Moveable* ml = colliderJ->GetGameObject()->GetComponent<Moveable>();
+                        Transform* tl = colliderJ->GetGameObject()->GetComponent<Transform>();
+                        if (ml)
+                        {
+                            tl->localPosition -= ml->speed * Time::DeltaTime;
+                            ml->speed = Vector3();
+                        }
                     }
                 }
             }
@@ -82,6 +100,16 @@ bool Collider::CheckCollision(const Collider& a, const Collider& b)
 
 
 Collider::Collider(bool isTrigger) : isTrigger(isTrigger) {}
+
+void Collider::Start()
+{
+    Register(*this);
+}
+
+Collider::~Collider()
+{
+    Unregister(*this);
+}
 
 Event<void(Collider*, Collider*)>& Collider::OnCollision()
 {

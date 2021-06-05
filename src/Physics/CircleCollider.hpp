@@ -21,7 +21,7 @@ namespace Adven
         float radius;
     public:
         CircleCollider(float radius, bool isTrigger = false);
-        virtual ~CircleCollider();
+        virtual ~CircleCollider() = default;
     public:
         /// Clones the transform.
         /// This function does not clone the transform childs nor parent.

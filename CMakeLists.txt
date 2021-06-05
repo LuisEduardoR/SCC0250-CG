@@ -11,73 +11,73 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 #find_package(glfw3 3 REQUIRED)
 
 set(COMMON_SOURCES
-    src/Assets/AssetLoader.hpp
     src/Assets/AssetLoader.cpp
-    src/Components/FollowObject.hpp
-    src/Components/FollowObject.cpp
-    src/Components/PlayerDeath.hpp
-    src/Components/PlayerDeath.cpp
-    src/Components/DestroyArea.hpp
-    src/Components/DestroyArea.cpp
-    src/Components/WrapAround.hpp
-    src/Components/WrapAround.cpp
+    src/Assets/AssetLoader.hpp
     src/Components/BaseEnemy.hpp
-    src/Components/Shooter.hpp
-    src/Components/Shooter.cpp
-    src/Components/Camera.hpp
+    src/Components/Boss.cpp
+    src/Components/Boss.hpp
     src/Components/Camera.cpp
-    src/Components/ShapeRenderer.cpp
-    src/Components/GameObject.hpp
-    src/Components/GameObject.cpp
-    src/Components/Player.cpp
-    src/Components/Moveable.hpp
-    src/Components/Transform.hpp
-    src/Components/Transform.cpp
-    src/Components/Player.hpp
-    src/Components/Component.hpp
+    src/Components/Camera.hpp
     src/Components/Component.cpp
-    src/Components/ShapeRenderer.hpp
-    src/Components/Moveable.cpp
-    src/Components/Health.hpp
-    src/Components/Health.cpp
-    src/Components/DestroyOnDie.hpp
-    src/Components/DestroyOnDie.cpp
-    src/Components/DamageOnContact.hpp
+    src/Components/Component.hpp
     src/Components/DamageOnContact.cpp
-    src/WindowSystem/WindowSystem.cpp
-    src/WindowSystem/WindowSystem.hpp
+    src/Components/DamageOnContact.hpp
+    src/Components/DestroyArea.cpp
+    src/Components/DestroyArea.hpp
+    src/Components/DestroyOnDie.cpp
+    src/Components/DestroyOnDie.hpp
+    src/Components/FollowObject.cpp
+    src/Components/FollowObject.hpp
+    src/Components/GameObject.cpp
+    src/Components/GameObject.hpp
+    src/Components/Health.cpp
+    src/Components/Health.hpp
+    src/Components/Moveable.cpp
+    src/Components/Moveable.hpp
+    src/Components/Player.cpp
+    src/Components/PlayerDeath.cpp
+    src/Components/PlayerDeath.hpp
+    src/Components/Player.hpp
+    src/Components/RendererComponent.hpp
+    src/Components/Shooter.cpp
+    src/Components/Shooter.hpp
+    src/Components/Transform.cpp
+    src/Components/Transform.hpp
+    src/Components/WrapAround.cpp
+    src/Components/WrapAround.hpp
+    src/Events/Event.hpp
+    src/Events/Listener.hpp
+    src/Input/Input.cpp
+    src/Input/Input.hpp
     src/Interfaces/IUpdatable.hpp
-    src/Scene/Scene.hpp
+    src/Math/Matrix4x4.cpp
+    src/Math/Matrix4x4.hpp
+    src/Math/Vector.cpp
+    src/Math/Vector.hpp
+    src/Physics/CircleCollider.cpp
+    src/Physics/CircleCollider.hpp
+    src/Physics/Collider.cpp
+    src/Physics/Collider.hpp
+    src/Rendering/Color.cpp
+    src/Rendering/Color.hpp
+    src/Rendering/Geometry.cpp
+    src/Rendering/Geometry.hpp
+    src/Rendering/PoissonDiscSampling.cpp
+    src/Rendering/PoissonDiscSampling.hpp
+    src/Rendering/RenderData.hpp
+    src/Rendering/Renderer.cpp
+    src/Rendering/Renderer.hpp
+    src/Rendering/RenderStateChange.hpp
+    src/Rendering/Shader.cpp
+    src/Rendering/Shader.hpp
     src/Scene/GameScene.cpp
     src/Scene/GameScene.hpp
     src/Scene/Scene.cpp
-    src/Events/Listener.hpp
-    src/Events/Event.hpp
-    src/Input/Input.cpp
-    src/Input/Input.hpp
-    src/Physics/CircleCollider.cpp
-    src/Physics/CircleCollider.hpp
-    src/Physics/Collider.hpp
-    src/Physics/Collider.cpp
+    src/Scene/Scene.hpp
     src/Time/Time.cpp
     src/Time/Time.hpp
-    src/Math/Matrix4x4.hpp
-    src/Math/Matrix4x4.cpp
-    src/Math/Vector.cpp
-    src/Math/Vector.hpp
-    src/Rendering/Renderer.cpp
-    src/Rendering/VertexData.hpp
-    src/Rendering/Geometry3D.hpp
-    src/Rendering/PoissonDiscSampling.cpp
-    src/Rendering/Shader.cpp
-    src/Rendering/Geometry3D.cpp
-    src/Rendering/PoissonDiscSampling.hpp
-    src/Rendering/Renderer.hpp
-    src/Rendering/Geometry2D.hpp
-    src/Rendering/Geometry2D.cpp
-    src/Rendering/Color.cpp
-    src/Rendering/Shader.hpp
-    src/Rendering/Color.hpp
+    src/WindowSystem/WindowSystem.cpp
+    src/WindowSystem/WindowSystem.hpp
 )
 
 add_executable(main
