@@ -5,9 +5,9 @@
 # include "GameObject.hpp"
 # include "Health.hpp"
 
-auto DestroyOnDie::DeathHandler(Health* health) -> void
+auto DestroyOnDie::DeathHandler(Health& health) -> void
 {
-    health->GetGameObject()->MarkForDestroy();
+    health.GetGameObject()->MarkForDestroy();
 }
 
 auto DestroyOnDie::Start() -> void

@@ -156,7 +156,7 @@ void Player::VDrawUpdate()
         0.0f,
     };
 
-    transform->localRotation.z += input.x * 3.0f * Time::DeltaTime;
+    transform->localRotation.z -= input.x * 3.0f * Time::DeltaTime;
 
     // moveable->speed = Vector3{ input * maxSpeed };
 

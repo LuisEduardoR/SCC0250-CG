@@ -13,6 +13,7 @@
 
 # include "../Components/Shooter.hpp"
 # include "../Components/Health.hpp"
+# include "../Components/HealthBar.hpp"
 # include "../Components/Camera.hpp"
 # include "../Components/Player.hpp"
 # include "../Components/Boss.hpp"
@@ -132,8 +133,7 @@ GameScene::GameScene()
 
     // Creates the player
     GameObject& player = AddGameObject({});
-
-    auto& playerTransform = player.AddComponent<Transform>(
+    player.AddComponent<Transform>(
         Vector3{ 0.0f, -0.3f, 0.0f },
         Vector3{},
         Vector3{ 0.3f, 0.3f, 1.0f });
@@ -147,8 +147,13 @@ GameScene::GameScene()
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
     player.AddComponent<WrapAround>();
 
-    // camera.AddComponent<FollowObject>(&playerTransform);
-
+    GameObject& healthBar = AddGameObject({});
+    healthBar.AddComponent<Transform>(Vector3{ -0.65f, -0.90f, 0.5f });
+    healthBar.AddComponent<HealthBar>(playerHealth, Vector2{ -0.3f, -0.025f }, Vector2{ 0.3f, 0.025f });
+    Quad barQuad{};
+    barQuad.color = Color::red;
+    healthBar.AddComponent<RendererComponent<Quad>>(barQuad);
+    
     // Gets random points for the asteroids
     std::vector<Vector2> asteroidPoints{
         amn::PoissonDiscSampler::GeneratePoints(0.3f, { 2.0f, 2.0f }, 5)

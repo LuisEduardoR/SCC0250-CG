@@ -32,6 +32,8 @@ set(COMMON_SOURCES
     src/Components/GameObject.hpp
     src/Components/Health.cpp
     src/Components/Health.hpp
+    src/Components/HealthBar.cpp
+    src/Components/HealthBar.hpp
     src/Components/Moveable.cpp
     src/Components/Moveable.hpp
     src/Components/Player.cpp
@@ -47,6 +49,8 @@ set(COMMON_SOURCES
     src/Components/WrapAround.hpp
     src/Events/Event.hpp
     src/Events/Listener.hpp
+    src/Exceptions/Exceptions.cpp
+    src/Exceptions/Exceptions.hpp
     src/Input/Input.cpp
     src/Input/Input.hpp
     src/Interfaces/IUpdatable.hpp
@@ -76,6 +80,7 @@ set(COMMON_SOURCES
     src/Scene/Scene.hpp
     src/Time/Time.cpp
     src/Time/Time.hpp
+    src/Utils/TypeUtils.hpp
     src/WindowSystem/WindowSystem.cpp
     src/WindowSystem/WindowSystem.hpp
 )

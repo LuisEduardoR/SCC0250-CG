@@ -20,7 +20,7 @@ auto PlayerDeath::Start() -> void
     }
 }
 
-auto PlayerDeath::DeathHandler(Health*) -> void
+auto PlayerDeath::DeathHandler(Health&) -> void
 {
     std::cout << "GAMEOVER!\nYou died!\n\n";
     std::exit(0);

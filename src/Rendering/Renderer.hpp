@@ -13,6 +13,7 @@
 # define RENDERER_HPP
 
 # include <GL/glew.h>
+# include <type_traits>
 
 # include "Shader.hpp"
 # include "Geometry.hpp"
@@ -20,6 +21,7 @@
 
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
+# include "../Utils/TypeUtils.hpp"
 
 class Renderer {
 
@@ -62,5 +64,38 @@ private:
     static void DrawInternal(float* data, size_t data_size, size_t count, GLenum mode, const Color& color = Color::white, const Matrix4x4& transform = Matrix4x4::Identity);
 
 }; 
+
+template<class T>
+void Renderer::Draw(const T& object, const Matrix4x4& transform)
+{
+    // Draws a Shape applying a transformation matrix
+    if constexpr (std::is_base_of_v<Shape, T>)
+    {
+        // Gets the vertices of our shape
+        RenderData data = object.GetRenderData();
+
+        // Performs the drawing
+        DrawInternal((float*)data.vertices, data.vertexCount * sizeof(Vector2), data.vertexCount, data.drawMode, Color(*data.color), transform);
+    }
+    // Draws a ShapeCollection applying a transformation matrix
+    else if constexpr (std::is_same_v<T, ShapeCollection>)
+    {
+        // Performs the drawing of each shape
+        for (const std::unique_ptr<Shape>& shape : *object.get())
+            Draw<Shape>(*shape.get(), transform);
+    }
+    // Draws a ShapeBatch applying a transformation matrix
+    else if constexpr (std::is_same_v<T, ShapeBatch>)
+    {
+        // Performs the drawing of each state
+        for(RenderStateChange state : object.stateChanges)
+            DrawInternal((float*)(object.vertexBuffer.data() + state.index), state.vertexCount * sizeof(Vector2), state.vertexCount, state.drawMode, state.color, transform);
+
+    }
+    else
+    {
+        static_assert(AlwaysFalse<T>, "Unsupported object passed to Renderer::Draw");
+    }
+}
 
 # endif /* end of include guard: RENDERER_HPP */

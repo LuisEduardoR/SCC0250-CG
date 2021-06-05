@@ -9,14 +9,14 @@ class Health;
 class DestroyOnDie : public Adven::Component
 {
 private:
-    static auto DeathHandler(Health* health) -> void;
+    static auto DeathHandler(Health& health) -> void;
 public:
     ~DestroyOnDie() override = default;
 public:
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     auto Start() -> void override;
 public:
-    Adven::Listener<void(Health*)> deathListener{ DestroyOnDie::DeathHandler };
+    Adven::Listener<void(Health&)> deathListener{ DestroyOnDie::DeathHandler };
 };
 
 # endif /* end of include guard: DESTROY_ON_DIE_HPP */

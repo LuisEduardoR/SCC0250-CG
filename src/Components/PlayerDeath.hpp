@@ -15,11 +15,11 @@ public:
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     auto Start() -> void override;
 private:
-    auto DeathHandler(Health* health) -> void;
+    auto DeathHandler(Health& health) -> void;
 
-    Adven::Listener<void(Health*)> deathListener
+    Adven::Listener<void(Health&)> deathListener
     {
-        [this](Health* health){ DeathHandler(health); }
+        [this](Health& health){ DeathHandler(health); }
     };
 };
 

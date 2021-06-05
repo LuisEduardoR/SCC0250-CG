@@ -112,35 +112,3 @@ void Renderer::DrawInternal(float* data, size_t data_size, size_t count, GLenum 
     glDrawArrays(mode, 0, count);
 
 }
-
-// Draws a Shape applying a transformation matrix
-template<>
-void Renderer::Draw<Shape>(const Shape& shape, const Matrix4x4& transform ) {
-
-    // Gets the vertices of our shape
-    RenderData data = shape.GetRenderData();
-
-    // Performs the drawing
-    DrawInternal((float*)data.vertices, data.vertexCount * sizeof(Vector2), data.vertexCount, data.drawMode, Color(*data.color), transform);
-
-}
-
-// Draws a ShapeCollection applying a transformation matrix
-template<>
-void Renderer::Draw<ShapeCollection>(const ShapeCollection& shapes, const Matrix4x4& transform) {
-
-    // Performs the drawing of each shape
-    for (const std::unique_ptr<Shape>& shape : *shapes.get())
-        Draw<Shape>(*shape.get(), transform);
-
-}
-
-// Draws a ShapeBatch applying a transformation matrix
-template<>
-void Renderer::Draw<ShapeBatch>(const ShapeBatch& shapeBatch, const Matrix4x4& transform) {
-
-    // Performs the drawing of each state
-    for(RenderStateChange state : shapeBatch.stateChanges)
-        DrawInternal((float*)(shapeBatch.vertexBuffer.data() + state.index), state.vertexCount * sizeof(Vector2), state.vertexCount, state.drawMode, state.color, transform);
-
-}
