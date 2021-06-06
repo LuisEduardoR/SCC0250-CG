@@ -190,6 +190,16 @@ auto Vector3::Dot(Vector3 a) const -> float
     return x * a.x + y * a.y + z + a.z;
 }
 
+auto Vector3::ClampMagnitude(float max) -> Vector3
+{
+    if (SqrMagnitude() > max * max)
+    {
+        return Normalized() * max;
+    }
+    
+    return *this;
+}
+
 auto Vector3::Cross(Vector3 a) const -> Vector3
 {
     return { y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x }; 

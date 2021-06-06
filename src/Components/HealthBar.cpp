@@ -30,7 +30,10 @@ auto HealthBar::Start() -> void
 auto HealthBar::HealthChangeHandler(Health& health) -> void
 {
     const float hpPercent = static_cast<float>(health.Value()) / static_cast<float>(health.MaxValue());
-    const Vector2 rectCur = rectMax * hpPercent;
+    const Vector2 rectCur = {
+        (std::abs(rectMax.x) + std::abs(rectMin.x)) * hpPercent - std::abs(rectMin.x),
+        rectMax.y
+    };
 
     renderer->data.a = { rectMin.x, rectCur.y };
     renderer->data.b = rectMin;

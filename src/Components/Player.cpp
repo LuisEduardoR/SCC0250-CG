@@ -150,13 +150,18 @@ void Player::VDrawUpdate()
     else if(Input::downPressed)
         input.y = -1.00f;
 
-    moveable->speed = Vector3{ 
-        0.0f,
-        std::clamp(moveable->speed.y + input.y * Time::DeltaTime, -maxSpeed, +maxSpeed),
-        0.0f,
-    };
-
     transform->localRotation.z -= input.x * 3.0f * Time::DeltaTime;
+
+    Vector3 accel {
+        Matrix4x4::Rotate(transform->localRotation)
+        * Vector4{ 
+            0.0f,
+            input.y,
+            0.0f, 1.0f
+        }
+    };
+    moveable->speed = (moveable->speed + accel * Time::DeltaTime).ClampMagnitude(maxSpeed); 
+
 
     // moveable->speed = Vector3{ input * maxSpeed };
 

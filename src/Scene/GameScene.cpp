@@ -15,6 +15,7 @@
 # include "../Components/Health.hpp"
 # include "../Components/HealthBar.hpp"
 # include "../Components/Camera.hpp"
+# include "../Components/EnemyShip.hpp"
 # include "../Components/Player.hpp"
 # include "../Components/Boss.hpp"
 # include "../Components/Moveable.hpp"
@@ -121,10 +122,23 @@ GameScene::GameScene()
             Vector3{ -1.0f, -1.0f, -1.0f },
             Vector3{ 1.0f, 1.0f, 1.0f}
         );
-        // bulletPrefab->AddComponent<DestroyArea>(
-        //     Vector3{ -100.0f, -100.0f, -100.0f },
-        //     Vector3{ 100.0f, 100.0f, 100.0f}
-        // );
+    }
+
+    auto enemyBulletPrefab = std::make_shared<GameObject>();
+    {
+        enemyBulletPrefab->AddComponent<Transform>(
+            Vector3{ 0.0f, 0.0f, 0.3f },
+            Vector3{},
+            Vector3{ 0.005f, 0.005f, 1.0f }
+        );
+        enemyBulletPrefab->AddComponent<RendererComponent<ShapeBatch>>(bBulletModel);
+        enemyBulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
+        enemyBulletPrefab->AddComponent<CircleCollider>( 0.05f, EnemyBulletLayer, true );
+        enemyBulletPrefab->AddComponent<DamageOnContact>(10);
+        enemyBulletPrefab->AddComponent<DestroyArea>(
+            Vector3{ -1.0f, -1.0f, -1.0f },
+            Vector3{ 1.0f, 1.0f, 1.0f}
+        );
     }
 
     auto bossBulletPrefab = std::make_shared<GameObject>();
@@ -138,10 +152,6 @@ GameScene::GameScene()
             Vector3{ -1.0f, -1.0f, -1.0f },
             Vector3{ 1.0f, 1.0f, 1.0f}
         );
-        // bossBulletPrefab->AddComponent<DestroyArea>(
-        //     Vector3{ -100.0f, -100.0f, -100.0f },
-        //     Vector3{ 100.0f, 100.0f, 100.0f}
-        // );
     }
 
     // Creates the boss
@@ -167,7 +177,7 @@ GameScene::GameScene()
         smallAsteroidPrefab->AddComponent<RendererComponent<ShapeCollection>>(asteroidModel);
         smallAsteroidPrefab->AddComponent<Moveable>();
         smallAsteroidPrefab->AddComponent<CircleCollider>(0.1f, AsteroidLayer, true);
-        smallAsteroidPrefab->AddComponent<DamageOnContact>(10);
+        smallAsteroidPrefab->AddComponent<DamageOnContact>(5);
         smallAsteroidPrefab->AddComponent<WrapAround>();
     }
 
@@ -183,16 +193,16 @@ GameScene::GameScene()
 
     // Creates the player
     GameObject& player = AddGameObject({});
-    player.AddComponent<Transform>(
+    auto& playerTransform = player.AddComponent<Transform>(
         Vector3{ 0.0f, -0.3f, 0.5f },
         Vector3{},
         Vector3{ 0.3f, 0.3f, 1.0f });
     player.AddComponent<Moveable>();
     player.AddComponent<RendererComponent<ShapeCollection>>(ship2Model);
     player.AddComponent<CircleCollider>(0.66f * 0.3f, PlayerLayer, false);
-    auto& playerHealth = player.AddComponent<Health>(100);
+    auto& playerHealth = player.AddComponent<Health>(200);
     player.AddComponent<Player>();
-    /* player.AddComponent<PlayerDeath>(); */
+    player.AddComponent<PlayerDeath>();
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
     player.AddComponent<WrapAround>();
@@ -203,6 +213,24 @@ GameScene::GameScene()
     Quad barQuad{};
     barQuad.color = Color::red;
     healthBar.AddComponent<RendererComponent<Quad>>(barQuad);
+
+
+    auto enemyShipPrefab = std::make_shared<GameObject>();
+    {
+        enemyShipPrefab->AddComponent<Transform>(
+            Vector3{ -0.7f, 0.5f, 0.5f },
+            Vector3{},
+            Vector3{ 0.15f, 0.15f, 1.0f });
+        enemyShipPrefab->AddComponent<Moveable>(Vector3{ 0.5f, 0.0f, 0.0f });
+        enemyShipPrefab->AddComponent<RendererComponent<ShapeCollection>>(shipModel);
+        enemyShipPrefab->AddComponent<CircleCollider>(0.7f * 0.15f, EnemyLayer, true);
+        enemyShipPrefab->AddComponent<Health>(100);
+        enemyShipPrefab->AddComponent<Shooter>(enemyBulletPrefab, Vector3{ -0.354f, 0.264f, 0.0f }, 0.0f, 0.5f);
+        enemyShipPrefab->AddComponent<Shooter>(enemyBulletPrefab, Vector3{ 0.354f, 0.264f, 0.0f }, 0.0f, 0.5f);
+        enemyShipPrefab->AddComponent<EnemyShip>(&playerTransform);
+        enemyShipPrefab->AddComponent<WrapAround>();
+        enemyShipPrefab->AddComponent<DestroyOnDie>();
+    }
     
     // Gets random points for the asteroids
     std::vector<Vector2> asteroidPoints{
@@ -239,21 +267,9 @@ GameScene::GameScene()
         asteroid.AddComponent<SplitOnDie>(smallAsteroidPrefab);
     }
 
+    GameObject& enemySpawner = AddGameObject({});
+    enemySpawner.AddComponent<TimedSpawner>(enemyShipPrefab, 10.0f); 
+
     GameObject& bossSpawner = AddGameObject({});
-    bossSpawner.AddComponent<TimedSpawner>(bossPrefab, 10.0f); 
-
-    // Creates the second ship
-    GameObject& ship2 = AddGameObject({});
-
-    ship2.AddComponent<Transform>(
-        Vector3{ -0.7f, -0.3f, 0.5f },
-        Vector3{},
-        Vector3{ 0.15f, 0.15f, 1.0f });
-    ship2.AddComponent<Moveable>();
-    ship2.AddComponent<RendererComponent<ShapeCollection>>(shipModel);
-    ship2.AddComponent<CircleCollider>(0.7f * 0.15f, EnemyLayer, true);
-    ship2.AddComponent<Health>(50);
-    ship2.AddComponent<DestroyOnDie>();
-    ship2.AddComponent<WrapAround>();
-
+    bossSpawner.AddComponent<TimedSpawner>(bossPrefab, 30.0f); 
 }

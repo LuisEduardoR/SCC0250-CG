@@ -60,7 +60,6 @@ public:
 class Vector3{
 
 public:
-
     float x, y, z;
 
     Vector3(float x, float y, float z) { this->x = x; this->y = y; this->z = z; }
@@ -84,6 +83,7 @@ public:
 	[[nodiscard]] auto operator-() const -> Vector3;
 
 	[[nodiscard]] auto Dot(Vector3 a) const -> float;
+	[[nodiscard]] auto ClampMagnitude(float max) -> Vector3;
 	[[nodiscard]] auto Cross(Vector3 a) const -> Vector3;
 	[[nodiscard]] auto SqrMagnitude() const -> float;
 	[[nodiscard]] auto Magnitude() const -> float;

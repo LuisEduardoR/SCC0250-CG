@@ -28,6 +28,8 @@ set(COMMON_SOURCES
     src/Components/DestroyOnDie.hpp
     src/Components/FollowObject.cpp
     src/Components/FollowObject.hpp
+    src/Components/EnemyShip.cpp
+    src/Components/EnemyShip.hpp
     src/Components/GameObject.cpp
     src/Components/GameObject.hpp
     src/Components/Health.cpp

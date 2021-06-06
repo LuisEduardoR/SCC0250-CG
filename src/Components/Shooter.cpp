@@ -67,14 +67,28 @@ void Shooter::VDrawUpdate()
         Transform* bulletTransform = bullet.GetComponent<Transform>();
         assert(bulletTransform);
         bulletTransform->localPosition = Vector3{ spawnPoint };
-        bulletTransform->localRotation = transform->localRotation;
-        bulletTransform->localScale = transform->localScale;
+        bulletTransform->localRotation = bulletTransform->localRotation + transform->localRotation;
+        bulletTransform->localScale = {
+            bulletTransform->localScale.x * transform->localScale.x,
+            bulletTransform->localScale.y * transform->localScale.y,
+            bulletTransform->localScale.z * transform->localScale.z,
+        };
 
         CircleCollider* bulletCollider = bullet.GetComponent<CircleCollider>();
         bulletCollider->radius *= bulletTransform->localScale.x;
 
+        Moveable* bulletPrefabRb = bullet.GetComponent<Moveable>();
+        assert(bulletPrefabRb);
         Moveable* bulletRb = bullet.GetComponent<Moveable>();
         assert(bulletRb);
+
+        bulletRb->speed = Vector3 {
+            Matrix4x4::Rotate(transform->localRotation)
+            * Vector4{ 
+                bulletPrefabRb->speed,
+                1.0f
+            }
+        };
 
         // Sets currentTime back to 0
         currentTime = 0.0f;
