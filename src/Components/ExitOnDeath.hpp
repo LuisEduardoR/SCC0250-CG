@@ -1,15 +1,18 @@
-#ifndef PLAYER_DEATH_HPP
-#define PLAYER_DEATH_HPP
+#ifndef EXIT_ON_DEATH_HPP
+#define EXIT_ON_DEATH_HPP
+
+#include <string>
 
 #include "Component.hpp"
 #include "../Events/Listener.hpp"
 
 class Health;
 
-class PlayerDeath : public Adven::Component
+class ExitOnDeath : public Adven::Component
 {
 public:
-    ~PlayerDeath() override = default;
+    ExitOnDeath(std::string&& message);
+    ~ExitOnDeath() override = default;
 
 public:
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
@@ -21,6 +24,8 @@ private:
     {
         [this](Health& health){ DeathHandler(health); }
     };
+
+    std::string message;
 };
 
-#endif /* end of include guard: PLAYER_DEATH_HPP */
+#endif /* end of include guard: EXIT_ON_DEATH_HPP */

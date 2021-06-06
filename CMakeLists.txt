@@ -26,10 +26,12 @@ set(COMMON_SOURCES
     src/Components/DestroyArea.hpp
     src/Components/DestroyOnDie.cpp
     src/Components/DestroyOnDie.hpp
-    src/Components/FollowObject.cpp
-    src/Components/FollowObject.hpp
     src/Components/EnemyShip.cpp
     src/Components/EnemyShip.hpp
+    src/Components/ExitOnDeath.cpp
+    src/Components/ExitOnDeath.hpp
+    src/Components/FollowObject.cpp
+    src/Components/FollowObject.hpp
     src/Components/GameObject.cpp
     src/Components/GameObject.hpp
     src/Components/Health.cpp
@@ -39,8 +41,6 @@ set(COMMON_SOURCES
     src/Components/Moveable.cpp
     src/Components/Moveable.hpp
     src/Components/Player.cpp
-    src/Components/PlayerDeath.cpp
-    src/Components/PlayerDeath.hpp
     src/Components/Player.hpp
     src/Components/RendererComponent.hpp
     src/Components/Shooter.cpp
