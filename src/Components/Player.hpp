@@ -15,6 +15,7 @@
 # include <array>
 # include <cstdint>
 # include <memory>
+# include <vector>
 
 # include "Component.hpp"
 # include "../Math/Vector.hpp"
@@ -24,6 +25,8 @@ namespace Adven {
     class Moveable;
     class CircleCollider;
 };
+
+class Shooter;
 
 class Transform;
 
@@ -51,6 +54,7 @@ private:
     Transform* transform;
     Adven::Moveable* moveable;
     Adven::CircleCollider* collider;
+    std::vector<Shooter*> shooters;
     Size size;
     float maxSpeed{ 1.0f };
     std::uint32_t damage{ 10 };

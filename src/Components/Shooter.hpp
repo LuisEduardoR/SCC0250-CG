@@ -14,6 +14,7 @@
 
 # include <array>
 # include <cstdint>
+# include <functional>
 # include <memory>
 
 # include "Component.hpp"
@@ -39,6 +40,8 @@ public:
     void VBlankUpdate() override;
 
     bool active;
+
+    std::function<void(Adven::GameObject&)> afterSpawn;
 
 private:
     Transform* transform{ nullptr };

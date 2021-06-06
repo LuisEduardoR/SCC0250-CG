@@ -7,6 +7,7 @@
 
 # include "Player.hpp"
 
+#include "DamageOnContact.hpp"
 # include "GameObject.hpp"
 # include "Moveable.hpp"
 # include "Transform.hpp"
@@ -39,6 +40,16 @@ void Player::Start()
     transform = GetGameObject()->GetComponent<Transform>();
     moveable = GetGameObject()->GetComponent<Moveable>();
     collider = GetGameObject()->GetComponent<CircleCollider>();    
+    shooters = GetGameObject()->GetComponents<Shooter>();
+
+    for (Shooter* shooter: shooters)
+        shooter->afterSpawn = [this](GameObject& bullet)
+        {
+            if (auto* damager = bullet.GetComponent<DamageOnContact>())
+            {
+                damager->damage = damage;
+            }
+        };
 
     SetSize(Size::Normal);
 }
@@ -166,7 +177,6 @@ void Player::VDrawUpdate()
     // moveable->speed = Vector3{ input * maxSpeed };
 
     // Gets the shooters and sets if they're active based on Input
-    std::vector<Shooter*> shooters = GetGameObject()->GetComponents<Shooter>();
     for(Shooter* shooter : shooters)
         shooter->active = Input::leftMouse == Input::State::Down || Input::leftMouse == Input::State::Held;
 }

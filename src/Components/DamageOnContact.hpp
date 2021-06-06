@@ -25,6 +25,7 @@ private:
             CollisionHandler(a, b);
         }
     };
+public:
     std::uint32_t damage;
     bool selfDestruct;
 };

@@ -90,6 +90,11 @@ void Shooter::VDrawUpdate()
             }
         };
 
+        if (afterSpawn)
+        {
+            afterSpawn(bullet);
+        }
+
         // Sets currentTime back to 0
         currentTime = 0.0f;
     }
