@@ -11,8 +11,8 @@
 
 // Stores what mouse buttons are pressed:
 
-bool Input::leftMousePressed = false;
-bool Input::rightMousePressed = false;
+Input::State Input::leftMouse = State::Released;
+Input::State Input::rightMouse = State::Released;
 
 // Process mouse input
 void Input::ProcessMouse(GLFWwindow *window, int button, int action, int mods) {
@@ -21,16 +21,16 @@ void Input::ProcessMouse(GLFWwindow *window, int button, int action, int mods) {
 
     case GLFW_MOUSE_BUTTON_LEFT:
         if(action == GLFW_PRESS)
-            leftMousePressed = true;
+            leftMouse = State::Down;
         else if (action == GLFW_RELEASE)
-            leftMousePressed = false;
+            leftMouse = State::Up;
         break;
     
     case GLFW_MOUSE_BUTTON_RIGHT:
         if(action == GLFW_PRESS)
-            rightMousePressed = true;
+            rightMouse = State::Down;
         else if (action == GLFW_RELEASE)
-            rightMousePressed = false;
+            rightMouse = State::Up;
         break;
 
     default:
@@ -58,15 +58,15 @@ void Input::ProcessCursor(GLFWwindow *window, double x, double y)
 
 // Stores what keys are pressed:
 
-bool Input::leftArrowPressed = false;
-bool Input::rightArrowPressed = false;
+Input::State Input::leftArrow = State::Released;
+Input::State Input::rightArrow = State::Released;
 
-bool Input::leftPressed = false;
-bool Input::rightPressed = false;
-bool Input::upPressed = false;
-bool Input::downPressed = false;
-bool Input::spacePressed = false;
-bool Input::shiftPressed = false;
+Input::State Input::left = State::Released;
+Input::State Input::right = State::Released;
+Input::State Input::up = State::Released;
+Input::State Input::down = State::Released;
+Input::State Input::space = State::Released;
+Input::State Input::shift = State::Released;
 
 // Process key input
 void Input::ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int mods) {
@@ -75,58 +75,60 @@ void Input::ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action
 
     case GLFW_KEY_LEFT:
         if(action == GLFW_PRESS)
-            leftArrowPressed = true;
+            leftArrow = State::Down;
         else if (action == GLFW_RELEASE)
-            leftArrowPressed = false;
+            leftArrow = State::Up;
         break;
     
     case GLFW_KEY_RIGHT:
         if(action == GLFW_PRESS)
-            rightArrowPressed = true;
+            rightArrow = State::Down;
         else if (action == GLFW_RELEASE)
-            rightArrowPressed = false;
+            rightArrow = State::Up;
         break;
 
     case GLFW_KEY_A:
         if(action == GLFW_PRESS)
-            leftPressed = true;
+            left = State::Down;
         else if (action == GLFW_RELEASE)
-            leftPressed = false;
+            left = State::Up;
         break;
     
     case GLFW_KEY_D:
         if(action == GLFW_PRESS)
-            rightPressed = true;
+            right = State::Down;
         else if (action == GLFW_RELEASE)
-            rightPressed = false;
+            right = State::Up;
         break;
 
     case GLFW_KEY_W:
         if(action == GLFW_PRESS)
-            upPressed = true;
+            up = State::Down;
         else if (action == GLFW_RELEASE)
-            upPressed = false;
+            up = State::Up;
         break;
     
     case GLFW_KEY_S:
         if(action == GLFW_PRESS)
-            downPressed = true;
+            down = State::Down;
         else if (action == GLFW_RELEASE)
-            downPressed = false;
+            down = State::Up;
         break;
 
     case GLFW_KEY_SPACE:
+    {
         if (action == GLFW_PRESS)
-            spacePressed = true;
+            space = State::Down;
         else if (action == GLFW_RELEASE)
-            spacePressed = false;
+            space = State::Up;
         break;
+    }
 
     case GLFW_KEY_LEFT_SHIFT:
         if (action == GLFW_PRESS)
-            shiftPressed = true;
+            shift = State::Down;
         else if (action == GLFW_RELEASE)
-            shiftPressed = false;
+            shift = State::Up;
         break;
 
     default:
@@ -134,4 +136,57 @@ void Input::ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action
 
     }
 
+}
+
+void Input::Update()
+{
+    if (leftMouse == State::Down)
+        leftMouse = State::Held;
+    else if (leftMouse == State::Up)
+        leftMouse = State::Released;
+
+    if (rightMouse == State::Down)
+        rightMouse = State::Held;
+    else if (rightMouse == State::Up)
+        rightMouse = State::Released;
+
+    if (leftArrow == State::Down)
+        leftArrow = State::Held;
+    else if (leftArrow == State::Up)
+        leftArrow = State::Released;
+
+    if (rightArrow == State::Down)
+        rightArrow = State::Held;
+    else if (rightArrow == State::Up)
+        rightArrow = State::Released;
+
+    if (left == State::Down)
+        left = State::Held;
+    else if (left == State::Up)
+        left = State::Released;
+
+    if (right == State::Down)
+        right = State::Held;
+    else if (right == State::Up)
+        right = State::Released;
+
+    if (up == State::Down)
+        up = State::Held;
+    else if (up == State::Up)
+        up = State::Released;
+
+    if (down == State::Down)
+        down = State::Held;
+    else if (down == State::Up)
+        down = State::Released;
+
+    if (space == State::Down)
+        space = State::Held;
+    else if (space == State::Up)
+        space = State::Released;
+
+    if (shift == State::Down)
+        shift = State::Held;
+    else if (shift == State::Up)
+        shift = State::Released;
 }

@@ -19,31 +19,41 @@ struct GLFWwindow;
 class Input {
 
 public:
+    enum class State
+    {
+        Released,   //Key has been released for a frame or more.
+        Down,       // Key was pressed this frame.
+        Held,       // Key has been pressed for a frame or more.
+        Up,         // Key was released this frame.
+    };
+
     // Process inputs
     static void ProcessMouse(GLFWwindow *window, int button, int action, int mods);
     static void ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action, int mods);
     static void ProcessCursor(GLFWwindow *window, double x, double y);
+    
+    // Update key states
+    static void Update();
 
     // Stores mouse buttons
-    static bool leftMousePressed;
-    static bool rightMousePressed;
+    static State leftMouse;
+    static State rightMouse;
 
     // Stores what keys are pressed:
-    static bool leftArrowPressed;
-    static bool rightArrowPressed;
+    static State leftArrow;
+    static State rightArrow;
 
-    static bool leftPressed;
-    static bool rightPressed;
-    static bool upPressed;
-    static bool downPressed;
-    static bool spacePressed;
-    static bool shiftPressed;
+    static State left;
+    static State right;
+    static State up;
+    static State down;
+    static State space;
+    static State shift;
 
     static Vector2 mousePosition;
 
-private:
     // Disallow any instances
-    Input() {}
+    Input() = delete;
 
 };
 
