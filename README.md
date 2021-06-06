@@ -70,3 +70,7 @@ Some code comes from dmdmoura's [Adven](https://github.com/dmdemoura/Adven) GBA 
     or
 
     > ./(program name)
+
+---
+
+Remember to keep the **assets** folder together with the executable
