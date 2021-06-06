@@ -21,6 +21,7 @@
 
 
 # include "Components/Camera.hpp"
+# include "Input/Input.hpp"
 # include "Math/Matrix4x4.hpp"
 # include "Rendering/Renderer.hpp"
 # include "WindowSystem/WindowSystem.hpp"
@@ -83,6 +84,9 @@ int main(void) {
 
         // Swaps the old buffers for the new ones
         WindowSystem::SwapBuffers();
+
+        // Update input state.
+        Input::Update();
 
         // Gets the end time.
         uint64_t endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();

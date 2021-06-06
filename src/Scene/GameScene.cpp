@@ -21,7 +21,7 @@
 # include "../Components/Moveable.hpp"
 # include "../Components/Transform.hpp"
 # include "../Components/WrapAround.hpp"
-# include "../Components/PlayerDeath.hpp"
+# include "../Components/ExitOnDeath.hpp"
 # include "../Components/DestroyArea.hpp"
 # include "../Components/DestroyOnDie.hpp"
 # include "../Components/SplitOnDie.hpp"
@@ -185,6 +185,7 @@ GameScene::GameScene()
         bossPrefab->AddComponent<Shooter>(bossBulletPrefab, Vector3{ 268.0f, 140.0f, 0.0f }, 0.0f, 2.0f);
         bossPrefab->AddComponent<Shooter>(bossBulletPrefab, Vector3{ -268.0f, 140.0f, 0.0f }, 1.0f, 2.0f);
         bossPrefab->AddComponent<Boss>(0.7f, 0.1f);
+        bossPrefab->AddComponent<ExitOnDeath>("GAMEOVER!\nYou won!\n");
         bossPrefab->AddComponent<DestroyOnDie>();
     }
 
@@ -227,7 +228,7 @@ GameScene::GameScene()
     player.AddComponent<CircleCollider>(0.66f * 0.3f, PlayerLayer, false);
     auto& playerHealth = player.AddComponent<Health>(200);
     player.AddComponent<Player>();
-    player.AddComponent<PlayerDeath>();
+    player.AddComponent<ExitOnDeath>("GAMEOVER!\nYou died!\n");
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ -0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
     player.AddComponent<WrapAround>();

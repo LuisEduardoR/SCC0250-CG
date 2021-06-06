@@ -7,6 +7,7 @@
 
 # include "Player.hpp"
 
+#include "DamageOnContact.hpp"
 # include "GameObject.hpp"
 # include "Moveable.hpp"
 # include "Transform.hpp"
@@ -39,6 +40,16 @@ void Player::Start()
     transform = GetGameObject()->GetComponent<Transform>();
     moveable = GetGameObject()->GetComponent<Moveable>();
     collider = GetGameObject()->GetComponent<CircleCollider>();    
+    shooters = GetGameObject()->GetComponents<Shooter>();
+
+    for (Shooter* shooter: shooters)
+        shooter->afterSpawn = [this](GameObject& bullet)
+        {
+            if (auto* damager = bullet.GetComponent<DamageOnContact>())
+            {
+                damager->damage = damage;
+            }
+        };
 
     SetSize(Size::Normal);
 }
@@ -90,7 +101,7 @@ void Player::VDrawUpdate()
     }
 
     // Updates the scale (based on input)
-    if (Input::spacePressed)
+    if (Input::space == Input::State::Down)
     {
         switch (size)
         {
@@ -104,7 +115,7 @@ void Player::VDrawUpdate()
             {}
         }
     }
-    else if (Input::shiftPressed)
+    else if (Input::shift == Input::State::Down)
     {
         switch (size)
         {
@@ -139,15 +150,15 @@ void Player::VDrawUpdate()
     Vector2 input = Vector2();
 
     // Updates the X position (based on input)
-    if(Input::rightPressed)
+    if (Input::right == Input::State::Down || Input::right == Input::State::Held)
         input.x = 1.00f;
-    else if(Input::leftPressed)
+    else if (Input::left == Input::State::Down || Input::left == Input::State::Held)
         input.x = -1.00f;
 
     // Updates the Y position (based on input)
-    if(Input::upPressed)
+    if (Input::up == Input::State::Down || Input::up == Input::State::Held)
         input.y = 1.00f;
-    else if(Input::downPressed)
+    else if (Input::down == Input::State::Down || Input::down == Input::State::Held)
         input.y = -1.00f;
 
     transform->localRotation.z -= input.x * 3.0f * Time::DeltaTime;
@@ -166,7 +177,6 @@ void Player::VDrawUpdate()
     // moveable->speed = Vector3{ input * maxSpeed };
 
     // Gets the shooters and sets if they're active based on Input
-    std::vector<Shooter*> shooters = GetGameObject()->GetComponents<Shooter>();
     for(Shooter* shooter : shooters)
-        shooter->active = Input::leftMousePressed;
+        shooter->active = Input::leftMouse == Input::State::Down || Input::leftMouse == Input::State::Held;
 }

@@ -11,9 +11,11 @@
 
 # include "AssetLoader.hpp"
 
+#include <cmath>
 # include <iostream>
 # include <fstream>
 # include <sstream>
+# include <stdexcept>
 
 // Opens a file
 template<typename T>
@@ -22,8 +24,7 @@ std::ifstream AssetLoader<T>::OpenFile(const std::string& path) {
     std::ifstream file;
 	file.open(path);
 	if (!file) {
-		std::cout << "Failed to open file: " << path << std::endl;
-        return nullptr;
+        throw std::logic_error("Failed to open file: " + path);
 	}
 
     return file;

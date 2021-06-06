@@ -125,8 +125,8 @@ A breakdown of the **src/** directory and it's sub-directories is found below:
 
 **A/D:**            Turn the ship left/right (Rotation)
 
-**SPACE, SHIFT:**   Change ship size (Scale), a smaller ship is harder to hit but also weaker
+**SPACE, SHIFT:**   Increase/decrease ship size (Scale), a smaller ship is harder to hit but also weaker
 
 **LEFT MOUSE:**     Shoot
 
-**OBS:** If you lose the game the window will close and a Game Over message will be printed to the terminal, when playing on Windows by double-clicking the **.exe** file, the game window will close along the terminal so it might not be possible to read the message
+**OBS:** If you win/lose the game the window will close and a Game Over message will be printed to the terminal, when playing on Windows by double-clicking the **.exe** file, the game window will close along the terminal so it might not be possible to read the message
