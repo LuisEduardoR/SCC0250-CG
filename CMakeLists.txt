@@ -45,6 +45,8 @@ set(COMMON_SOURCES
     src/Components/Shooter.hpp
     src/Components/SplitOnDie.cpp
     src/Components/SplitOnDie.hpp
+    src/Components/TimedSpawner.cpp
+    src/Components/TimedSpawner.hpp
     src/Components/Transform.cpp
     src/Components/Transform.hpp
     src/Components/WrapAround.cpp

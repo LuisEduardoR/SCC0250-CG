@@ -42,9 +42,9 @@ void Scene::VBlankUpdate()
 
 GameObject& Scene::AddGameObject(GameObject&& gameObject)
 {
-    rootObjects.push_back(std::move(gameObject));
-    rootObjects.back().SetScene(this);
-    return rootObjects.back();
+    rootObjects.push_front(std::move(gameObject));
+    rootObjects.front().SetScene(this);
+    return rootObjects.front();
 }
 
 void Scene::RemoveGameObject(const GameObject& gameObject)

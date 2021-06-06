@@ -167,16 +167,16 @@ void GameObject::VBlankUpdate()
 
 void GameObject::AddChild(const GameObject& gameObject)
 {
-    children.push_back(gameObject);
-    auto& child = children.back();
+    children.push_front(gameObject);
+    auto& child = children.front();
     child.parent = this;
     child.SetScene(scene);
 }
 
 void GameObject::AddChild(GameObject&& gameObject)
 {
-    children.push_back(std::move(gameObject)); 
-    auto& child = children.back();
+    children.push_front(std::move(gameObject)); 
+    auto& child = children.front();
     child.parent = this;
     child.SetScene(scene);
 }
@@ -247,7 +247,7 @@ auto GameObject::SetScene(Scene* scene) -> void
 {
     this->scene = scene;
 
-    scene->toUpdateObjects.push_back(this);
+    scene->toUpdateObjects.push_front(this);
 }
 
 auto GameObject::begin() noexcept -> iterator

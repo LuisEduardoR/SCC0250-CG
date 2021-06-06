@@ -48,13 +48,13 @@ void Boss::VDrawUpdate()
 {
     if (!transform)
     {
-        std::cout << "Boss expects a Transform";
+        std::cout << "Boss expects a Transform\n";
         return;
     }
 
     if (!moveable)
     {
-        std::cout << "Boss expects a Moveable";
+        std::cout << "Boss expects a Moveable\n";
         return;
     }
 

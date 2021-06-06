@@ -67,6 +67,7 @@ public:
     Vector3() : Vector3(0.0f, 0.0f, 0.0f) {}
 	explicit Vector3(const Vector2& vec);
 	explicit Vector3(const Vector4& vec);
+	Vector3(const Vector2& vec, float z);
 
     Vector3(const Vector3& other) = default;
 	Vector3(Vector3&& other) = default;

@@ -15,6 +15,7 @@
 namespace Time
 {
     extern float DeltaTime;    
+    extern float Time;    
 }
 
 # endif /* end of include guard: TIME_HPP */

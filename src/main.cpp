@@ -89,6 +89,7 @@ int main(void) {
         
         // Calculates our frame time delta
         Time::DeltaTime = (endTime - startTime) / 1000.0f;
+        Time::Time += Time::DeltaTime;
         # if DISPLAY_DELTA_TIME
             std::cout << "DeltaTime: " << Time::DeltaTime << " FPS: " << 1.0f / Time::DeltaTime << "\n"; 
         # endif

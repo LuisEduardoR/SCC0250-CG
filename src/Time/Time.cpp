@@ -8,3 +8,4 @@
 #include "Time.hpp"
 
 float Time::DeltaTime = 0.0f;
+float Time::Time = 0.0f;

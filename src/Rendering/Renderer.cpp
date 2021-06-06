@@ -25,6 +25,8 @@ void Renderer::Init() {
     GLint result = glewInit();
     std::cout << "GlewStatus: " << glewGetErrorString(result) << std::endl;
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 }
 
 // Destroys the renderer
@@ -35,7 +37,7 @@ void Renderer::Destroy() {
 // Clears our color program with a certain color
 void Renderer::Clear(const Color& c) {
     glClearColor(c.r, c.g, c.b, c.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 // Sets the program our renderer will use based on some shader code

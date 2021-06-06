@@ -41,8 +41,8 @@ public:
     bool active;
 
 private:
-    Transform* transform;
-    Adven::Moveable* moveable;
+    Transform* transform{ nullptr };
+    Adven::Moveable* moveable{ nullptr };
     std::shared_ptr<Adven::GameObject> bulletPrefab;
 
     Vector3 cannonOffset;

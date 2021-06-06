@@ -46,7 +46,7 @@ void Shooter::VDrawUpdate()
 {
     if (!transform)
     {
-        std::cout << "Shooter expects a Transform";
+        std::cout << "Shooter expects a Transform\n";
         return;
     }
 

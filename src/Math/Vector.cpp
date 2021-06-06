@@ -130,6 +130,7 @@ auto operator!=(Vector2 a, Vector2 b) -> bool
 
 Vector3::Vector3(const Vector2& vec) : x(vec.x), y(vec.y), z(0.0f) {}
 Vector3::Vector3(const Vector4& vec) : x(vec.x), y(vec.y), z(vec.z) {}
+Vector3::Vector3(const Vector2& vec, float z) : x(vec.x), y(vec.y), z(z) {}
 
 auto Vector3::operator+=(Vector3 a) -> Vector3&
 {
