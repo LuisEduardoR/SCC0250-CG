@@ -43,6 +43,8 @@ set(COMMON_SOURCES
     src/Components/RendererComponent.hpp
     src/Components/Shooter.cpp
     src/Components/Shooter.hpp
+    src/Components/SplitOnDie.cpp
+    src/Components/SplitOnDie.hpp
     src/Components/Transform.cpp
     src/Components/Transform.hpp
     src/Components/WrapAround.cpp

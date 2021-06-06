@@ -20,7 +20,7 @@ namespace Adven
     public:
         float radius;
     public:
-        CircleCollider(float radius, bool isTrigger = false);
+        CircleCollider(float radius, Layer layer = 0, bool isTrigger = false);
         virtual ~CircleCollider() = default;
     public:
         /// Clones the transform.

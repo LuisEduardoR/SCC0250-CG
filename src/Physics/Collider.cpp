@@ -14,10 +14,11 @@
 
 #include <algorithm>
 #include <iostream>
+#include <stdexcept>
 
 using namespace Adven;
 
-std::unordered_map<Scene*, std::forward_list<Collider*>> Collider::collidersPerScene;
+std::unordered_map<const Scene*, Collider::SceneData> Collider::dataByScene;
 /*
     Static methods
 */
@@ -27,9 +28,10 @@ void Collider::Register(Collider& collider)
     {
         // If there's no list for this scene insert it.
         // Otherwise do nothing.
-        collidersPerScene.insert({});
+        auto [iter, _didInsert] = dataByScene.insert({ scene, {} });
+        auto& [key, data] = *iter;
 
-        collidersPerScene[scene].push_front(&collider);
+        data.colliders.push_front(&collider);
     }
 }
 
@@ -37,25 +39,38 @@ void Collider::Unregister(Collider& collider)
 {
     if (Scene* scene = collider.GetGameObject()->GetScene())
     {
-        if (const auto& iter = collidersPerScene.find(scene); iter != collidersPerScene.end())
+        if (auto iter = dataByScene.find(scene); iter != dataByScene.end())
         {
-            iter->second.remove(&collider);
+            iter->second.colliders.remove(&collider);
         }
     }
 }
 
 void Collider::Update()
 {
-    for (auto& [scene, colliders] : collidersPerScene)
+    for (auto& [scene, data] : dataByScene)
     {
-        for (auto i = colliders.begin(); i != colliders.end(); ++i)
+        for (auto i = data.colliders.begin(); i != data.colliders.end(); ++i)
         {
-            for (auto j = ++colliders.begin(); j != colliders.end(); ++j)
+            for (auto j = ++data.colliders.begin(); j != data.colliders.end(); ++j)
             {
                 if (i == j) continue;
 
                 auto* colliderI = *i;
                 auto* colliderJ = *j;
+
+                try
+                {
+                    bool shouldCollide = data.collisionLayers
+                        .at(colliderI->layer)
+                        .at(colliderJ->layer);
+
+                    if (!shouldCollide) continue;
+                }
+                catch (const std::out_of_range&)
+                {
+                    //Assume the objects should collide.
+                }
 
                 if (CheckCollision(*colliderI, *colliderJ))
                 {
@@ -85,6 +100,7 @@ void Collider::Update()
         }
     }
 }
+
 bool Collider::CheckCollision(const Collider& a, const Collider& b)
 {
     //if (typeid(a) == typeid(RectCollider) && typeid(b) == typeid(RectCollider))
@@ -99,7 +115,14 @@ bool Collider::CheckCollision(const Collider& a, const Collider& b)
 }
 
 
-Collider::Collider(bool isTrigger) : isTrigger(isTrigger) {}
+Collider::SceneData& Collider::GetSceneData(const Scene& scene)
+{
+    auto [iter, didInsert] = dataByScene.insert({ &scene, {} });
+    return iter->second;
+}
+
+
+Collider::Collider(Layer layer, bool isTrigger) : layer(layer), isTrigger(isTrigger) {}
 
 void Collider::Start()
 {

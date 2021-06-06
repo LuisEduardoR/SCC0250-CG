@@ -23,6 +23,7 @@
 # include "../Components/PlayerDeath.hpp"
 # include "../Components/DestroyArea.hpp"
 # include "../Components/DestroyOnDie.hpp"
+# include "../Components/SplitOnDie.hpp"
 # include "../Components/FollowObject.hpp"
 # include "../Components/DamageOnContact.hpp"
 # include "../Components/RendererComponent.hpp"
@@ -58,11 +59,32 @@ namespace
         return skyModel;
 
     }
-
+    
+    enum CollisionLayers : Collider::Layer
+    {
+        DefaultLayer,
+        AsteroidLayer, 
+        PlayerLayer,
+        PlayerBulletLayer,
+        EnemyLayer,
+        EnemyBulletLayer,
+    };
 }
 
 GameScene::GameScene()
 {
+    std::vector<std::vector<bool>> collisionLayers
+    {
+        { true, true, true, true, true, true },     // Default
+        { true, false, true, true, true, true },    // Asteroid
+        { true, true, false, false, true, true },   // Player
+        { true, true, false, false, true, true },   // PlayerBullet
+        { true, true, true, true, false, false },   // Enemy
+        { true, true, true, true, false, false },   // EnemyBullet
+    };
+
+    Collider::GetSceneData(*this).collisionLayers = std::move(collisionLayers);
+
     // Loads vertex and fragment shader's GLSL code 
     std::string vertexCode   = AssetLoader<std::string>::LoadAsset("./assets/vertex.glsl");
     std::string fragmentCode = AssetLoader<std::string>::LoadAsset("./assets/fragment.glsl");
@@ -92,7 +114,7 @@ GameScene::GameScene()
         bulletPrefab->AddComponent<Transform>(Vector3(), Vector3());
         bulletPrefab->AddComponent<RendererComponent<ShapeBatch>>(bulletModel);
         bulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
-        bulletPrefab->AddComponent<CircleCollider>( 0.09f, true );
+        bulletPrefab->AddComponent<CircleCollider>( 0.09f, PlayerBulletLayer, true );
         bulletPrefab->AddComponent<DamageOnContact>(10);
         bulletPrefab->AddComponent<DestroyArea>(
             Vector3{ -1.0f, -1.0f, -1.0f },
@@ -109,7 +131,7 @@ GameScene::GameScene()
         bossBulletPrefab->AddComponent<Transform>(Vector3(), Vector3());
         bossBulletPrefab->AddComponent<RendererComponent<ShapeBatch>>(bBulletModel);
         bossBulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
-        bossBulletPrefab->AddComponent<CircleCollider>( 0.05f, true );
+        bossBulletPrefab->AddComponent<CircleCollider>( 0.05f, EnemyBulletLayer, true );
         bossBulletPrefab->AddComponent<DamageOnContact>(10);
         bossBulletPrefab->AddComponent<DestroyArea>(
             Vector3{ -1.0f, -1.0f, -1.0f },
@@ -119,6 +141,16 @@ GameScene::GameScene()
         //     Vector3{ -100.0f, -100.0f, -100.0f },
         //     Vector3{ 100.0f, 100.0f, 100.0f}
         // );
+    }
+
+    auto smallAsteroidPrefab = std::make_shared<GameObject>();
+    {
+        smallAsteroidPrefab->AddComponent<Transform>();
+        smallAsteroidPrefab->AddComponent<RendererComponent<ShapeCollection>>(asteroidModel);
+        smallAsteroidPrefab->AddComponent<Moveable>();
+        smallAsteroidPrefab->AddComponent<CircleCollider>(0.1f, AsteroidLayer, true);
+        smallAsteroidPrefab->AddComponent<DamageOnContact>(10);
+        smallAsteroidPrefab->AddComponent<WrapAround>();
     }
 
     GameObject& camera = AddGameObject({});
@@ -139,7 +171,7 @@ GameScene::GameScene()
         Vector3{ 0.3f, 0.3f, 1.0f });
     player.AddComponent<Moveable>();
     player.AddComponent<RendererComponent<ShapeCollection>>(ship2Model);
-    player.AddComponent<CircleCollider>(0.66f * 0.3f, false);
+    player.AddComponent<CircleCollider>(0.66f * 0.3f, PlayerLayer, false);
     auto& playerHealth = player.AddComponent<Health>(100);
     player.AddComponent<Player>();
     player.AddComponent<PlayerDeath>();
@@ -166,7 +198,7 @@ GameScene::GameScene()
         // Gets a random angle and scale
         float angle{ 2.0f * CONST_PI
                      * std::uniform_real_distribution<float>{ 0.0f, 1.0f }(rng) };
-        float scale{ std::uniform_real_distribution<float>{ 0.02f, 0.07f }(rng) };
+        float scale{ std::uniform_real_distribution<float>{ 0.05f, 0.13f }(rng) };
         Vector3 speed
         {
             std::uniform_real_distribution<float>{ -0.05f, 0.05f }(rng),
@@ -182,9 +214,11 @@ GameScene::GameScene()
             Vector3{ scale, scale, 1.0f });
         asteroid.AddComponent<RendererComponent<ShapeCollection>>(asteroidModel);
         asteroid.AddComponent<Moveable>(speed);
-        asteroid.AddComponent<CircleCollider>(scale, true);
+        asteroid.AddComponent<CircleCollider>(scale, AsteroidLayer, true);
+        asteroid.AddComponent<Health>(5);
         asteroid.AddComponent<DamageOnContact>(10);
         asteroid.AddComponent<WrapAround>();
+        asteroid.AddComponent<SplitOnDie>(smallAsteroidPrefab);
     }
 
     // Creates the boss
@@ -197,7 +231,7 @@ GameScene::GameScene()
     boss.AddComponent<Moveable>();
     boss.AddComponent<RendererComponent<ShapeCollection>>(bossModel);
     boss.AddComponent<Health>(1000);
-    boss.AddComponent<CircleCollider>(0.3f, true);
+    boss.AddComponent<CircleCollider>(0.3f, EnemyLayer, true);
     boss.AddComponent<Shooter>(bossBulletPrefab, Vector3{ 268.0f, 140.0f, 0.0f }, 0.0f, 2.0f);
     boss.AddComponent<Shooter>(bossBulletPrefab, Vector3{ -268.0f, 140.0f, 0.0f }, 1.0f, 2.0f);
     boss.AddComponent<Boss>(0.7f, 0.1f);
@@ -209,12 +243,12 @@ GameScene::GameScene()
     ship2.AddComponent<Transform>(
         Vector3{ -0.7f, -0.3f, 0.0f },
         Vector3{},
-        Vector3{ 0.3f, 0.3f, 1.0f });
+        Vector3{ 0.15f, 0.15f, 1.0f });
     ship2.AddComponent<Moveable>();
     ship2.AddComponent<RendererComponent<ShapeCollection>>(shipModel);
-    ship2.AddComponent<CircleCollider>(0.7f * 0.3f, true);
+    ship2.AddComponent<CircleCollider>(0.7f * 0.15f, EnemyLayer, true);
     ship2.AddComponent<Health>(50);
     ship2.AddComponent<DestroyOnDie>();
-    /* ship2.AddComponent<WrapAround>(); */
+    ship2.AddComponent<WrapAround>();
 
 }
