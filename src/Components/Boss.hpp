@@ -6,7 +6,8 @@
 //  Prof. Ricardo M. Marcacini
 
 /*
-    This file contains the Player component
+    This file contains the Boss component
+    Implements the boss mechanics
 */
 
 # ifndef BOSS_HPP

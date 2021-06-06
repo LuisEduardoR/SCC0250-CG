@@ -7,6 +7,8 @@
 
 /*
     This file contains the Player component
+    Implements the player mechanics allowing for
+    user control
 */
 
 # ifndef PLAYER_HPP

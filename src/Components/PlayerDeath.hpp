@@ -1,3 +1,17 @@
+// Abner Eduardo Silveira Santos - NUSP 10692012
+// Amanda de Moura Peres - NUSP 10734522
+// Luís Eduardo Rozante de Freitas Pereira - NUSP 10734794
+// Desenvolvido para a disciplina:
+//  SCC0250 - Computação Gráfica (2021)
+//  Prof. Ricardo M. Marcacini
+
+/*
+    This file contains the PlayerDeath component
+    Implements a death mechanic for when the health
+    of a GameObject with Player and Health components
+    runs out
+*/
+
 #ifndef PLAYER_DEATH_HPP
 #define PLAYER_DEATH_HPP
 

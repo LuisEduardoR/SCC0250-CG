@@ -1,3 +1,18 @@
+
+// Abner Eduardo Silveira Santos - NUSP 10692012
+// Amanda de Moura Peres - NUSP 10734522
+// Luís Eduardo Rozante de Freitas Pereira - NUSP 10734794
+// Desenvolvido para a disciplina:
+//  SCC0250 - Computação Gráfica (2021)
+//  Prof. Ricardo M. Marcacini
+
+/*
+    This file contains the DamageOnContact component
+    Does damage when a GameObject with a Collider and a 
+    Health component collides against this a GameObject 
+    with this component and also a Collider
+*/
+
 # ifndef DAMAGE_ON_CONTACT_HPP
 # define DAMAGE_ON_CONTACT_HPP
 

@@ -7,6 +7,8 @@
 
 /*
     This file contains the Transform component
+    Allows a GameObject to be translated, rotated
+    and scaled
 */
 
 # ifndef TRANSFORM_HPP

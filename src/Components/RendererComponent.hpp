@@ -6,7 +6,9 @@
 //  Prof. Ricardo M. Marcacini
 
 /*
-    This file contains the ComponentRenderer component
+    This file contains the RendererComponent component
+    Implements a way call the renderer to draw something
+    ons screen for the GameObject with this component
 */
 
 # ifndef COMPONENT_RENDERER_HPP
@@ -19,7 +21,6 @@
 
 # include "../Rendering/Renderer.hpp"
 
-// !FIX: Using component causes linker errors
 template<class T>
 class RendererComponent : public Adven::Component {
 

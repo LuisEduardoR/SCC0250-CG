@@ -6,7 +6,8 @@
 //  Prof. Ricardo M. Marcacini
 
 /*
-    This file contains the Player component
+    This file contains the Shooter component
+    Allows a Gameobject to shoot
 */
 
 # ifndef SHOOTER_HPP

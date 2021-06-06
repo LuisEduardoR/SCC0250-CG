@@ -42,6 +42,7 @@ using namespace Adven;
 namespace
 {
 
+    // Generates random points to be used on the sky
     auto GenerateSkyModel() -> ShapeCollection
     {
         
@@ -62,6 +63,7 @@ namespace
 
     }
     
+    // Collision layer used by the scene
     enum CollisionLayers : Collider::Layer
     {
         DefaultLayer,
@@ -71,10 +73,17 @@ namespace
         EnemyLayer,
         EnemyBulletLayer,
     };
+
 }
 
+// Creates all the objects and adds all the components necessary to run the scene
+// The rest will be executed via Scene::VDrawUpdate() and Scene::VBlankUpdate()
+// that will update each GameObject and it's Components to execute the game. This
+// functions are executed on this scene by the main loop.
 GameScene::GameScene()
 {
+
+    // Matrix containing which layers collide with eachother
     std::vector<std::vector<bool>> collisionLayers
     {
         { true, true, true, true, true, true },     // Default
@@ -85,6 +94,7 @@ GameScene::GameScene()
         { true, true, true, true, false, false },   // EnemyBullet
     };
 
+    // Sets the collision layers of this scene
     Collider::GetSceneData(*this).collisionLayers = std::move(collisionLayers);
 
     // Loads vertex and fragment shader's GLSL code 
@@ -111,8 +121,10 @@ GameScene::GameScene()
     // Make a prefab. Prefabs are just normal gameobjects.
     // Though they don't need to be attached to a scene.
     // Use a shared_ptr so many components can keep a reference to the same prefab.
+    // Creates a prefab for the bullet
     auto bulletPrefab = std::make_shared<GameObject>();
     {
+        // Adds the necessary components
         bulletPrefab->AddComponent<Transform>(Vector3{ 0.0f, 0.0f, 0.3f });
         bulletPrefab->AddComponent<RendererComponent<ShapeBatch>>(bulletModel);
         bulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
@@ -124,8 +136,10 @@ GameScene::GameScene()
         );
     }
 
+    // Creates a prefab for the enemy bullet
     auto enemyBulletPrefab = std::make_shared<GameObject>();
     {
+        // Adds the necessary components
         enemyBulletPrefab->AddComponent<Transform>(
             Vector3{ 0.0f, 0.0f, 0.3f },
             Vector3{},
@@ -141,8 +155,10 @@ GameScene::GameScene()
         );
     }
 
+    // Creates a prefab for the boss bullet
     auto bossBulletPrefab = std::make_shared<GameObject>();
     {
+        // Adds the necessary components
         bossBulletPrefab->AddComponent<Transform>(Vector3{ 0.0f, 0.0f, 0.3f });
         bossBulletPrefab->AddComponent<RendererComponent<ShapeBatch>>(bBulletModel);
         bossBulletPrefab->AddComponent<Moveable>(Vector3 { 0.0f, 1.2f, 0.0f });
@@ -157,6 +173,7 @@ GameScene::GameScene()
     // Creates the boss
     auto bossPrefab = std::make_shared<GameObject>();
     {
+        // Adds the necessary components
         bossPrefab->AddComponent<Transform>(
             Vector3{ 0.0f, 0.4f, 0.5f },
             Vector3{ 0.0f, 0.0f, CONST_PI },
@@ -171,8 +188,10 @@ GameScene::GameScene()
         bossPrefab->AddComponent<DestroyOnDie>();
     }
 
+    // Creates a prefab for small asteroids
     auto smallAsteroidPrefab = std::make_shared<GameObject>();
     {
+        // Adds the necessary components
         smallAsteroidPrefab->AddComponent<Transform>(Vector3{ 0.0f, 0.4f, 0.4f });
         smallAsteroidPrefab->AddComponent<RendererComponent<ShapeCollection>>(asteroidModel);
         smallAsteroidPrefab->AddComponent<Moveable>();
@@ -181,18 +200,24 @@ GameScene::GameScene()
         smallAsteroidPrefab->AddComponent<WrapAround>();
     }
 
+    // Creates the camera
     GameObject& camera = AddGameObject({});
+    // Adds the necessary components
     camera.AddComponent<Transform>();
     camera.AddComponent<Camera>(true);
 
     // Creates the sky
     GameObject sky{};
+    // Adds the necessary components
     sky.AddComponent<Transform>(Vector3 { -1.0f, -1.0f, 1.0f });
     sky.AddComponent<RendererComponent<ShapeBatch>>(skyBatch);
+
+    // Attaches the sky to the camera so they move together
     camera.AddChild(std::move(sky));
 
     // Creates the player
     GameObject& player = AddGameObject({});
+    // Adds the necessary components
     auto& playerTransform = player.AddComponent<Transform>(
         Vector3{ 0.0f, -0.3f, 0.5f },
         Vector3{},
@@ -207,16 +232,19 @@ GameScene::GameScene()
     player.AddComponent<Shooter>(bulletPrefab, Vector3{ 0.1f, 0.86f, 0.0f }, 0.0f, 0.2f);
     player.AddComponent<WrapAround>();
 
+    // Creates the health bar
     GameObject& healthBar = AddGameObject({});
+    // Adds the necessary components
     healthBar.AddComponent<Transform>(Vector3{ -0.65f, -0.90f, 0.0f });
     healthBar.AddComponent<HealthBar>(playerHealth, Vector2{ -0.3f, -0.025f }, Vector2{ 0.3f, 0.025f });
     Quad barQuad{};
     barQuad.color = Color::red;
     healthBar.AddComponent<RendererComponent<Quad>>(barQuad);
 
-
+    // Creates a prefab for the enemy ship
     auto enemyShipPrefab = std::make_shared<GameObject>();
     {
+        // Adds the necessary components
         enemyShipPrefab->AddComponent<Transform>(
             Vector3{ -0.7f, 0.5f, 0.5f },
             Vector3{},
@@ -236,8 +264,12 @@ GameScene::GameScene()
     std::vector<Vector2> asteroidPoints{
         amn::PoissonDiscSampler::GeneratePoints(0.3f, { 2.0f, 2.0f }, 5)
     };
+
+    // Creates a random number geeration to also randomize scale and rotation
 	std::random_device rd;
 	std::mt19937 rng{ rd() };
+
+    // Adds al the asteroids
     for (const Vector2& point: asteroidPoints)
     {
 
@@ -254,6 +286,7 @@ GameScene::GameScene()
 
         // Creates an asteroid
         GameObject& asteroid = AddGameObject({});
+        // Adds the necessary components
         asteroid.AddComponent<Transform>(
             Vector3{ point, 0.4f } - Vector3{ 1.0f, 1.0f, 0.0f },
             Vector3{ 0.0f, 0.0f, angle },
@@ -267,9 +300,12 @@ GameScene::GameScene()
         asteroid.AddComponent<SplitOnDie>(smallAsteroidPrefab);
     }
 
+    // Creates the enemy spawner and adds the TimedSpawner component
     GameObject& enemySpawner = AddGameObject({});
     enemySpawner.AddComponent<TimedSpawner>(enemyShipPrefab, 10.0f); 
 
+    // Creates the enemy spawner and adds the TimedSpawner component
     GameObject& bossSpawner = AddGameObject({});
     bossSpawner.AddComponent<TimedSpawner>(bossPrefab, 30.0f); 
+
 }

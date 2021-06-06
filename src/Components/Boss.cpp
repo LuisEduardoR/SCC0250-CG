@@ -5,6 +5,10 @@
 //  SCC0250 - Computação Gráfica (2021)
 //  Prof. Ricardo M. Marcacini
 
+/*
+    This file contains the BOSS component
+*/
+
 # include "Boss.hpp"
 
 # include "GameObject.hpp"

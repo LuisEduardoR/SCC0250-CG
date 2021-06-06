@@ -6,7 +6,8 @@
 //  Prof. Ricardo M. Marcacini
 
 /*
-    This file contains the Player component
+    This file contains the BaseEnemy component
+    Intended  to be used as a base to further develop enemies
 */
 
 # ifndef BASE_ENEMY_HPP
@@ -51,4 +52,4 @@ private:
 
 };
 
-#endif /* end of include guard: PLAYER_HPP */
+#endif /* end of include guard: BASE_ENEMY_HPP */
