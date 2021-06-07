@@ -44,7 +44,7 @@ void Boss::Start()
     moveable = GetGameObject()->GetComponent<Moveable>();
 
     targetPos = transform->localPosition.x + amplitude/2.0f;
-    moveable->speed.x = -speed;
+    moveable->speed.x = speed;
     goingRight = true;
 }
 
@@ -66,13 +66,13 @@ void Boss::VDrawUpdate()
 
     if(goingRight && transform->localPosition.x >= targetPos)
     {
-        moveable->speed.x = speed;
+        moveable->speed.x = -speed;
         goingRight = false;
         targetPos -= amplitude;
     }
     else if(!goingRight && transform->localPosition.x <= targetPos)
     {
-        moveable->speed.x = -speed;
+        moveable->speed.x = speed;
         goingRight = true;
         targetPos += amplitude;
     }
