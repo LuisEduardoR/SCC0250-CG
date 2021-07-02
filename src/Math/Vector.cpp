@@ -187,7 +187,7 @@ auto Vector3::operator-() const -> Vector3
 
 auto Vector3::Dot(Vector3 a) const -> float
 {
-    return x * a.x + y * a.y + z + a.z;
+    return x * a.x + y * a.y + z * a.z;
 }
 
 auto Vector3::ClampMagnitude(float max) -> Vector3
