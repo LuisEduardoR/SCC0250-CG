@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.18)
-project(cgtrabalho1)
+project(cgtrabalho2)
+
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    "${CMAKE_SOURCE_DIR}/external/SDL2Test/cmake/")
 
 include(pmm.cmake)
 pmm(CONAN)
@@ -9,10 +13,14 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 #find_package(OpenGL REQUIRED)
 #find_package(GLEW 2 REQUIRED)
 #find_package(glfw3 3 REQUIRED)
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 
 set(COMMON_SOURCES
     src/Assets/AssetLoader.cpp
     src/Assets/AssetLoader.hpp
+    src/Assets/WavefrontObject.hpp
+    src/Assets/WavefrontParser.hpp
     src/Components/BaseEnemy.hpp
     src/Components/Boss.cpp
     src/Components/Boss.hpp
@@ -86,6 +94,7 @@ set(COMMON_SOURCES
     src/Scene/Scene.hpp
     src/Time/Time.cpp
     src/Time/Time.hpp
+    src/Utils/IOUtils.hpp
     src/Utils/TypeUtils.hpp
     src/WindowSystem/WindowSystem.cpp
     src/WindowSystem/WindowSystem.hpp
@@ -104,11 +113,19 @@ foreach(TARGET ${EXE_TARGETS})
     set_property(TARGET ${TARGET} PROPERTY CXX_EXTENSIONS OFF)
     target_compile_features(${TARGET} PUBLIC cxx_std_17)
 
+    target_include_directories(${TARGET}
+        PRIVATE
+            ${SDL2_INCLUDE_DIRS}
+            ${SDL2_IMAGE_INCLUDE_DIRS}
+    )
+
     target_link_libraries(${TARGET} 
         PRIVATE
             #GL
             #GLEW
             #glfw
+            ${SDL2_LIBRARIES}
+            ${SDL2_IMAGE_LIBRARIES}
             CONAN_PKG::glew
             CONAN_PKG::glfw
     )
@@ -122,6 +139,7 @@ foreach(TARGET ${EXE_TARGETS})
             -Wconversion        # Warn on implicit conversion that might alter a value.
             -Wsign-conversion   # Warn also about implict conversion between signed and unsigned types.
             #-pedantic-errors    # Error on language extensions.
+            -U _GNU_SOURCE      # How many times do I have to say no extensions? (strerror_r)
         >
         $<$<CXX_COMPILER_ID:MSVC>:
             /WX     # Treat warnings as errors.

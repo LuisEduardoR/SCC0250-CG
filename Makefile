@@ -25,7 +25,7 @@ SRC = ./src/*.cpp $(SRC_ASSETS) $(SRC_COMPONENTS) $(SRC_EVENTS) $(SRC_EXCEPTIONS
 OUTPUT = Trabalho-CG.exe
 
 # Linker arguments
-LINKER_LINUX = -lglfw -lGL -lGLEW -lm
+LINKER_LINUX = -lglfw -lGL -lGLEW -lm -lSDL2 -lSDL2_image
 LINKER_WINDOWS = -lglfw3 -lglew32 -lopengl32
 
 # Compilation flags
