@@ -19,6 +19,8 @@ find_package(SDL2_image REQUIRED)
 set(COMMON_SOURCES
     src/Assets/AssetLoader.cpp
     src/Assets/AssetLoader.hpp
+    src/Assets/Texture2D.hpp
+    src/Assets/Texture2D.cpp
     src/Assets/WavefrontObject.hpp
     src/Assets/WavefrontParser.hpp
     src/Components/BaseEnemy.hpp

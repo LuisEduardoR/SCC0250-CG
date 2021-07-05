@@ -17,6 +17,8 @@
 
 # include <string>
 
+class Texture2D;
+
 template<typename T>
 class AssetLoader {
 
@@ -44,5 +46,8 @@ std::string AssetLoader<std::string>::LoadAsset(const std::string& path);
 
 template<>
 ShapeCollection AssetLoader<ShapeCollection>::LoadAsset(const std::string& path);
+
+template<>
+Texture2D AssetLoader<Texture2D>::LoadAsset(const std::string& path);
 
 # endif /* end of include guard: ASSET_LOADER_HPP */
