@@ -93,7 +93,7 @@ void Renderer::CreateArrayBuffer() {
 }
 
 // Draws an object directly interacting with our graphics API
-void Renderer::DrawInternal(float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
+void Renderer::DrawInternal(const float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
 
     // Creates our array buffer
     CreateArrayBuffer();
@@ -107,7 +107,7 @@ void Renderer::DrawInternal(float* data, size_t data_size, size_t count, GLenum 
     // Associates the positions of our geometry
     loc = glGetAttribLocation(Renderer::currentProgram, "position");
     glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+    glVertexAttribPointer(loc, data_size / count / sizeof(float), GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
     // Associates our color
     loc = glGetUniformLocation(Renderer::currentProgram, "color");

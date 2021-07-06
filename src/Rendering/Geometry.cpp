@@ -181,3 +181,45 @@ ShapeBatch::ShapeBatch(ShapeCollection collection) {
     # endif
 
 }
+
+Mesh::Mesh(std::vector<VertexInput>&& vertices) : vertexInputBuffer(std::move(vertices)) {}
+
+Mesh::Mesh(const WavefrontObject& cubeObj)
+{
+    GLint start{ 0 };
+
+    for (const WavefrontObject::Element<WavefrontObject::Face>& face : cubeObj.faces)
+    {
+
+        for (std::size_t i = 0; i < face.data.vertexIndexes.size(); i++) 
+        {
+            VertexInput vertexInput{};
+            
+            vertexInput.position = Vector3
+            { 
+                cubeObj.vertices.at(face.data.vertexIndexes[i] - 1).data
+            };
+
+            /* vertexInput.texturePosition = Vector2 */
+            /* { */
+            /*     cubeObj.textureVertices.at(face.data.textureVertexIndexes[i] - 1).data */
+            /* }; */
+
+            vertexInputBuffer.push_back(vertexInput);
+        }
+
+        GLint vertexCount{ static_cast<GLint>(face.data.vertexIndexes.size()) };
+        drawCalls.push_back({ GL_TRIANGLE_FAN, start, vertexCount });
+        start += vertexCount;
+    }
+}
+
+auto Mesh::GetVertexInput() const -> const std::vector<VertexInput>&
+{
+    return vertexInputBuffer;
+}
+
+auto Mesh::GetDrawCalls() const -> const std::vector<DrawCall>&
+{
+    return drawCalls;
+}

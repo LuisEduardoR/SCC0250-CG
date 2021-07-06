@@ -11,6 +11,8 @@
 # include <vector>
 # include <random>
 
+# include "../Assets/WavefrontObject.hpp"
+# include "../Assets/AssetLoader.hpp"
 # include "../Components/Shooter.hpp"
 # include "../Components/Health.hpp"
 # include "../Components/HealthBar.hpp"
@@ -35,7 +37,7 @@
 # include "../Rendering/Renderer.hpp"
 # include "../Rendering/Geometry.hpp"
 # include "../Rendering/PoissonDiscSampling.hpp"
-# include "../Assets/AssetLoader.hpp"
+# include "../WindowSystem/WindowSystem.hpp"
 
 using namespace Adven;
 
@@ -121,6 +123,17 @@ GameScene::GameScene()
     
     // Generates the sky and batchs it's shapes for performance
     ShapeBatch skyBatch(GenerateSkyModel());
+
+    auto cubeObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/cube.obj");
+    
+    Mesh cubeMesh{ cubeObj };
+    
+    GameObject& cube = AddGameObject({});
+    cube.AddComponent<Transform>(
+            Vector3{ 0.0f, 0.0f, 2.0f },
+            Vector3{ 0.0f, CONST_PI / 4.0f, 0.0f },
+            Vector3{ 0.3f, 0.3f, 0.3f });
+    cube.AddComponent<RendererComponent<Mesh>>(cubeMesh);
 
     // Make a prefab. Prefabs are just normal gameobjects.
     // Though they don't need to be attached to a scene.
@@ -208,7 +221,7 @@ GameScene::GameScene()
     // Creates the camera
     GameObject& camera = AddGameObject({});
     // Adds the necessary components
-    camera.AddComponent<Transform>();
+    camera.AddComponent<Transform>(Vector3 { 0.0f, 0.0f, -5.0f });
     camera.AddComponent<Camera>(true);
 
     // Creates the sky

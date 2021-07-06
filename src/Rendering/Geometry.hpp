@@ -18,6 +18,7 @@
 # include "Color.hpp"
 # include "RenderData.hpp"
 # include "RenderStateChange.hpp"
+# include "../Assets/WavefrontObject.hpp"
 # include "../Math/Vector.hpp"
 
 # include <GL/glew.h>
@@ -33,10 +34,10 @@ public:
     Color color;
 
     // Constructors
-    Shape(Color color) {
+    inline Shape(Color color) {
         this->color = color;
     }
-    Shape() : Shape(Color::white) {}
+    inline Shape() : Shape(Color::white) {}
 
     // Destructors
     virtual ~Shape() = default;
@@ -54,10 +55,10 @@ public:
     Vector2 a;
 
     // Constructors
-    Point(Vector2 a, Color color = Color::white) : Shape(color) {
+    inline Point(Vector2 a, Color color = Color::white) : Shape(color) {
         this->a = a;
     }
-    Point() : Point(Vector2()) {}
+    inline Point() : Point(Vector2()) {}
 
     // Destructors
     virtual ~Point() = default;
@@ -80,11 +81,11 @@ public:
     Vector2 a, b;
 
     // Constructors
-    Line(Vector2 a, Vector2 b, Color color = Color::white) : Shape(color) {
+    inline Line(Vector2 a, Vector2 b, Color color = Color::white) : Shape(color) {
         this->a = a;
         this->b = b;
     }
-    Line() : Line({ 0.0f, -0.5f}, { 0.0f, 0.5f}) {}
+    inline Line() : Line({ 0.0f, -0.5f}, { 0.0f, 0.5f}) {}
 
     // Destructors
     virtual ~Line() = default;
@@ -107,12 +108,12 @@ public:
     Vector2 a, b, c;
 
     // Constructors
-    Triangle(Vector2 a, Vector2 b, Vector2 c, Color color = Color::white) : Shape(color) {
+    inline Triangle(Vector2 a, Vector2 b, Vector2 c, Color color = Color::white) : Shape(color) {
         this->a = a;
         this->b = b;
         this->c = c;
     }
-    Triangle() : Triangle({ 0.0f, 0.5f}, { -0.5f, -0.5f}, { 0.5f, -0.5f}) {}
+    inline Triangle() : Triangle({ 0.0f, 0.5f}, { -0.5f, -0.5f}, { 0.5f, -0.5f}) {}
 
     Triangle(const Triangle& other) = default;
     Triangle(Triangle&& other) = default;
@@ -141,13 +142,13 @@ public:
     Vector2 a, b, c, d;
 
     // Constructors
-    Quad(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color = Color::white) : Shape(color) {
+    inline Quad(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color = Color::white) : Shape(color) {
         this->a = a;
         this->b = b;
         this->c = c;
         this->d = d;
     };
-    Quad() : Quad({ 0.5f, 0.5f}, { -0.5f, 0.5f}, { -0.5f, -0.5f}, { 0.5f, -0.5f}) {}
+    inline Quad() : Quad({ 0.5f, 0.5f}, { -0.5f, 0.5f}, { -0.5f, -0.5f}, { 0.5f, -0.5f}) {}
 
     // Destructors
     virtual ~Quad() = default;
@@ -188,8 +189,8 @@ public:
         GeneratePoints();
         
     }
-    Circle(Vector2 center, float radius) : Circle(center, radius, this->default_precision) {} 
-    Circle() : Circle({ 0.0f, 0.0f}, 1.0f, this->default_precision) {}
+    inline Circle(Vector2 center, float radius) : Circle(center, radius, this->default_precision) {} 
+    inline Circle() : Circle({ 0.0f, 0.0f}, 1.0f, this->default_precision) {}
 
     // Destructors
     virtual ~Circle() = default;
@@ -227,6 +228,38 @@ public:
     // Stores the data of all state changes that must happen when rendering
     std::vector<RenderStateChange> stateChanges;
 
+};
+
+class Mesh final {
+public:
+    // Shader input element
+    struct VertexInput {
+        Vector3 position;
+        /* Vector2 texturePosition; */
+    };
+
+    struct DrawCall {
+        GLenum mode; // DrawMode
+        GLint first; // Start index on the associated buffer
+        GLsizei count; // Element count on the buffer
+    };
+
+    Mesh(std::vector<VertexInput>&& vertices);
+    Mesh(const WavefrontObject& object);
+
+    Mesh(const Mesh& other) = default;
+    Mesh(Mesh&& other) = default;
+
+    auto operator=(const Mesh& other) -> Mesh& = default;
+    auto operator=(Mesh&& other) -> Mesh& = default;
+
+
+    auto GetVertexInput() const -> const std::vector<VertexInput>&;
+    auto GetDrawCalls() const -> const std::vector<DrawCall>&;
+
+private:
+    std::vector<VertexInput> vertexInputBuffer;
+    std::vector<DrawCall> drawCalls;
 };
 
 # endif /* end of include guard: GEOMETRY_HPP */

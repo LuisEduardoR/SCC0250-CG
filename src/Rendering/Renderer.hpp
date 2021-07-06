@@ -64,7 +64,7 @@ private:
     static void CreateArrayBuffer();
 
     // Draws an object directly interacting with our graphics API
-    static void DrawInternal(float* data, size_t data_size, size_t count, GLenum mode, const Color& color = Color::white, const Matrix4x4& transform = Matrix4x4::Identity);
+    static void DrawInternal(const float* data, size_t data_size, size_t count, GLenum mode, const Color& color = Color::white, const Matrix4x4& transform = Matrix4x4::Identity);
 
 }; 
 
@@ -94,6 +94,28 @@ void Renderer::Draw(const T& object, const Matrix4x4& transform)
         for(RenderStateChange state : object.stateChanges)
             DrawInternal((float*)(object.vertexBuffer.data() + state.index), state.vertexCount * sizeof(Vector2), state.vertexCount, state.drawMode, state.color, transform);
 
+    }
+    else if constexpr (std::is_same_v<T, Mesh>)
+    {
+        const std::vector<Mesh::VertexInput>& vertexInputBuffer(
+            object.GetVertexInput()
+        );
+
+        int i = 0;
+        for (const Mesh::DrawCall drawCall : object.GetDrawCalls())
+        {
+            float color = (float) i / (float) drawCall.count;
+
+            DrawInternal(
+                    // TODO: fix me
+                    reinterpret_cast<const float*>(vertexInputBuffer.data() + drawCall.first),
+                    sizeof(Mesh::VertexInput) * drawCall.count,
+                    drawCall.count,
+                    drawCall.mode,
+                    Color(color, color, color),
+                    transform);
+            i++;
+        }
     }
     else
     {
