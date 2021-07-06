@@ -44,6 +44,9 @@ public:
 
     // Sets the view matrix for the current program
     static void SetViewMatrix(const Matrix4x4& viewMatrix = Matrix4x4::Identity);
+    //
+    // Sets the projection matrix for the current program
+    static void SetProjectionMatrix(const Matrix4x4& projectionMatrix = Matrix4x4::Identity);
 
     // Draws an object of type T applying a transformation matrix
     template<class T>

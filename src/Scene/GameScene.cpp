@@ -107,6 +107,10 @@ GameScene::GameScene()
     // Set the render program to our shader
     Renderer::SetProgram(shader);
 
+	float aspect = static_cast<float>(WINDOW_WIDTH) / static_cast<float>(WINDOW_HEIGHT);
+    Renderer::SetProjectionMatrix(Matrix4x4::Perspective(CONST_PI / 2.0f, aspect, 1.0f, 100.0f));
+    /* Renderer::SetProjectionMatrix(Matrix4x4::Identity); */
+
     // Loads the models that will be used
     ShapeCollection shipModel     = AssetLoader<ShapeCollection>::LoadAsset("./assets/ship.asset");
     ShapeCollection ship2Model    = AssetLoader<ShapeCollection>::LoadAsset("./assets/ship2.asset");

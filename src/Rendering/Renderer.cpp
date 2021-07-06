@@ -68,6 +68,13 @@ void Renderer::SetViewMatrix(const Matrix4x4& viewMatrix)
     glUniformMatrix4fv(loc, 1, GL_FALSE, viewMatrix.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 }
 
+// Sets the projection matrix for the current program
+void Renderer::SetProjectionMatrix(const Matrix4x4& projectionMatrix)
+{
+    GLint loc = glGetUniformLocation(Renderer::currentProgram, "projection");
+    glUniformMatrix4fv(loc, 1, GL_FALSE, projectionMatrix.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+}
+
 // Creates an array buffer (if one was already created re-uses it)
 void Renderer::CreateArrayBuffer() {
     

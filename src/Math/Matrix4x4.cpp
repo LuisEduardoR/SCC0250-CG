@@ -26,7 +26,7 @@ auto Matrix4x4::Camera(Vector3 cameraPos, Vector3 rotation, Vector3 viewFront, V
 		{ cameraX.x, cameraY.x, cameraZ.x, 0 },
 		{ cameraX.y, cameraY.y, cameraZ.y, 0 },
 		{ cameraX.z, cameraY.z, cameraZ.z, 0 },
-		{ -cameraX.Dot(cameraPos), -cameraY.Dot(cameraPos), -cameraZ.Dot(cameraPos), 1 }
+		{ cameraX.Dot(cameraPos), cameraY.Dot(cameraPos), cameraZ.Dot(cameraPos), 1 }
 	};
 }
 
@@ -40,7 +40,7 @@ auto Matrix4x4::LookAt(Vector3 cameraPos, Vector3 targetPos, Vector3 viewUp) -> 
 		{ cameraX.x, cameraY.x, cameraZ.x, 0 },
 		{ cameraX.y, cameraY.y, cameraZ.y, 0 },
 		{ cameraX.z, cameraY.z, cameraZ.z, 0 },
-		{ -cameraX.Dot(cameraPos), -cameraY.Dot(cameraPos), -cameraZ.Dot(cameraPos), 1 }
+		{ cameraX.Dot(cameraPos), cameraY.Dot(cameraPos), cameraZ.Dot(cameraPos), 1 }
 	};
 }
 
@@ -49,8 +49,8 @@ auto Matrix4x4::Perspective(float fov, float aspect, float zNear, float zFar) ->
 	return Matrix4x4{
 		{ 1.0f / std::tan(fov * 0.5f) * aspect, 0.0f, 0.0f, 0.0f },
 		{ 0.0f, 1.0f / std::tan(fov * 0.5f), 0.0f, 0.0f },
-		{ 0.0f, 0.0f, zNear - zFar / zFar - zNear, -1.0f },
-		{ 0.0f, 0.0f, 2.0f * zFar * zNear / zNear - zFar, 0.0f }, 
+		{ 0.0f, 0.0f, (zNear + zFar) / (zNear - zFar), -1.0f },
+		{ 0.0f, 0.0f, (2.0f * zFar * zNear) / (zNear - zFar), 0.0f }, 
 	};
 }
 
