@@ -17,29 +17,6 @@
 # include <sstream>
 # include <stdexcept>
 
-// Opens a file
-template<typename T>
-std::ifstream AssetLoader<T>::OpenFile(const std::string& path) {
-
-    std::ifstream file;
-	file.open(path);
-	if (!file) {
-        throw std::logic_error("Failed to open file: " + path);
-	}
-
-    return file;
-
-}
-
-// Closes a file
-template<typename T>
-void AssetLoader<T>::CloseFile(std::ifstream& file) {
-
-    if(file)
-        file.close();
-
-}
-
 template<>
 std::string AssetLoader<std::string>::LoadAsset(const std::string& path) {
    

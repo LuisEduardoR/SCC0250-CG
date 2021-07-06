@@ -22,6 +22,7 @@ set(COMMON_SOURCES
     src/Assets/Texture2D.hpp
     src/Assets/Texture2D.cpp
     src/Assets/WavefrontObject.hpp
+    src/Assets/WavefrontObject.cpp
     src/Assets/WavefrontParser.hpp
     src/Components/BaseEnemy.hpp
     src/Components/Boss.cpp

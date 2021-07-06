@@ -16,8 +16,10 @@
 # include "../Rendering/Geometry.hpp"
 
 # include <string>
+# include <fstream>
 
 class Texture2D;
+struct WavefrontObject;
 
 template<typename T>
 class AssetLoader {
@@ -41,6 +43,10 @@ public:
 
 };
 
+/**
+ * Specializations. Might be defined on the T type cpp file.
+ */
+
 template<>
 std::string AssetLoader<std::string>::LoadAsset(const std::string& path);
 
@@ -49,5 +55,35 @@ ShapeCollection AssetLoader<ShapeCollection>::LoadAsset(const std::string& path)
 
 template<>
 Texture2D AssetLoader<Texture2D>::LoadAsset(const std::string& path);
+
+template<>
+WavefrontObject AssetLoader<WavefrontObject>::LoadAsset(const std::string& path);
+
+/**
+ * Templated implementations
+ */
+
+// Opens a file
+template<typename T>
+std::ifstream AssetLoader<T>::OpenFile(const std::string& path) {
+
+    std::ifstream file;
+	file.open(path);
+	if (!file) {
+        throw std::logic_error("Failed to open file: " + path);
+	}
+
+    return file;
+
+}
+
+// Closes a file
+template<typename T>
+void AssetLoader<T>::CloseFile(std::ifstream& file) {
+
+    if(file)
+        file.close();
+
+}
 
 # endif /* end of include guard: ASSET_LOADER_HPP */
