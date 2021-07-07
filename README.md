@@ -20,7 +20,7 @@ Some code comes from dmdmoura's [Adven](https://github.com/dmdemoura/Adven) GBA 
 * Install packages (assuming an Ubuntu based distribution):
 
 ```
-$ sudo apt install g++ make libglfw3-dev mesa-common-dev libglew-dev
+$ sudo apt install g++ make libglfw3-dev mesa-common-dev libglew-dev libsdl2-dev
 ```
 
 * To compile:
@@ -68,6 +68,12 @@ $ pacman -S mingw-w64-x86_64-glew
 
 ```
 $ pacman -S mingw-w64-x86_64-glm
+```
+
+  - SDL2:
+
+```
+$ pacman -S mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image
 ```
 
 * Add **C:\msys64\mingw64\bin** to **PATH** (Considering that MSYS2 was installed in **C:\msys64**)
