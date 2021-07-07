@@ -11,8 +11,9 @@
 # include <vector>
 # include <random>
 
-# include "../Assets/WavefrontObject.hpp"
 # include "../Assets/AssetLoader.hpp"
+# include "../Assets/Texture2D.hpp"
+# include "../Assets/WavefrontObject.hpp"
 # include "../Components/Shooter.hpp"
 # include "../Components/Health.hpp"
 # include "../Components/HealthBar.hpp"
@@ -37,6 +38,7 @@
 # include "../Rendering/Renderer.hpp"
 # include "../Rendering/Geometry.hpp"
 # include "../Rendering/PoissonDiscSampling.hpp"
+# include "../Rendering/TextureObject.hpp"
 # include "../WindowSystem/WindowSystem.hpp"
 
 using namespace Adven;
@@ -125,8 +127,14 @@ GameScene::GameScene()
     ShapeBatch skyBatch(GenerateSkyModel());
 
     auto cubeObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/cube.obj");
+    auto texture = AssetLoader<Texture2D>::LoadAsset(
+            "./assets/kenney_prototypetextures/PNG/Purple/texture_05.png");
+
+    auto testTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    testTexture->UploadTexture(0, texture);
     
     Mesh cubeMesh{ cubeObj };
+    cubeMesh.SetTexture(testTexture);
     
     GameObject& cube = AddGameObject({});
     cube.AddComponent<Transform>(

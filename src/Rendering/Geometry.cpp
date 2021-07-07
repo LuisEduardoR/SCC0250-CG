@@ -200,10 +200,10 @@ Mesh::Mesh(const WavefrontObject& cubeObj)
                 cubeObj.vertices.at(face.data.vertexIndexes[i] - 1).data
             };
 
-            /* vertexInput.texturePosition = Vector2 */
-            /* { */
-            /*     cubeObj.textureVertices.at(face.data.textureVertexIndexes[i] - 1).data */
-            /* }; */
+            vertexInput.texturePosition = Vector2
+            {
+                cubeObj.textureVertices.at(face.data.textureVertexIndexes[i] - 1).data
+            };
 
             vertexInputBuffer.push_back(vertexInput);
         }
@@ -222,4 +222,14 @@ auto Mesh::GetVertexInput() const -> const std::vector<VertexInput>&
 auto Mesh::GetDrawCalls() const -> const std::vector<DrawCall>&
 {
     return drawCalls;
+}
+
+auto Mesh::GetTexture() const -> std::shared_ptr<TextureObject>
+{
+    return texture;
+}
+
+auto Mesh::SetTexture(std::shared_ptr<TextureObject> texture) -> void
+{
+    this->texture = texture;
 }

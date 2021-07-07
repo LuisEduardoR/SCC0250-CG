@@ -64,7 +64,14 @@ private:
     static void CreateArrayBuffer();
 
     // Draws an object directly interacting with our graphics API
-    static void DrawInternal(const float* data, size_t data_size, size_t count, GLenum mode, const Color& color = Color::white, const Matrix4x4& transform = Matrix4x4::Identity);
+    static void DrawInternal(
+            const void* data,
+            size_t data_size,
+            size_t count,
+            GLenum mode,
+            const Color& color = Color::white,
+            const Matrix4x4& transform = Matrix4x4::Identity,
+            TextureObject* texture = nullptr);
 
 }; 
 
@@ -113,7 +120,8 @@ void Renderer::Draw(const T& object, const Matrix4x4& transform)
                     drawCall.count,
                     drawCall.mode,
                     Color(color, color, color),
-                    transform);
+                    transform,
+                    object.GetTexture().get());
             i++;
         }
     }

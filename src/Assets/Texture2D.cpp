@@ -1,6 +1,7 @@
 # include "Texture2D.hpp"
 
 # include <SDL2/SDL_image.h>
+# include <SDL2/SDL_surface.h>
 # include "AssetLoader.hpp"
 
 template<>
@@ -23,7 +24,7 @@ auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
 		throw std::runtime_error(msg);
 	}
 
-	image.reset(SDL_ConvertSurfaceFormat(image.get(), SDL_PIXELFORMAT_RGBA8888, 0)); 
+	image.reset(SDL_ConvertSurfaceFormat(image.get(), SDL_PIXELFORMAT_RGBA32, 0)); 
 
 	if (image == nullptr)
 	{
@@ -42,7 +43,9 @@ auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
 	std::vector<std::byte> pixels{};
 	pixels.resize(size);
 
+	SDL_LockSurface(image.get());
 	std::copy(begin, end, pixels.begin());
+	SDL_UnlockSurface(image.get());
 
 	return Texture2D(std::move(pixels),
 			static_cast<std::size_t>(image->w),
@@ -109,14 +112,16 @@ Texture2D::Texture2D(std::vector<std::byte>&& pixels,
 	height(height),
 	width(width),
 	pitch(width * PixelFormatNumComponents(format) *  PixelTypeBytes(type)),
+	pixels(pixels),
 	format(format),
 	type(type)
 {
 	// TODO: Check invalid format and type combos.
 }
 
-auto Texture2D::Format() -> PixelFormat { return format; }
-auto Texture2D::Height() -> std::size_t { return height; }
-auto Texture2D::Pitch() -> std::size_t { return pitch; }
-auto Texture2D::Width() -> std::size_t { return width; }
-auto Texture2D::Type() -> PixelType { return type; }
+auto Texture2D::Format() const -> PixelFormat { return format; }
+auto Texture2D::Height() const -> std::size_t { return height; }
+auto Texture2D::Pitch() const -> std::size_t { return pitch; }
+auto Texture2D::Pixels() const -> const std::vector<std::byte>& { return pixels; }
+auto Texture2D::Width() const -> std::size_t { return width; }
+auto Texture2D::Type() const -> PixelType { return type; }

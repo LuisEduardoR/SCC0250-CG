@@ -93,7 +93,15 @@ void Renderer::CreateArrayBuffer() {
 }
 
 // Draws an object directly interacting with our graphics API
-void Renderer::DrawInternal(const float* data, size_t data_size, size_t count, GLenum mode, const Color& color, const Matrix4x4& transform) {
+void Renderer::DrawInternal(
+        const void* data,
+        size_t data_size,
+        size_t count,
+        GLenum mode,
+        const Color& color,
+        const Matrix4x4& transform,
+        TextureObject* textureObject)
+{
 
     // Creates our array buffer
     CreateArrayBuffer();
@@ -107,8 +115,15 @@ void Renderer::DrawInternal(const float* data, size_t data_size, size_t count, G
     // Associates the positions of our geometry
     loc = glGetAttribLocation(Renderer::currentProgram, "position");
     glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, data_size / count / sizeof(float), GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+    glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
+    // Associates the positions of our geometry
+    loc = glGetAttribLocation(Renderer::currentProgram, "inTexPosition");
+    glEnableVertexAttribArray(loc);
+    glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, data_size / count,
+            reinterpret_cast<void*>(3 * sizeof(float)));
+    // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+     
     // Associates our color
     loc = glGetUniformLocation(Renderer::currentProgram, "color");
     glUniform4f(loc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
@@ -116,6 +131,19 @@ void Renderer::DrawInternal(const float* data, size_t data_size, size_t count, G
     // Associates our transform matrix
     loc = glGetUniformLocation(Renderer::currentProgram, "transform");
     glUniformMatrix4fv(loc, 1, GL_FALSE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+
+    if (textureObject != nullptr)
+    {
+        GLint textureUnit{ 0 };
+        // Texture unit to activate
+        glActiveTexture(GL_TEXTURE0 + textureUnit);
+        // Binds texture to above texture unit.
+        textureObject->Bind();
+
+        // Texture unit to associate sampler with.
+        loc = glGetUniformLocation(Renderer::currentProgram, "texSampler");
+        glUniform1i(loc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    }
 
     // Performs the drawing
     glDrawArrays(mode, 0, count);

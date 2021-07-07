@@ -91,6 +91,8 @@ set(COMMON_SOURCES
     src/Rendering/RenderStateChange.hpp
     src/Rendering/Shader.cpp
     src/Rendering/Shader.hpp
+    src/Rendering/TextureObject.cpp
+    src/Rendering/TextureObject.hpp
     src/Scene/GameScene.cpp
     src/Scene/GameScene.hpp
     src/Scene/Scene.cpp
