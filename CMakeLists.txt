@@ -49,6 +49,8 @@ set(COMMON_SOURCES
     src/Components/Health.hpp
     src/Components/HealthBar.cpp
     src/Components/HealthBar.hpp
+    src/Components/ItemAnimator.cpp
+    src/Components/ItemAnimator.hpp
     src/Components/Moveable.cpp
     src/Components/Moveable.hpp
     src/Components/Player.cpp
