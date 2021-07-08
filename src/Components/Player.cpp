@@ -57,7 +57,7 @@ void Player::VDrawUpdate()
 
     transform->localRotation = { 
         Input::mousePosition.y / 500.f,
-        Input::mousePosition.x / 500.f,
+        -Input::mousePosition.x / 500.f,
         0.0f,
     };
 
@@ -65,15 +65,15 @@ void Player::VDrawUpdate()
 
     // Updates the X position (based on input)
     if (Input::right == Input::State::Down || Input::right == Input::State::Held)
-        input.x = 1.00f;
-    else if (Input::left == Input::State::Down || Input::left == Input::State::Held)
         input.x = -1.00f;
+    else if (Input::left == Input::State::Down || Input::left == Input::State::Held)
+        input.x = 1.00f;
 
     // Updates the Y position (based on input)
     if (Input::space == Input::State::Down || Input::space == Input::State::Held)
-        input.y = 1.00f;
-    else if (Input::shift == Input::State::Down || Input::shift == Input::State::Held)
         input.y = -1.00f;
+    else if (Input::shift == Input::State::Down || Input::shift == Input::State::Held)
+        input.y = 1.00f;
 
     // Updates the Z position (based on input)
     if (Input::up == Input::State::Down || Input::up == Input::State::Held)

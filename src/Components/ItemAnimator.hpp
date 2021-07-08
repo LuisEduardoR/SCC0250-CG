@@ -5,8 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef DM_ADVEN_MOVEABLE_HPP
-#define DM_ADVEN_MOVEABLE_HPP
+#ifndef DM_ADVEN_ITEM_ANIMATOR_HPP
+#define DM_ADVEN_ITEM_ANIMATOR_HPP
 
 #include "Component.hpp"
 
@@ -32,4 +32,4 @@ namespace Adven
     };
 }
 
-#endif /* end of include guard: DM_ADVEN_MOVEABLE_HPP */
+#endif /* end of include guard: DM_ADVEN_ITEM_ANIMATOR_HPP */
