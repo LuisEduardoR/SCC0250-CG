@@ -15,6 +15,8 @@ GLuint Renderer::currentProgram{ 0 };
 //Current array buffer bound to the renderer
 GLuint Renderer::arrayBuffer{ 0 };
 
+bool Renderer::wireframeMode{ false };
+
 // Initializes the renderer
 void Renderer::Init() {
 
@@ -145,7 +147,20 @@ void Renderer::DrawInternal(
         glUniform1i(loc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
     }
 
+    if (wireframeMode)
+        mode = GL_LINE_LOOP;
+
     // Performs the drawing
     glDrawArrays(mode, 0, count);
 
+}
+
+void Renderer::ToggleWireframe()
+{
+    wireframeMode = !wireframeMode;    
+
+    if (wireframeMode)
+        std::cout << "Wireframe mode:\t enabled.\n";
+    else
+        std::cout << "Wireframe mode:\tdisabled.\n";
 }

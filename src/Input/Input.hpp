@@ -49,6 +49,7 @@ public:
     static State down;
     static State space;
     static State shift;
+    static State p;
 
     static Vector2 mousePosition;
 

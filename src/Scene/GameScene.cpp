@@ -31,6 +31,7 @@
 # include "../Components/FollowObject.hpp"
 # include "../Components/DamageOnContact.hpp"
 # include "../Components/RendererComponent.hpp"
+# include "../Components/RenderParamInput.hpp"
 # include "../Components/TimedSpawner.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -143,6 +144,8 @@ GameScene::GameScene()
             Vector3{ 0.3f, 0.3f, 0.3f });
     cube.AddComponent<RendererComponent<Mesh>>(cubeMesh);
 
+    GameObject& renderParamObj = AddGameObject({});
+    renderParamObj.AddComponent<RenderParamInput>();
     // Make a prefab. Prefabs are just normal gameobjects.
     // Though they don't need to be attached to a scene.
     // Use a shared_ptr so many components can keep a reference to the same prefab.

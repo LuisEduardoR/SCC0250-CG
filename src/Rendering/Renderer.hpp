@@ -26,7 +26,6 @@
 class Renderer {
 
 public:
-
     // Initializes the renderer
     static void Init();
 
@@ -52,7 +51,11 @@ public:
     template<class T>
     static void Draw(const T& object, const Matrix4x4& transform = Matrix4x4::Identity);
 
+    // Toggles wireframe rendering.
+    static void ToggleWireframe();
+
 private:
+    static bool wireframeMode;
 
     // Current program being used by the renderer
     static GLuint currentProgram;
