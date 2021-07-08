@@ -32,6 +32,12 @@ private:
     static GLFWwindow *mainWindow;
 
 public:
+    enum class CursorMode
+    {
+       Normal,
+       Hidden,
+       Disabled
+    };
 
     // Initializes the windom system
     static void Init();
@@ -59,6 +65,8 @@ public:
     
     // Sets a callback function for when the cursor moves
     static void SetCursorPosCallback(GLFWcursorposfun callback);
+
+    static void SetCursorMode(CursorMode cursorMode);
 };
 
 # endif /* end of include guard: WINDOW_SYSTEM_HPP */

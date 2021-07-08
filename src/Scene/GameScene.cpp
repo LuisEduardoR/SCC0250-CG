@@ -17,10 +17,10 @@
 # include "../Components/Camera.hpp"
 # include "../Components/EnemyShip.hpp"
 # include "../Components/Transform.hpp"
-
 # include "../Components/DamageOnContact.hpp"
+# include "../Components/Moveable.hpp".hpp"
+# include "../Components/Player.hpp"
 # include "../Components/RendererComponent.hpp"
-# include "../Components/RenderParamInput.hpp"
 # include "../Components/TimedSpawner.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -117,14 +117,12 @@ GameScene::GameScene()
             Vector3{ 0.3f, 0.3f, 0.3f });
     cube.AddComponent<RendererComponent<Mesh>>(cubeMesh);
 
-    GameObject& renderParamObj = AddGameObject({});
-    renderParamObj.AddComponent<RenderParamInput>();
-
-
-    // Creates the camera
-    GameObject& camera = AddGameObject({});
+    // Creates the player
+    GameObject& player = AddGameObject({});
     // Adds the necessary components
-    camera.AddComponent<Transform>(Vector3 { 0.0f, 0.0f, -5.0f });
-    camera.AddComponent<Camera>(true);
+    player.AddComponent<Transform>(Vector3 { 0.0f, 0.0f, -5.0f });
+    player.AddComponent<Moveable>();
+    player.AddComponent<Player>();
+    player.AddComponent<Camera>(true);
 
 }

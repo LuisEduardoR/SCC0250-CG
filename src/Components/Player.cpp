@@ -21,6 +21,7 @@
 # include "../Physics/CircleCollider.hpp"
 # include "../Math/Vector.hpp"
 # include "../Rendering/Geometry.hpp"
+# include "../Rendering/Renderer.hpp"
 # include "../WindowSystem/WindowSystem.hpp"
 
 # include <iostream>
@@ -37,117 +38,30 @@ auto Player::Clone() const -> std::unique_ptr<Component>
 void Player::Start()
 {
     // Gets the player components
-    transform = GetGameObject()->GetComponent<Transform>();
-    moveable = GetGameObject()->GetComponent<Moveable>();
-    collider = GetGameObject()->GetComponent<CircleCollider>();    
-    shooters = GetGameObject()->GetComponents<Shooter>();
-
-    for (Shooter* shooter: shooters)
-        shooter->afterSpawn = [this](GameObject& bullet)
-        {
-            if (auto* damager = bullet.GetComponent<DamageOnContact>())
-            {
-                damager->damage = damage;
-            }
-        };
-
-    SetSize(Size::Normal);
-}
-
-auto Player::SetSize(Size size) -> void
-{
-    switch (size)
-    {
-    case Size::Small:
-    {
-        transform->localScale = Vector3{ 0.075f, 0.075f, 1.0f };
-        maxSpeed = 1.0f;
-        damage = 10;
-        collider->radius = 0.66f * 0.075f;
-    }
-    break;
-    case Size::Normal:
-    {
-        transform->localScale = Vector3{ 0.15f, 0.15f, 1.0f };
-        maxSpeed = 0.6f;
-        damage = 20;
-        collider->radius = 0.66f * 0.15f;
-    }
-    break;
-    case Size::Big:
-    {
-        transform->localScale = Vector3{ 0.3f, 0.3f, 1.0f };
-        maxSpeed = 0.3f;
-        damage = 30;
-        collider->radius = 0.66f * 0.3f;
-    }
-    break;
-    };
-    this->size = size;
+    transform = &GetGameObject()->RequireComponent<Transform>();
+    moveable = &GetGameObject()->RequireComponent<Moveable>();
+    /* collider = &GetGameObject()->RequireComponent<CircleCollider>(); */    
+    WindowSystem::SetCursorMode(WindowSystem::CursorMode::Disabled);
 }
 
 void Player::VDrawUpdate()
 {
-    if (!transform)
-    {
-        std::cout << "Player expects a Transform";
-        return;
-    }
+    if (Input::p == Input::State::Down)
+        Renderer::ToggleWireframe();
 
-    if (!moveable)
-    {
-        std::cout << "Player expects a Moveable component";
-        return;
-    }
+    if (Input::esc == Input::State::Down)
+        WindowSystem::SetCursorMode(WindowSystem::CursorMode::Normal);
+    else if (Input::leftMouse == Input::State::Down)
+        WindowSystem::SetCursorMode(WindowSystem::CursorMode::Disabled);
 
-    // Updates the scale (based on input)
-    if (Input::space == Input::State::Down)
-    {
-        switch (size)
-        {
-            case Size::Small:
-                SetSize(Size::Normal);
-            break;
-            case Size::Normal:
-                SetSize(Size::Big);
-            break;
-            default:
-            {}
-        }
-    }
-    else if (Input::shift == Input::State::Down)
-    {
-        switch (size)
-        {
-            case Size::Normal:
-                SetSize(Size::Small);
-            break;
-            case Size::Big:
-                SetSize(Size::Normal);
-            break;
-            default:
-            {}
-        }
-    }
 
-    // Vector2 targetPos
-    // {
-    //     (Input::mousePosition.x - WINDOW_WIDTH  / 2.0f) / (WINDOW_WIDTH  / 2.0f),                            
-    //     (Input::mousePosition.y - WINDOW_HEIGHT / 2.0f) / (WINDOW_HEIGHT / 2.0f)
-    // };
+    transform->localRotation = { 
+        Input::mousePosition.y / 500.f,
+        Input::mousePosition.x / 500.f,
+        0.0f,
+    };
 
-    // Aim ship at cursor
-    // Vector2 pos = Vector2{ transform->WorldPosition() } - targetPos;
-    // if (pos.Magnitude() >= 0.005f)
-    // {
-    //     targetPos.Normalize();
-    //     float shipAngle = std::atan2(1.0f, 0.0f);
-    //     float aimAngle = std::atan2(targetPos.y, targetPos.x);
-
-    //     transform->localRotation = Vector3{ 0.0f, 0.0f, aimAngle - shipAngle };
-    // }
-
-    Vector2 input = Vector2();
+    Vector3 input{};
 
     // Updates the X position (based on input)
     if (Input::right == Input::State::Down || Input::right == Input::State::Held)
@@ -156,27 +70,20 @@ void Player::VDrawUpdate()
         input.x = -1.00f;
 
     // Updates the Y position (based on input)
-    if (Input::up == Input::State::Down || Input::up == Input::State::Held)
+    if (Input::space == Input::State::Down || Input::space == Input::State::Held)
         input.y = 1.00f;
-    else if (Input::down == Input::State::Down || Input::down == Input::State::Held)
+    else if (Input::shift == Input::State::Down || Input::shift == Input::State::Held)
         input.y = -1.00f;
 
-    transform->localRotation.z -= input.x * 3.0f * Time::DeltaTime;
+    // Updates the Z position (based on input)
+    if (Input::up == Input::State::Down || Input::up == Input::State::Held)
+        input.z = 1.00f;
+    else if (Input::down == Input::State::Down || Input::down == Input::State::Held)
+        input.z = -1.00f;
 
-    Vector3 accel {
-        Matrix4x4::Rotate(transform->localRotation)
-        * Vector4{ 
-            0.0f,
-            input.y,
-            0.0f, 1.0f
-        }
-    };
-    moveable->speed = (moveable->speed + accel * Time::DeltaTime).ClampMagnitude(maxSpeed); 
-
-
-    // moveable->speed = Vector3{ input * maxSpeed };
+    Vector3 accel { Matrix4x4::Rotate(transform->localRotation) * Vector4{ input } };
+    /* moveable->speed = (moveable->speed + accel * Time::DeltaTime).ClampMagnitude(maxSpeed); */ 
+    moveable->speed = accel * maxSpeed;
 
     // Gets the shooters and sets if they're active based on Input
-    for(Shooter* shooter : shooters)
-        shooter->active = Input::leftMouse == Input::State::Down || Input::leftMouse == Input::State::Held;
 }

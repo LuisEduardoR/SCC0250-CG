@@ -12,6 +12,7 @@
 
 #include "../Interfaces/IUpdatable.hpp"
 
+#include <stdexcept>
 #include <typeinfo>
 #include <functional>
 #include <memory>
@@ -126,6 +127,11 @@ namespace Adven
         void RemoveComponent(const Component& component);
         void RemoveComponent(std::function<bool(const Component&)> compare);
 
+        template<typename T>
+        T& RequireComponent();
+        template<typename T>
+        const T& RequireComponent() const;
+
         auto SetScene(Scene* scene) -> void;
     public: // Container methods.
         auto begin() noexcept -> iterator;
@@ -213,6 +219,28 @@ namespace Adven
             }
         }
         return results;
+    }
+
+    template<typename T>
+    T& GameObject::RequireComponent()
+    {
+        if (auto* component = GetComponent<T>())
+        {
+            return *component;
+        }
+        else throw std::runtime_error(
+                std::string("Require component missing: ") + typeid(T).name()); 
+    }
+
+    template<typename T>
+    const T& GameObject::RequireComponent() const
+    {
+        if (const auto* component = GetComponent<T>())
+        {
+            return *component;
+        }
+        else throw std::runtime_error(
+                std::string("Require component missing: ") + typeid(T).name()); 
     }
 }
 

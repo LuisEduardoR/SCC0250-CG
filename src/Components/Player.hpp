@@ -44,22 +44,10 @@ public:
     void VDrawUpdate() override;
 
 private:
-    enum class Size
-    {
-        Small,
-        Normal,
-        Big
-    };
-
-    auto SetSize(Size size) -> void;
-
     Transform* transform;
     Adven::Moveable* moveable;
     Adven::CircleCollider* collider;
-    std::vector<Shooter*> shooters;
-    Size size;
-    float maxSpeed{ 1.0f };
-    std::uint32_t damage{ 10 };
+    float maxSpeed{ 3.0f };
 };
 
 #endif /* end of include guard: PLAYER_HPP */

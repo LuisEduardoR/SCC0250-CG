@@ -54,8 +54,6 @@ set(COMMON_SOURCES
     src/Components/Player.cpp
     src/Components/Player.hpp
     src/Components/RendererComponent.hpp
-    src/Components/RenderParamInput.hpp
-    src/Components/RenderParamInput.cpp
     src/Components/Shooter.cpp
     src/Components/Shooter.hpp
     src/Components/SplitOnDie.cpp

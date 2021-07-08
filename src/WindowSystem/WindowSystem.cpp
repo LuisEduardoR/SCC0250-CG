@@ -7,7 +7,19 @@
 
 # include "WindowSystem.hpp"
 
+# include <iostream>
+
+# include <GLFW/glfw3.h>
+
 # include "../Input/Input.hpp"
+
+namespace {
+constexpr std::array<int, 3> cursorModeToGlfw{{
+    GLFW_CURSOR_NORMAL,
+    GLFW_CURSOR_HIDDEN,
+    GLFW_CURSOR_DISABLED,
+}};
+}
 
 GLFWwindow* WindowSystem::mainWindow{ nullptr };
 
@@ -37,6 +49,12 @@ void WindowSystem::Init() {
     SetKeyCallback(Input::ProcessKey);
     SetMouseButtonCallback(Input::ProcessMouse);
     SetCursorPosCallback(Input::ProcessCursor);
+
+    if (glfwRawMouseMotionSupported()) {
+        glfwSetInputMode(mainWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    } else {
+        std::cout << "WARN: Raw mouse motion is unsupported\n";
+    }
 }
 
 // Destroys the windows system
@@ -78,4 +96,10 @@ void WindowSystem::SetMouseButtonCallback(GLFWmousebuttonfun callback) {
 // Sets a callback function for when the cursor moves
 void WindowSystem::SetCursorPosCallback(GLFWcursorposfun callback) {
     glfwSetCursorPosCallback(mainWindow, callback);
+}
+
+void WindowSystem::SetCursorMode(CursorMode cursorMode) {
+    auto glfwCursorMode = cursorModeToGlfw[static_cast<std::size_t>(cursorMode)];
+
+    glfwSetInputMode(mainWindow, GLFW_CURSOR, glfwCursorMode);
 }
