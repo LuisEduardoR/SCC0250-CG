@@ -128,12 +128,12 @@ GameScene::GameScene()
     // Loads the textures =============================================
     std::array<Texture2D, 6> skybox = 
     {{
-        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_rt.jpg"),
-        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_lf.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_ft.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_bk.jpg"),
         AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_up.jpg"),
         AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_dn.jpg"),
-        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_ft.jpg"),
-        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_bk.jpg")
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_rt.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_lf.jpg")
     }};
     auto skyboxTexture = std::make_shared<TextureObject>(TextureObject::Type::TextureCubeMap);
     skyboxTexture->UploadTexture(0, skybox);
