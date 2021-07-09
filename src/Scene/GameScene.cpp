@@ -102,13 +102,15 @@ GameScene::GameScene()
     // Sets the collision layers of this scene
     Collider::GetSceneData(*this).collisionLayers = std::move(collisionLayers);
 
-    // Loads vertex and fragment shader's GLSL code and creates the default shader
-    std::string vertexCode   = AssetLoader<std::string>::LoadAsset("./assets/defaultVertex.glsl");
-    std::string fragmentCode = AssetLoader<std::string>::LoadAsset("./assets/defaultFragment.glsl");
-    std::string skyboxVert   = AssetLoader<std::string>::LoadAsset("./assets/skybox_vert.glsl");
-    std::string skyboxFrag   = AssetLoader<std::string>::LoadAsset("./assets/skybox_frag.glsl");
-    auto defaultShader       = std::make_shared<Shader>(vertexCode, fragmentCode);
-    auto skyboxShader        = std::make_shared<Shader>(skyboxVert, skyboxFrag);
+    // Loads default shader's vertex and fragment GLSL code and creates it 
+    std::string defaultVertex   = AssetLoader<std::string>::LoadAsset("./assets/defaultVertex.glsl");
+    std::string defaultFragment = AssetLoader<std::string>::LoadAsset("./assets/defaultFragment.glsl");
+    auto defaultShader       = std::make_shared<Shader>(defaultVertex, defaultFragment);
+
+    // Loads skybox shader's vertex and fragment GLSL code and creates it
+    std::string skyboxVertex   = AssetLoader<std::string>::LoadAsset("./assets/skyboxVertex.glsl");
+    std::string skyboxFragment   = AssetLoader<std::string>::LoadAsset("./assets/skyboxFragment.glsl");
+    auto skyboxShader        = std::make_shared<Shader>(skyboxVertex, skyboxFragment);
  
     // Loads the models ===============================================
     auto cubeObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/cube.obj");
@@ -117,11 +119,11 @@ GameScene::GameScene()
     auto tableObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/table.obj");
     auto kelpObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/kelp.obj");
     auto rockObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/rock.obj");
-    auto sceneryWallObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_wall.obj");
-    auto sceneryBeamObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_beam.obj");
-    auto sceneryConcreteObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_concrete.obj");
-    auto scenerySandObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_sand.obj");
-    auto sceneryRockObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_rock.obj");
+    auto sceneryWallObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/sceneryWall.obj");
+    auto sceneryBeamObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/sceneryBeam.obj");
+    auto sceneryConcreteObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/sceneryConcrete.obj");
+    auto scenerySandObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenerySand.obj");
+    auto sceneryRockObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/sceneryRock.obj");
     auto weaponObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/weapon.obj");
     auto armorObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/armor.obj");
 
@@ -138,7 +140,7 @@ GameScene::GameScene()
     auto skyboxTexture = std::make_shared<TextureObject>(TextureObject::Type::TextureCubeMap);
     skyboxTexture->UploadTexture(0, skybox);
     
-    auto crawlerTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Crawler.png");
+    auto crawlerTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/crawler.png");
     auto crawlerTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     crawlerTexture->UploadTexture(0, crawlerTextureFile);
 
@@ -154,23 +156,23 @@ GameScene::GameScene()
     auto outsideAtlasTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     outsideAtlasTexture->UploadTexture(0, outsideAtlasTextureFile);
     
-    auto wallTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Wall.png");
+    auto wallTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/wall.png");
     auto wallTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     wallTexture->UploadTexture(0, wallTextureFile);
 
-    auto beamTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Beam.png");
+    auto beamTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/beam.png");
     auto beamTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     beamTexture->UploadTexture(0, beamTextureFile);
 
-    auto concreteTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Concrete.png");
+    auto concreteTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/concrete.png");
     auto concreteTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     concreteTexture->UploadTexture(0, concreteTextureFile);
 
-    auto sandTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Sand.png");
+    auto sandTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/sand.png");
     auto sandTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     sandTexture->UploadTexture(0, sandTextureFile);
 
-    auto rockTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Rock.png");
+    auto rockTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/rock.png");
     auto rockTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     rockTexture->UploadTexture(0, rockTextureFile);
 
@@ -252,7 +254,7 @@ GameScene::GameScene()
     GameObject& player = AddGameObject({});
 
     // Adds the necessary components
-    player.AddComponent<Transform>(Vector3 { 0.0f, 2.5f, 0.0f });
+    player.AddComponent<Transform>(Vector3 { 0.0f, 2.5f, 4.0f });
     player.AddComponent<Moveable>();
     player.AddComponent<Player>();
     player.AddComponent<Camera>(true, cubeMesh, skyboxShader);
