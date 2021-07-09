@@ -84,8 +84,8 @@ void Player::VDrawUpdate()
         fovInput = -0.25f;
 
     fov += fovInput;
-    if (fov <= 0.0f)
-        fov = 0.25f;
+    if (fov < 1.25f)
+        fov = 1.25f;
 
     Vector3 direction { Matrix4x4::Rotate(transform->localRotation) * Vector4{ input, 1.0f } };
     Vector3 posIntent = transform->localPosition + direction.Normalized() * Time::DeltaTime * maxSpeed;
@@ -94,9 +94,4 @@ void Player::VDrawUpdate()
 
     // Applies the projection matrix.
     Renderer::SetProjectionMatrix(Matrix4x4::Perspective(CONST_PI / fov, ASPECT, 0.1f, 100.0f));
-
-    /* moveable->speed = (moveable->speed + accel * Time::DeltaTime).ClampMagnitude(maxSpeed); */ 
-    // moveable->speed = accel * maxSpeed;
-
-    // Gets the shooters and sets if they're active based on Input
 }

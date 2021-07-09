@@ -49,8 +49,8 @@ private:
     Adven::CircleCollider* collider;
     float maxSpeed { 4.0f };
     float fov;
-    Vector3 lowerBounds { -12.5f, 1.5f, -12.5f };
-    Vector3 higherBounds { 12.5f, 1.5f, 12.5f };
+    Vector3 lowerBounds { -12.3f, 1.5f, -12.3f };
+    Vector3 higherBounds { 12.3f, 1.5f, 12.3f };
 };
 
 #endif /* end of include guard: PLAYER_HPP */
