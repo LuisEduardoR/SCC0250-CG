@@ -236,7 +236,7 @@ GameScene::GameScene()
     // Creates the player
     GameObject& player = AddGameObject({});
     // Adds the necessary components
-    player.AddComponent<Transform>(Vector3 { 0.0f, 2.5f, -5.0f });
+    player.AddComponent<Transform>(Vector3 { 0.0f, 2.5f, 0.0f });
     player.AddComponent<Moveable>();
     player.AddComponent<Player>();
     player.AddComponent<Camera>(true);

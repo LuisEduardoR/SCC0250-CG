@@ -76,6 +76,12 @@ private:
             const Matrix4x4& transform = Matrix4x4::Identity,
             TextureObject* texture = nullptr);
 
+    void Renderer::DrawSkybox(
+    const void* data,
+    size_t data_size,
+    size_t count,
+    const Matrix4x4& transform,
+    TextureObject* textureObject);
 }; 
 
 template<class T>

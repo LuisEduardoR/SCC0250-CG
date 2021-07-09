@@ -155,6 +155,47 @@ void Renderer::DrawInternal(
 
 }
 
+void Renderer::DrawSkybox(
+    const void* data,
+    size_t data_size,
+    size_t count,
+    const Matrix4x4& transform,
+    TextureObject* textureObject)
+{
+    // Creates our array buffer
+    CreateArrayBuffer();
+
+    // Sends our data to the array buffer
+    glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_DYNAMIC_DRAW);
+
+    // Associates the variables from our program with our data:
+    GLint loc;
+
+    // Associates the positions of our geometry
+    loc = glGetAttribLocation(Renderer::currentProgram, "position");
+    glEnableVertexAttribArray(loc);
+    glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+
+    glDepthMask(GL_FALSE);
+    // ... set view and projection matrix
+
+    if (textureObject != nullptr)
+    {
+        GLint textureUnit{ 0 };
+        // Texture unit to activate
+        glActiveTexture(GL_TEXTURE0 + textureUnit);
+        // Binds texture to above texture unit.
+        textureObject->Bind();
+
+        // Texture unit to associate sampler with.
+        loc = glGetUniformLocation(Renderer::currentProgram, "texSampler");
+        glUniform1i(loc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    }
+
+    glDrawArrays(GL_TRIANGLE_FAN, 0, count);
+    glDepthMask(GL_TRUE);
+}
+
 void Renderer::ToggleWireframe()
 {
     wireframeMode = !wireframeMode;    
