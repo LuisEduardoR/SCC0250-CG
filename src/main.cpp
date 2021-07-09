@@ -75,6 +75,8 @@ int main(void) {
 
         // Check every frame for camera, because it might change.
         Camera* camera = Camera::MainCamera();
+        // Renders skybox with custom view
+        camera->RenderSkybox();
         // Set view matrix to camera's or identity in case camera has been deleted.
         Renderer::SetViewMatrix(camera ? camera->ViewMatrix() : Matrix4x4::Identity);            
 

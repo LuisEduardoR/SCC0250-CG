@@ -8,7 +8,9 @@
 #ifndef DM_ADVEN_CAMERA_HPP
 #define DM_ADVEN_CAMERA_HPP
 
-#include "Component.hpp"
+# include "Component.hpp"
+# include "../Rendering/Geometry.hpp"
+# include "../Rendering/Shader.hpp"
 
 union Matrix4x4;
 
@@ -24,7 +26,7 @@ namespace Adven
         // Sets or clears the main camera. nullptr to clear.
         static void MainCamera(Camera* camera);
     public:
-        Camera(bool makeMain = false);
+        Camera(bool makeMain, Mesh skybox, std::shared_ptr<Shader> skyboxShader);
     public:
         ~Camera() override;
     public:
@@ -32,6 +34,11 @@ namespace Adven
         [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
     public: 
         [[nodiscard]] Matrix4x4 ViewMatrix() const;
+        void RenderSkybox();
+
+    private:
+        std::shared_ptr<Shader> skyboxShader;
+        Mesh skybox;
     };
 }
 

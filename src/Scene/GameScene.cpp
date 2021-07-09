@@ -105,9 +105,13 @@ GameScene::GameScene()
     // Loads vertex and fragment shader's GLSL code and creates the default shader
     std::string vertexCode   = AssetLoader<std::string>::LoadAsset("./assets/defaultVertex.glsl");
     std::string fragmentCode = AssetLoader<std::string>::LoadAsset("./assets/defaultFragment.glsl");
-    auto defaultShader = std::make_shared<Shader>(vertexCode, fragmentCode);
+    std::string skyboxVert   = AssetLoader<std::string>::LoadAsset("./assets/skybox_vert.glsl");
+    std::string skyboxFrag   = AssetLoader<std::string>::LoadAsset("./assets/skybox_frag.glsl");
+    auto defaultShader       = std::make_shared<Shader>(vertexCode, fragmentCode);
+    auto skyboxShader        = std::make_shared<Shader>(skyboxVert, skyboxFrag);
     
     // Loads the models ===============================================
+    auto cubeObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/cube.obj");
     auto crawlerObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/crawler.obj");
     auto labTankObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/labtank.obj");
     auto tableObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/table.obj");
@@ -122,6 +126,18 @@ GameScene::GameScene()
     auto armorObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/armor.obj");
 
     // Loads the textures =============================================
+    std::array<Texture2D, 6> skybox = 
+    {{
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_rt.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_lf.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_up.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_dn.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_ft.jpg"),
+        AssetLoader<Texture2D>::LoadAsset("./assets/skybox/underwater/uw_bk.jpg")
+    }};
+    auto skyboxTexture = std::make_shared<TextureObject>(TextureObject::Type::TextureCubeMap);
+    skyboxTexture->UploadTexture(0, skybox);
+    
     auto crawlerTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Crawler.png");
     auto crawlerTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     crawlerTexture->UploadTexture(0, crawlerTextureFile);
@@ -167,6 +183,9 @@ GameScene::GameScene()
     armorTexture->UploadTexture(0, armorTextureFile);
     
     // Creates the GameObjects ========================================
+
+    Mesh cubeMesh { cubeObj };
+    cubeMesh.SetTexture(skyboxTexture);
 
     // Creates the Crawler
     Mesh crawlerMesh { crawlerObj };
@@ -237,6 +256,6 @@ GameScene::GameScene()
     player.AddComponent<Transform>(Vector3 { 0.0f, 2.5f, 0.0f });
     player.AddComponent<Moveable>();
     player.AddComponent<Player>();
-    player.AddComponent<Camera>(true);
+    player.AddComponent<Camera>(true, cubeMesh, skyboxShader);
 
 }
