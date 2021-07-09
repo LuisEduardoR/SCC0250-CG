@@ -116,7 +116,10 @@ GameScene::GameScene()
     auto labTankObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/labtank.obj");
     auto tableObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/table.obj");
     auto kelpObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/kelp.obj");
+    auto rockObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/rock.obj");
     auto sceneryWallObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_wall.obj");
+    auto sceneryBeamObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_beam.obj");
+    auto sceneryConcreteObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_concrete.obj");
     auto scenerySandObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_sand.obj");
     auto sceneryRockObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_rock.obj");
     auto weaponObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/weapon.obj");
@@ -142,6 +145,14 @@ GameScene::GameScene()
     auto wallTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Wall.png");
     auto wallTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     wallTexture->UploadTexture(0, wallTextureFile);
+
+    auto beamTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Beam.png");
+    auto beamTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    beamTexture->UploadTexture(0, beamTextureFile);
+
+    auto concreteTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Concrete.png");
+    auto concreteTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    concreteTexture->UploadTexture(0, concreteTextureFile);
 
     auto sandTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Sand.png");
     auto sandTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
@@ -179,10 +190,27 @@ GameScene::GameScene()
     kelpMesh.SetTexture(outsideAtlasTexture);
     CreateStaticMesh(kelpMesh, Vector3{ -3.0f, 0.0f, 8.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
+    // Creates the rocks
+    Mesh rockMesh { rockObj };
+    rockMesh.SetTexture(rockTexture);
+    CreateStaticMesh(rockMesh, Vector3{ -11.0f, 0.0f, -14.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(rockMesh, Vector3{ 11.0f, 0.0f, -10.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
+    CreateStaticMesh(rockMesh, Vector3{ 0.0f, 0.0f, -8.0f }, Vector3{ CONST_PI / 2.0f, 0.0f, CONST_PI / 2.0f });
+
     // Creates the scenery wall
     Mesh sceneryWallMesh { sceneryWallObj };
     sceneryWallMesh.SetTexture(wallTexture);
     CreateStaticMesh(sceneryWallMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+
+    // Creates the scenery metal beam
+    Mesh sceneryBeamMesh { sceneryBeamObj };
+    sceneryBeamMesh.SetTexture(beamTexture);
+    CreateStaticMesh(sceneryBeamMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+
+    // Creates the scenery concrete
+    Mesh sceneryConcreteMesh { sceneryConcreteObj };
+    sceneryConcreteMesh.SetTexture(concreteTexture);
+    CreateStaticMesh(sceneryConcreteMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the scenery sand
     Mesh scenerySandMesh { scenerySandObj };
