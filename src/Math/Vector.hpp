@@ -89,6 +89,7 @@ public:
 	[[nodiscard]] auto Magnitude() const -> float;
 	auto Normalize() -> Vector3&;
 	[[nodiscard]] auto Normalized() const -> Vector3;
+	auto Clamp(Vector3 lowerBounds, Vector3 higherBounds) -> Vector3&;
 };
 
 [[nodiscard]] auto operator+(Vector3 a, Vector3 b) -> Vector3;

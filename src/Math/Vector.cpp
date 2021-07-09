@@ -8,6 +8,7 @@
 # include "Vector.hpp"
 
 # include <cmath>
+# include <algorithm>
 
 Vector2::Vector2(const Vector3& vec) : x(vec.x), y(vec.y) {}
 Vector2::Vector2(const Vector4& vec) : x(vec.x), y(vec.y) {}
@@ -237,6 +238,15 @@ auto Vector3::Normalized() const -> Vector3
     }
 
     return {};
+}
+
+auto Vector3::Clamp(Vector3 lowerBounds, Vector3 higherBounds) -> Vector3&
+{
+    this->x = std::clamp(this->x, lowerBounds.x, higherBounds.x);
+    this->y = std::clamp(this->y, lowerBounds.y, higherBounds.y);
+    this->z = std::clamp(this->z, lowerBounds.z, higherBounds.z);
+
+    return *this;
 }
 
 auto operator+(Vector3 a, Vector3 b) -> Vector3

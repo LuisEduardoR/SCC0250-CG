@@ -20,9 +20,10 @@
 # include <map>
 # include <vector>
 
-# define WINDOW_WIDTH 800
-# define WINDOW_HEIGHT 800
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
 # define WINDOW_TITLE "Trabalho 1"
+# define ASPECT 0.5625f
 
 class WindowSystem {
 
