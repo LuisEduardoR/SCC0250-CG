@@ -67,6 +67,23 @@ namespace
 
 }
 
+void GameScene::CreateStaticMesh(const Mesh& mesh, const Vector3& position, const Vector3& rotation) {
+    
+    GameObject& gameObject = AddGameObject({});
+    gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
+    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
+
+}
+
+void GameScene::CreateItem(const Mesh& mesh, const Vector3& position, const Vector3& rotation) {
+    
+    GameObject& gameObject = AddGameObject({});
+    gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
+    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
+    gameObject.AddComponent<ItemAnimator>(0.15f, 0.50f);
+
+}
+
 // Creates all the objects and adds all the components necessary to run the scene
 // The rest will be executed via Scene::VDrawUpdate() and Scene::VBlankUpdate()
 // that will update each GameObject and it's Components to execute the game. This
@@ -102,7 +119,12 @@ GameScene::GameScene()
     auto crawlerObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/crawler.obj");
     auto labTankObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/labtank.obj");
     auto tableObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/table.obj");
+    auto kelpObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/kelp.obj");
+    auto sceneryWallObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_wall.obj");
+    auto scenerySandObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_sand.obj");
+    auto sceneryRockObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/scenery_rock.obj");
     auto weaponObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/weapon.obj");
+    auto armorObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/armor.obj");
 
     // Loads the textures.
     auto crawlerTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Crawler.png");
@@ -117,58 +139,74 @@ GameScene::GameScene()
     auto propsAtlasTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     propsAtlasTexture->UploadTexture(0, propsAtlasTextureFile);
 
+    auto outsideAtlasTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/outside-ATLAS.png");
+    auto outsideAtlasTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    outsideAtlasTexture->UploadTexture(0, outsideAtlasTextureFile);
+    
+    auto wallTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Wall.png");
+    auto wallTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    wallTexture->UploadTexture(0, wallTextureFile);
+
+    auto sandTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Sand.png");
+    auto sandTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    sandTexture->UploadTexture(0, sandTextureFile);
+
+    auto rockTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Rock.png");
+    auto rockTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    rockTexture->UploadTexture(0, rockTextureFile);
+
     auto weaponTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/weapon.png");
     auto weaponTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     weaponTexture->UploadTexture(0, weaponTextureFile);
+
+    auto armorTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/armor.png");
+    auto armorTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+    armorTexture->UploadTexture(0, armorTextureFile);
     
     // Creates the Crawler
     Mesh crawlerMesh { crawlerObj };
     crawlerMesh.SetTexture(crawlerTexture);
-    
-    GameObject& crawler = AddGameObject({});
-    crawler.AddComponent<Transform> (
-                                        Vector3{ 0.0f, 0.0f, 2.0f },
-                                        Vector3{ 0.0f, 0.0f, 0.0f },
-                                        Vector3{ 1.0f, 1.0f, 1.0f }
-                                    );
-    crawler.AddComponent<RendererComponent<Mesh>>(crawlerMesh);
+    CreateStaticMesh(crawlerMesh, Vector3{ 0.0f, 0.0f, 2.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the lab tank
     Mesh labTankMesh { labTankObj };
     labTankMesh.SetTexture(techAtlasTexture);
-    
-    GameObject& labTank = AddGameObject({});
-    labTank.AddComponent<Transform> (
-                                        Vector3{ 0.0f, 0.0f, 0.0f },
-                                        Vector3{ 0.0f, 0.0f, 0.0f },
-                                        Vector3{ 1.0f, 1.0f, 1.0f }
-                                    );
-    labTank.AddComponent<RendererComponent<Mesh>>(labTankMesh);
+    CreateStaticMesh(labTankMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the table
     Mesh tableMesh { tableObj };
     tableMesh.SetTexture(propsAtlasTexture);
-    
-    GameObject& table = AddGameObject({});
-    table.AddComponent<Transform> (
-                                        Vector3{ 2.0f, 0.0f, 0.0f },
-                                        Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f },
-                                        Vector3{ 1.0f, 1.0f, 1.0f }
-                                    );
-    table.AddComponent<RendererComponent<Mesh>>(tableMesh);
+    CreateStaticMesh(tableMesh, Vector3{ 2.0f, 0.0f, 0.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
+
+    // Creates the kelp
+    Mesh kelpMesh { kelpObj };
+    kelpMesh.SetTexture(outsideAtlasTexture);
+    CreateStaticMesh(kelpMesh, Vector3{ -3.0f, 0.0f, 8.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+
+    // Creates the scenery wall
+    Mesh sceneryWallMesh { sceneryWallObj };
+    sceneryWallMesh.SetTexture(wallTexture);
+    CreateStaticMesh(sceneryWallMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+
+    // Creates the scenery sand
+    Mesh scenerySandMesh { scenerySandObj };
+    scenerySandMesh.SetTexture(sandTexture);
+    CreateStaticMesh(scenerySandMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+
+    // Creates the scenery rock
+    Mesh sceneryRockMesh { sceneryRockObj };
+    sceneryRockMesh.SetTexture(rockTexture);
+    CreateStaticMesh(sceneryRockMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the weapon
     Mesh weaponMesh { weaponObj };
     weaponMesh.SetTexture(weaponTexture);
-    
-    GameObject& weapon = AddGameObject({});
-    weapon.AddComponent<Transform> (
-                                        Vector3{ 2.0f, 1.25f, 0.0f },
-                                        Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f },
-                                        Vector3{ 1.0f, 1.0f, 1.0f }
-                                    );
-    weapon.AddComponent<RendererComponent<Mesh>>(weaponMesh);
-    weapon.AddComponent<ItemAnimator>(0.15f, 0.50f);
+    CreateItem(weaponMesh, Vector3{ 2.0f, 1.25f, 0.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
+
+    // Creates the armor
+    Mesh armorMesh { armorObj };
+    armorMesh.SetTexture(armorTexture);
+    CreateItem(armorMesh, Vector3{ 3.00f, 0.25f, 6.00f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
 
     // Creates the player
