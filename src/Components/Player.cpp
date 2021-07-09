@@ -42,6 +42,7 @@ void Player::Start()
     moveable = &GetGameObject()->RequireComponent<Moveable>();
     /* collider = &GetGameObject()->RequireComponent<CircleCollider>(); */    
     WindowSystem::SetCursorMode(WindowSystem::CursorMode::Disabled);
+    fov = 2.0f;
 }
 
 void Player::VDrawUpdate()
@@ -57,11 +58,12 @@ void Player::VDrawUpdate()
 
     transform->localRotation = { 
         Input::mousePosition.y / 500.f,
-        Input::mousePosition.x / 500.f,
+        -Input::mousePosition.x / 500.f,
         0.0f,
     };
 
     Vector3 input{};
+    float fovInput = 0.0f;
 
     // Updates the X position (based on input)
     if (Input::right == Input::State::Down || Input::right == Input::State::Held)
@@ -69,22 +71,30 @@ void Player::VDrawUpdate()
     else if (Input::left == Input::State::Down || Input::left == Input::State::Held)
         input.x = -1.00f;
 
-    // Updates the Y position (based on input)
-    if (Input::space == Input::State::Down || Input::space == Input::State::Held)
-        input.y = 1.00f;
-    else if (Input::shift == Input::State::Down || Input::shift == Input::State::Held)
-        input.y = -1.00f;
-
     // Updates the Z position (based on input)
     if (Input::up == Input::State::Down || Input::up == Input::State::Held)
         input.z = -1.00f;
     else if (Input::down == Input::State::Down || Input::down == Input::State::Held)
         input.z = 1.00f;
 
+    // Updates the Fov (based on input)
+    if (Input::rightArrow == Input::State::Down)
+        fovInput = 0.25f;
+    else if (Input::leftArrow == Input::State::Down)
+        fovInput = -0.25f;
+
+    fov += fovInput;
+    if (fov <= 0.0f)
+        fov = 0.25f;
+
     Vector3 direction { Matrix4x4::Rotate(transform->localRotation) * Vector4{ input, 1.0f } };
     Vector3 posIntent = transform->localPosition + direction.Normalized() * Time::DeltaTime * maxSpeed;
     posIntent.Clamp(lowerBounds, higherBounds);
     transform->localPosition = posIntent;
+
+    // Applies the projection matrix.
+    Renderer::SetProjectionMatrix(Matrix4x4::Perspective(CONST_PI / fov, ASPECT, 0.1f, 100.0f));
+
     /* moveable->speed = (moveable->speed + accel * Time::DeltaTime).ClampMagnitude(maxSpeed); */ 
     // moveable->speed = accel * maxSpeed;
 

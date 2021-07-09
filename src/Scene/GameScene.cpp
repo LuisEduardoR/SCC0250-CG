@@ -111,10 +111,6 @@ GameScene::GameScene()
     // Set the render program to our shader
     Renderer::SetProgram(shader);
 
-    // Applies the projection matrix.
-	float aspect = static_cast<float>(WINDOW_WIDTH) / static_cast<float>(WINDOW_HEIGHT);
-    Renderer::SetProjectionMatrix(Matrix4x4::Perspective(CONST_PI / 2.0f, aspect, 1.0f, 100.0f));
-
     // Loads the models.
     auto crawlerObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/crawler.obj");
     auto labTankObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/labtank.obj");
