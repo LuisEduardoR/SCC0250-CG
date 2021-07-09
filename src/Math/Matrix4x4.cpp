@@ -26,7 +26,7 @@ auto Matrix4x4::Camera(Vector3 cameraPos, Vector3 rotation, Vector3 viewFront, V
 		{ cameraX.x, cameraY.x, cameraZ.x, 0 },
 		{ cameraX.y, cameraY.y, cameraZ.y, 0 },
 		{ cameraX.z, cameraY.z, cameraZ.z, 0 },
-		{ cameraX.Dot(cameraPos), cameraY.Dot(cameraPos), cameraZ.Dot(cameraPos), 1 }
+		{ -cameraX.Dot(cameraPos), -cameraY.Dot(cameraPos), -cameraZ.Dot(cameraPos), 1 }
 	};
 }
 

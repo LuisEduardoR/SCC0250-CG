@@ -47,7 +47,9 @@ private:
     Transform* transform;
     Adven::Moveable* moveable;
     Adven::CircleCollider* collider;
-    float maxSpeed{ 3.0f };
+    float maxSpeed { 3.0f };
+    Vector3 lowerBounds { -12.5f, 0.0f, -12.5f };
+    Vector3 higherBounds { 12.5f, 5.0f, 12.5f };
 };
 
 #endif /* end of include guard: PLAYER_HPP */
