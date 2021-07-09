@@ -7,11 +7,9 @@
 
 # include "Player.hpp"
 
-#include "DamageOnContact.hpp"
 # include "GameObject.hpp"
 # include "Moveable.hpp"
 # include "Transform.hpp"
-# include "Shooter.hpp"
 
 # include "../Time/Time.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -94,4 +92,5 @@ void Player::VDrawUpdate()
 
     // Applies the projection matrix.
     Renderer::SetProjectionMatrix(Matrix4x4::Perspective(CONST_PI / fov, ASPECT, 0.1f, 100.0f));
+
 }

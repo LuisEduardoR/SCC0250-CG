@@ -16,6 +16,7 @@
 
 # include "Scene.hpp"
 # include "../Assets/WavefrontObject.hpp"
+# include "../Rendering/Shader.hpp"
 # include "../Rendering/Geometry.hpp"
 # include "../Rendering/TextureObject.hpp"
 # include "../Components/GameObject.hpp"
@@ -27,8 +28,8 @@ public:
     GameScene();
     ~GameScene() override = default;
 private:
-    void CreateStaticMesh(const Mesh& mesh, const Vector3& position, const Vector3& rotation);
-    void CreateItem(const Mesh& mesh, const Vector3& position, const Vector3& rotation);
+    void CreateStaticMesh(const Mesh& mesh, std::shared_ptr<Shader> shader, const Vector3& position, const Vector3& rotation);
+    void CreateItem(const Mesh& mesh, std::shared_ptr<Shader> shader, const Vector3& position, const Vector3& rotation);
 };
 
 #endif /* end of include guard: GAME_SCENE_HPP */
