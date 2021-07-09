@@ -35,9 +35,35 @@ auto TextureObject::UploadTexture(GLint level, const Texture2D& textureAsset) ->
             textureAsset.Pixels().data());
 
     // Refactor this code into their own functions.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glGenerateMipmap(static_cast<GLenum>(type));
+}
+
+auto TextureObject::UploadTexture(GLint level, std::array<const Texture2D*, 6> textureAssets) -> void
+{
+    Bind();
+    GLenum i = 0;
+    for (const Texture2D* textureAsset : textureAssets)
+    {
+        glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                level,
+                GL_RGBA,
+                static_cast<GLsizei>(textureAsset->Width()),
+                static_cast<GLsizei>(textureAsset->Height()),
+                0, // Always zero. Legacy stuff.
+                static_cast<GLenum>(textureAsset->Format()),
+                static_cast<GLenum>(textureAsset->Type()),
+                textureAsset->Pixels().data());
+
+        i++;
+    }
+
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(static_cast<GLenum>(type), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }

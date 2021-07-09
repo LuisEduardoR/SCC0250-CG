@@ -20,6 +20,7 @@
 # include "GameObject.hpp"
 
 # include "../Rendering/Renderer.hpp"
+#include <memory>
 
 template<class T>
 class RendererComponent : public Adven::Component {
@@ -27,8 +28,9 @@ class RendererComponent : public Adven::Component {
 public:
 
     T data;
+    std::shared_ptr<Shader> shader;
 
-    RendererComponent(T data) : data(data) {}
+    RendererComponent(T data, std::shared_ptr<Shader> shader) : data(data), shader(shader) {}
     ~RendererComponent() override = default;
 
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> {
@@ -40,6 +42,7 @@ public:
         Matrix4x4 world = transform != nullptr ? transform->WorldMatrix()
             : Matrix4x4::Identity;
 
+        Renderer::SetProgram(*shader.get());
         Renderer::Draw<T>(data, world);
 
     }
