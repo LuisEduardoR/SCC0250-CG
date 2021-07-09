@@ -14,13 +14,14 @@
 # ifndef COMPONENT_RENDERER_HPP
 # define COMPONENT_RENDERER_HPP
 
+#include <memory>
+
 # include "Component.hpp"
 
 # include "Transform.hpp"
 # include "GameObject.hpp"
 
 # include "../Rendering/Renderer.hpp"
-#include <memory>
 
 template<class T>
 class RendererComponent : public Adven::Component {
@@ -34,7 +35,7 @@ public:
     ~RendererComponent() override = default;
 
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> {
-        return std::make_unique<RendererComponent>(data);
+        return std::make_unique<RendererComponent>(data, shader);
     }
     void VDrawUpdate() override {
 

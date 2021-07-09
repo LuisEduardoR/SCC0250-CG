@@ -15,9 +15,7 @@
 # include "../Assets/Texture2D.hpp"
 # include "../Assets/WavefrontObject.hpp"
 # include "../Components/Camera.hpp"
-# include "../Components/EnemyShip.hpp"
 # include "../Components/Transform.hpp"
-# include "../Components/DamageOnContact.hpp"
 # include "../Components/Moveable.hpp"
 # include "../Components/Player.hpp"
 # include "../Components/RendererComponent.hpp"
@@ -67,19 +65,22 @@ namespace
 
 }
 
-void GameScene::CreateStaticMesh(const Mesh& mesh, const Vector3& position, const Vector3& rotation) {
+// Creates a static mesh on the current scene
+void GameScene::CreateStaticMesh(const Mesh& mesh, std::shared_ptr<Shader> shader, const Vector3& position, const Vector3& rotation) {
     
     GameObject& gameObject = AddGameObject({});
     gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
-    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
+    gameObject.AddComponent<RendererComponent<Mesh>>(mesh, shader);
 
 }
 
-void GameScene::CreateItem(const Mesh& mesh, const Vector3& position, const Vector3& rotation) {
+// Creates an item on the current scene
+void GameScene::CreateItem(const Mesh& mesh, std::shared_ptr<Shader> shader, const Vector3& position, const Vector3& rotation) {
     
     GameObject& gameObject = AddGameObject({});
     gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
-    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
+    gameObject.AddComponent<RendererComponent<Mesh>>(mesh, shader);
+    // Items have an special animation.
     gameObject.AddComponent<ItemAnimator>(0.15f, 0.50f);
 
 }
@@ -101,17 +102,12 @@ GameScene::GameScene()
     // Sets the collision layers of this scene
     Collider::GetSceneData(*this).collisionLayers = std::move(collisionLayers);
 
-    // Loads vertex and fragment shader's GLSL code 
-    std::string vertexCode   = AssetLoader<std::string>::LoadAsset("./assets/vertex.glsl");
-    std::string fragmentCode = AssetLoader<std::string>::LoadAsset("./assets/fragment.glsl");
-
-    // Creates our shader from code
-    Shader shader(vertexCode, fragmentCode);
-
-    // Set the render program to our shader
-    Renderer::SetProgram(shader);
-
-    // Loads the models.
+    // Loads vertex and fragment shader's GLSL code and creates the default shader
+    std::string vertexCode   = AssetLoader<std::string>::LoadAsset("./assets/defaultVertex.glsl");
+    std::string fragmentCode = AssetLoader<std::string>::LoadAsset("./assets/defaultFragment.glsl");
+    auto defaultShader = std::make_shared<Shader>(vertexCode, fragmentCode);
+    
+    // Loads the models ===============================================
     auto crawlerObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/crawler.obj");
     auto labTankObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/labtank.obj");
     auto tableObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/table.obj");
@@ -125,7 +121,7 @@ GameScene::GameScene()
     auto weaponObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/weapon.obj");
     auto armorObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/armor.obj");
 
-    // Loads the textures.
+    // Loads the textures =============================================
     auto crawlerTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Crawler.png");
     auto crawlerTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     crawlerTexture->UploadTexture(0, crawlerTextureFile);
@@ -170,71 +166,73 @@ GameScene::GameScene()
     auto armorTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     armorTexture->UploadTexture(0, armorTextureFile);
     
+    // Creates the GameObjects ========================================
+
     // Creates the Crawler
     Mesh crawlerMesh { crawlerObj };
     crawlerMesh.SetTexture(crawlerTexture);
-    CreateStaticMesh(crawlerMesh, Vector3{ 0.0f, 0.0f, 2.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(crawlerMesh, defaultShader, Vector3{ 0.0f, 0.0f, 2.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the lab tank
     Mesh labTankMesh { labTankObj };
     labTankMesh.SetTexture(techAtlasTexture);
-    CreateStaticMesh(labTankMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(labTankMesh, defaultShader, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the table
     Mesh tableMesh { tableObj };
     tableMesh.SetTexture(propsAtlasTexture);
-    CreateStaticMesh(tableMesh, Vector3{ 2.0f, 0.0f, 0.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
+    CreateStaticMesh(tableMesh, defaultShader, Vector3{ 2.0f, 0.0f, 0.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
 
     // Creates the kelp
     Mesh kelpMesh { kelpObj };
     kelpMesh.SetTexture(outsideAtlasTexture);
-    CreateStaticMesh(kelpMesh, Vector3{ -3.0f, 0.0f, 8.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(kelpMesh, defaultShader, Vector3{ -3.0f, 0.0f, 8.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the rocks
     Mesh rockMesh { rockObj };
     rockMesh.SetTexture(rockTexture);
-    CreateStaticMesh(rockMesh, Vector3{ -11.0f, 0.0f, -14.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
-    CreateStaticMesh(rockMesh, Vector3{ 11.0f, 0.0f, -10.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
-    CreateStaticMesh(rockMesh, Vector3{ 0.0f, 0.0f, -8.0f }, Vector3{ CONST_PI / 2.0f, 0.0f, CONST_PI / 2.0f });
+    CreateStaticMesh(rockMesh, defaultShader, Vector3{ -11.0f, 0.0f, -14.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(rockMesh, defaultShader, Vector3{ 11.0f, 0.0f, -10.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
+    CreateStaticMesh(rockMesh, defaultShader, Vector3{ 0.0f, 0.0f, -8.0f }, Vector3{ CONST_PI / 2.0f, 0.0f, CONST_PI / 2.0f });
 
     // Creates the scenery wall
     Mesh sceneryWallMesh { sceneryWallObj };
     sceneryWallMesh.SetTexture(wallTexture);
-    CreateStaticMesh(sceneryWallMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(sceneryWallMesh, defaultShader, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the scenery metal beam
     Mesh sceneryBeamMesh { sceneryBeamObj };
     sceneryBeamMesh.SetTexture(beamTexture);
-    CreateStaticMesh(sceneryBeamMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(sceneryBeamMesh, defaultShader, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the scenery concrete
     Mesh sceneryConcreteMesh { sceneryConcreteObj };
     sceneryConcreteMesh.SetTexture(concreteTexture);
-    CreateStaticMesh(sceneryConcreteMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(sceneryConcreteMesh, defaultShader, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the scenery sand
     Mesh scenerySandMesh { scenerySandObj };
     scenerySandMesh.SetTexture(sandTexture);
-    CreateStaticMesh(scenerySandMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(scenerySandMesh, defaultShader, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the scenery rock
     Mesh sceneryRockMesh { sceneryRockObj };
     sceneryRockMesh.SetTexture(rockTexture);
-    CreateStaticMesh(sceneryRockMesh, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateStaticMesh(sceneryRockMesh, defaultShader, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the weapon
     Mesh weaponMesh { weaponObj };
     weaponMesh.SetTexture(weaponTexture);
-    CreateItem(weaponMesh, Vector3{ 2.0f, 1.25f, 0.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
+    CreateItem(weaponMesh, defaultShader, Vector3{ 2.0f, 1.25f, 0.0f }, Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f });
 
     // Creates the armor
     Mesh armorMesh { armorObj };
     armorMesh.SetTexture(armorTexture);
-    CreateItem(armorMesh, Vector3{ 3.00f, 0.25f, 6.00f }, Vector3{ 0.0f, 0.0f, 0.0f });
+    CreateItem(armorMesh, defaultShader, Vector3{ 3.00f, 0.25f, 6.00f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
-
-    // Creates the player
+    // Creates the player =============================================
     GameObject& player = AddGameObject({});
+
     // Adds the necessary components
     player.AddComponent<Transform>(Vector3 { 0.0f, 2.5f, 0.0f });
     player.AddComponent<Moveable>();

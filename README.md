@@ -10,6 +10,8 @@ Made by:
 
 Some code comes from dmdmoura's [Adven](https://github.com/dmdemoura/Adven) GBA engine and from LuisEduardoR's [GLGame](https://github.com/LuisEduardoR/GLGame) repository
 
+The models and textures come from the game DEEP by Fellowship of the Game, it can be played at [itch.io](https://fog-icmc.itch.io/deep)
+
 
 ---
 
@@ -99,7 +101,7 @@ $ ./(program name)
 
 ## Structure of the project:
 
-The project code is in the **src/** directory. The game also loads **.asset** files containing geometry and **.glsl** shaders from the **assets/** directory, keep a copy of it with any executable version of the game
+The project code is in the **src/** directory. The game also loads **.png**, **.obj** and **.glsl** files from the **assets/** directory, keep a copy of it with any executable version of the game!
 
 A **Makefile** is provided with the commands to compile and run this game on Windows and Linux
 
@@ -127,12 +129,12 @@ A breakdown of the **src/** directory and it's sub-directories is found below:
 
 ## Instructions
 
-**W/S:**            Accelerate/decelerate the ship (Translation)
+**W/A/S/D:**            Walk
 
-**A/D:**            Turn the ship left/right (Rotation)
+**Mouse**               Look around
 
-**SPACE, SHIFT:**   Increase/decrease ship size (Scale), a smaller ship is harder to hit but also weaker
+**P:**                  Toggle wire-frame
 
-**LEFT MOUSE:**     Shoot
+**Left/right arrows:**  Toggle FoV
 
-**OBS:** If you win/lose the game the window will close and a Game Over message will be printed to the terminal, when playing on Windows by double-clicking the **.exe** file, the game window will close along the terminal so it might not be possible to read the message
+**ESC:**                Free cursor and reset camera

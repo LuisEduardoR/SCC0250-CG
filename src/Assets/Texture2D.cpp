@@ -4,6 +4,8 @@
 # include <SDL2/SDL_surface.h>
 # include "AssetLoader.hpp"
 
+# include <stdexcept>
+
 template<>
 auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
 {
@@ -56,52 +58,58 @@ auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
 
 namespace
 {
-auto PixelFormatNumComponents(Texture2D::PixelFormat format) -> std::size_t
-{
-	switch(format)
-	{
-	case Texture2D::PixelFormat::R:
-	case Texture2D::PixelFormat::DepthComponent:
-	case Texture2D::PixelFormat::StencilIndex:
-		return 1;
-	case Texture2D::PixelFormat::RG:
-		return 2;
-	case Texture2D::PixelFormat::RGB:
-	case Texture2D::PixelFormat::BGR:
-		return 3;
-	case Texture2D::PixelFormat::RGBA:
-	case Texture2D::PixelFormat::BGRA:
-		return 4;
-	}
-}
 
-auto PixelTypeBytes(Texture2D::PixelType type) -> std::size_t
-{
-	switch(type)
+	auto PixelFormatNumComponents(Texture2D::PixelFormat format) -> std::size_t
 	{
-	case Texture2D::PixelType::U8:
-	case Texture2D::PixelType::U8_2_3_3_Rev:
-	case Texture2D::PixelType::U8_3_3_2:
-		return 1;
-	case Texture2D::PixelType::I16:
-	case Texture2D::PixelType::U16:
-	case Texture2D::PixelType::U16_1_5_5_5_Rev:
-	case Texture2D::PixelType::U16_4_4_4_4:
-	case Texture2D::PixelType::U16_4_4_4_4_Rev:
-	case Texture2D::PixelType::U16_5_5_5_1:
-	case Texture2D::PixelType::U16_5_6_5:
-	case Texture2D::PixelType::U16_5_6_5_Rev:
-		return 2;
-	case Texture2D::PixelType::F32:
-	case Texture2D::PixelType::I32:
-	case Texture2D::PixelType::U32:
-	case Texture2D::PixelType::U32_10_10_10_2:
-	case Texture2D::PixelType::U32_2_10_10_10_Rev:
-	case Texture2D::PixelType::U32_8_8_8_8:
-	case Texture2D::PixelType::U32_8_8_8_8_Rev:
-		return 4;
+		switch(format)
+		{
+		case Texture2D::PixelFormat::R:
+		case Texture2D::PixelFormat::DepthComponent:
+		case Texture2D::PixelFormat::StencilIndex:
+			return 1;
+		case Texture2D::PixelFormat::RG:
+			return 2;
+		case Texture2D::PixelFormat::RGB:
+		case Texture2D::PixelFormat::BGR:
+			return 3;
+		case Texture2D::PixelFormat::RGBA:
+		case Texture2D::PixelFormat::BGRA:
+			return 4;
+		default:
+			throw std::runtime_error("Invalid format!");
+		}
 	}
-}
+
+	auto PixelTypeBytes(Texture2D::PixelType type) -> std::size_t
+	{
+		switch(type)
+		{
+		case Texture2D::PixelType::U8:
+		case Texture2D::PixelType::U8_2_3_3_Rev:
+		case Texture2D::PixelType::U8_3_3_2:
+			return 1;
+		case Texture2D::PixelType::I16:
+		case Texture2D::PixelType::U16:
+		case Texture2D::PixelType::U16_1_5_5_5_Rev:
+		case Texture2D::PixelType::U16_4_4_4_4:
+		case Texture2D::PixelType::U16_4_4_4_4_Rev:
+		case Texture2D::PixelType::U16_5_5_5_1:
+		case Texture2D::PixelType::U16_5_6_5:
+		case Texture2D::PixelType::U16_5_6_5_Rev:
+			return 2;
+		case Texture2D::PixelType::F32:
+		case Texture2D::PixelType::I32:
+		case Texture2D::PixelType::U32:
+		case Texture2D::PixelType::U32_10_10_10_2:
+		case Texture2D::PixelType::U32_2_10_10_10_Rev:
+		case Texture2D::PixelType::U32_8_8_8_8:
+		case Texture2D::PixelType::U32_8_8_8_8_Rev:
+			return 4;
+		default:
+			throw std::runtime_error("Invalid format!");
+		}
+	}
+
 }
 
 Texture2D::Texture2D(std::vector<std::byte>&& pixels,

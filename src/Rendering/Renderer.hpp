@@ -111,27 +111,29 @@ void Renderer::Draw(const T& object, const Matrix4x4& transform)
             DrawInternal((float*)(object.vertexBuffer.data() + state.index), state.vertexCount * sizeof(Vector2), state.vertexCount, state.drawMode, state.color, transform);
 
     }
+    // Draws a mesh applying the necessary matrixes
     else if constexpr (std::is_same_v<T, Mesh>)
     {
+        // Gets the data for rendering (positions and UVs)
         const std::vector<Mesh::VertexInput>& vertexInputBuffer(
             object.GetVertexInput()
         );
 
-        int i = 0;
+        // Draws each face of an object
         for (const Mesh::DrawCall drawCall : object.GetDrawCalls())
         {
-            float color = (float) i / (float) drawCall.count;
 
+            // Performs the drawing
             DrawInternal(
-                    // TODO: fix me
-                    reinterpret_cast<const float*>(vertexInputBuffer.data() + drawCall.first),
-                    sizeof(Mesh::VertexInput) * drawCall.count,
-                    drawCall.count,
-                    drawCall.mode,
-                    Color(color, color, color),
-                    transform,
-                    object.GetTexture().get());
-            i++;
+                            vertexInputBuffer.data() + drawCall.first,
+                            sizeof(Mesh::VertexInput) * drawCall.count,
+                            drawCall.count,
+                            drawCall.mode,
+                            Color::white,
+                            transform,
+                            object.GetTexture().get()
+                        );
+                        
         }
     }
     else
