@@ -64,18 +64,18 @@ auto Matrix4x4::Rotate(float rotationAngle) -> Matrix4x4
 
 auto Matrix4x4::Rotate(Vector3 rotationAngle) -> Matrix4x4
 {
-	return Matrix4x4{ { 1.0f, 0.0f, 0.0f, 0.0f },
-					  { 0.0f, std::cos(rotationAngle.x), std::sin(rotationAngle.x), 0.0f },
-					  { 0.0f, -std::sin(rotationAngle.x), std::cos(rotationAngle.x), 0.0f },
-					  { 0.0f, 0.0f, 0.0f, 1.0f } }
-		   * Matrix4x4{ { std::cos(rotationAngle.y), 0.0f, -std::sin(rotationAngle.y), 0.0f },
-						{ 0.0f, 1.0f, 0.0f, 0.0f },
-						{ std::sin(rotationAngle.y), 0.0f, std::cos(rotationAngle.y), 0.0f },
-						{ 0.0f, 0.0f, 0.0f, 1.0f } }
-		   * Matrix4x4{ { std::cos(rotationAngle.z), std::sin(rotationAngle.z), 0.0f, 0.0f },
-						{ -std::sin(rotationAngle.z), std::cos(rotationAngle.z), 0.0f, 0.0f },
-						{ 0.0f, 0.0f, 1.0f, 0.0f },
-						{ 0.0f, 0.0f, 0.0f, 1.0f } };
+	return Matrix4x4{ { std::cos(rotationAngle.y), 0.0f, -std::sin(rotationAngle.y), 0.0f },
+					{ 0.0f, 1.0f, 0.0f, 0.0f },
+					{ std::sin(rotationAngle.y), 0.0f, std::cos(rotationAngle.y), 0.0f },
+					{ 0.0f, 0.0f, 0.0f, 1.0f } }
+			* Matrix4x4{ { 1.0f, 0.0f, 0.0f, 0.0f },
+					{ 0.0f, std::cos(rotationAngle.x), std::sin(rotationAngle.x), 0.0f },
+					{ 0.0f, -std::sin(rotationAngle.x), std::cos(rotationAngle.x), 0.0f },
+					{ 0.0f, 0.0f, 0.0f, 1.0f } }
+			* Matrix4x4{ { std::cos(rotationAngle.z), std::sin(rotationAngle.z), 0.0f, 0.0f },
+					{ -std::sin(rotationAngle.z), std::cos(rotationAngle.z), 0.0f, 0.0f },
+					{ 0.0f, 0.0f, 1.0f, 0.0f },
+					{ 0.0f, 0.0f, 0.0f, 1.0f } };
 }
 
 auto Matrix4x4::Scale(Vector2 scaleFactor) -> Matrix4x4
