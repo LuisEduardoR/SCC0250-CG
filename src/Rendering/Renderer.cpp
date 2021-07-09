@@ -11,6 +11,8 @@
 # include "RenderStateChange.hpp"
 
 GLuint Renderer::currentProgram{ 0 };
+Matrix4x4 Renderer::projection = Matrix4x4::Identity;
+Matrix4x4 Renderer::view = Matrix4x4::Identity;
 
 //Current array buffer bound to the renderer
 GLuint Renderer::arrayBuffer{ 0 };
@@ -60,7 +62,8 @@ void Renderer::SetProgram(const Shader& shader) {
     // Uses the program from our shader
     Renderer::currentProgram = shader.GetProgramId();
     glUseProgram(Renderer::currentProgram);
-
+    Renderer::SetProjectionMatrix(projection);
+    Renderer::SetViewMatrix(view);
 }
 
 // Sets the view matrix for the current program
@@ -68,6 +71,7 @@ void Renderer::SetViewMatrix(const Matrix4x4& viewMatrix)
 {
     GLint loc = glGetUniformLocation(Renderer::currentProgram, "view");
     glUniformMatrix4fv(loc, 1, GL_FALSE, viewMatrix.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    view = viewMatrix;
 }
 
 // Sets the projection matrix for the current program
@@ -75,6 +79,7 @@ void Renderer::SetProjectionMatrix(const Matrix4x4& projectionMatrix)
 {
     GLint loc = glGetUniformLocation(Renderer::currentProgram, "projection");
     glUniformMatrix4fv(loc, 1, GL_FALSE, projectionMatrix.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    projection = projectionMatrix;
 }
 
 // Creates an array buffer (if one was already created re-uses it)

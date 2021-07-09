@@ -11,6 +11,7 @@
 #include "Transform.hpp"
 #include "GameObject.hpp"
 #include "../Rendering/Renderer.hpp"
+#include "../WindowSystem/WindowSystem.hpp"
 
 namespace Adven
 {
@@ -72,7 +73,6 @@ void Camera::RenderSkybox()
                     
     }
 }
-
 
 auto Camera::Clone() const -> std::unique_ptr<Component>
 {

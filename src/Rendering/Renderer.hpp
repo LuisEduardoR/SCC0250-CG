@@ -57,6 +57,10 @@ public:
 private:
     static bool wireframeMode;
 
+    static Matrix4x4 projection;
+
+    static Matrix4x4 view;
+
     // Current program being used by the renderer
     static GLuint currentProgram;
 

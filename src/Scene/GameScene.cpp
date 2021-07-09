@@ -109,7 +109,7 @@ GameScene::GameScene()
     std::string skyboxFrag   = AssetLoader<std::string>::LoadAsset("./assets/skybox_frag.glsl");
     auto defaultShader       = std::make_shared<Shader>(vertexCode, fragmentCode);
     auto skyboxShader        = std::make_shared<Shader>(skyboxVert, skyboxFrag);
-    
+ 
     // Loads the models ===============================================
     auto cubeObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/cube.obj");
     auto crawlerObj = AssetLoader<WavefrontObject>::LoadAsset("./assets/crawler.obj");
@@ -184,9 +184,6 @@ GameScene::GameScene()
     
     // Creates the GameObjects ========================================
 
-    Mesh cubeMesh { cubeObj };
-    cubeMesh.SetTexture(skyboxTexture);
-
     // Creates the Crawler
     Mesh crawlerMesh { crawlerObj };
     crawlerMesh.SetTexture(crawlerTexture);
@@ -250,6 +247,8 @@ GameScene::GameScene()
     CreateItem(armorMesh, defaultShader, Vector3{ 3.00f, 0.25f, 6.00f }, Vector3{ 0.0f, 0.0f, 0.0f });
 
     // Creates the player =============================================
+    Mesh cubeMesh { cubeObj };
+    cubeMesh.SetTexture(skyboxTexture);
     GameObject& player = AddGameObject({});
 
     // Adds the necessary components
