@@ -140,7 +140,7 @@ GameScene::GameScene()
     auto skyboxTexture = std::make_shared<TextureObject>(TextureObject::Type::TextureCubeMap);
     skyboxTexture->UploadTexture(0, skybox);
     
-    auto crawlerTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/crawler.png");
+    auto crawlerTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Crawler.png");
     auto crawlerTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     crawlerTexture->UploadTexture(0, crawlerTextureFile);
 
@@ -156,23 +156,23 @@ GameScene::GameScene()
     auto outsideAtlasTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     outsideAtlasTexture->UploadTexture(0, outsideAtlasTextureFile);
     
-    auto wallTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/wall.png");
+    auto wallTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Wall.png");
     auto wallTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     wallTexture->UploadTexture(0, wallTextureFile);
 
-    auto beamTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/beam.png");
+    auto beamTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Beam.png");
     auto beamTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     beamTexture->UploadTexture(0, beamTextureFile);
 
-    auto concreteTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/concrete.png");
+    auto concreteTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Concrete.png");
     auto concreteTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     concreteTexture->UploadTexture(0, concreteTextureFile);
 
-    auto sandTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/sand.png");
+    auto sandTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Sand.png");
     auto sandTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     sandTexture->UploadTexture(0, sandTextureFile);
 
-    auto rockTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/rock.png");
+    auto rockTextureFile = AssetLoader<Texture2D>::LoadAsset("./assets/Rock.png");
     auto rockTexture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
     rockTexture->UploadTexture(0, rockTextureFile);
 
