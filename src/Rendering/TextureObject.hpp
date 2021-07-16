@@ -31,8 +31,8 @@ public:
 
     auto Bind() -> void;
     auto Unbind() -> void;
-    auto UploadTexture(GLint level, const Texture2D& textureAsset) -> void; 
-    auto UploadTexture(GLint level, const std::array<Texture2D, 6>& textureAssets) -> void;
+    auto UploadTexture(GLint level, std::shared_ptr<Texture2D> textureAsset) -> void; 
+    auto UploadTexture(GLint level, const std::array<std::shared_ptr<Texture2D>, 6>& textureAssets) -> void;
 
     Type type;
 };

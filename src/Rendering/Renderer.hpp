@@ -89,34 +89,10 @@ public:
 }; 
 
 template<class T>
-void Renderer::Draw(const T& object, const Matrix4x4& transform)
-{
-    // Draws a Shape applying a transformation matrix
-    if constexpr (std::is_base_of_v<Shape, T>)
-    {
-        // Gets the vertices of our shape
-        RenderData data = object.GetRenderData();
-
-        // Performs the drawing
-        DrawInternal((float*)data.vertices, data.vertexCount * sizeof(Vector2), data.vertexCount, data.drawMode, Color(*data.color), transform);
-    }
-    // Draws a ShapeCollection applying a transformation matrix
-    else if constexpr (std::is_same_v<T, ShapeCollection>)
-    {
-        // Performs the drawing of each shape
-        for (const std::unique_ptr<Shape>& shape : *object.get())
-            Draw<Shape>(*shape.get(), transform);
-    }
-    // Draws a ShapeBatch applying a transformation matrix
-    else if constexpr (std::is_same_v<T, ShapeBatch>)
-    {
-        // Performs the drawing of each state
-        for(RenderStateChange state : object.stateChanges)
-            DrawInternal((float*)(object.vertexBuffer.data() + state.index), state.vertexCount * sizeof(Vector2), state.vertexCount, state.drawMode, state.color, transform);
-
-    }
+void Renderer::Draw(const T& object, const Matrix4x4& transform) {
+    
     // Draws a mesh applying the necessary matrixes
-    else if constexpr (std::is_same_v<T, Mesh>)
+    if constexpr (std::is_same_v<T, Mesh>)
     {
         // Gets the data for rendering (positions and UVs)
         const std::vector<Mesh::VertexInput>& vertexInputBuffer(
