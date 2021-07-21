@@ -19,18 +19,23 @@ Mesh::Mesh(std::shared_ptr<WavefrontObject> object)
     for (const WavefrontObject::Element<WavefrontObject::Face>& face : object->faces)
     {
 
-        for (std::size_t i = 0; i < face.data.vertexIndexes.size(); i++) 
+        for (std::size_t i = 0; i < face.data.vertexIndexes.size(); i++)
         {
             VertexInput vertexInput{};
-            
+
             vertexInput.position = Vector3
-            { 
+            {
                 object->vertices.at(face.data.vertexIndexes[i] - 1).data
             };
 
             vertexInput.texturePosition = Vector2
             {
                 object->textureVertices.at(face.data.textureVertexIndexes[i] - 1).data
+            };
+
+            vertexInput.normal = Vector3
+            {
+                object->normals.at(face.data.normalVectorIndexes[i] - 1).data
             };
 
             vertexInputBuffer.push_back(vertexInput);

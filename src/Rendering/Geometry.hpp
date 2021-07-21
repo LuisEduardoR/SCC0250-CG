@@ -34,6 +34,7 @@ public:
     struct VertexInput {
         Vector3 position;
         Vector2 texturePosition;
+        Vector3 normal;
     };
 
     struct DrawCall {

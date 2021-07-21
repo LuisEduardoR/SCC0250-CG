@@ -125,27 +125,40 @@ void Renderer::DrawInternal(
     glBufferData(GL_ARRAY_BUFFER, data_size, data, GL_DYNAMIC_DRAW);
 
     // Associates the variables from our program with our data:
-    GLint loc;
+    const GLint positionLoc = 0;
+    const GLint texturePositionLoc = 1;
+    const GLint normalLoc = 2;
 
     // Associates the positions of our geometry
-    loc = glGetAttribLocation(Renderer::currentProgram, "position");
-    glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
     // Associates the positions of our geometry
-    loc = glGetAttribLocation(Renderer::currentProgram, "inTexPosition");
-    glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, data_size / count,
+    glEnableVertexAttribArray(texturePositionLoc);
+    glVertexAttribPointer(texturePositionLoc, 2, GL_FLOAT, GL_FALSE, data_size / count,
             reinterpret_cast<void*>(3 * sizeof(float)));
     // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
-    // Associates our color
-    loc = glGetUniformLocation(Renderer::currentProgram, "color");
-    glUniform4f(loc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    glEnableVertexAttribArray(normalLoc);
+    glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+
+    const GLint transformLoc = 0;
+    const GLint colorLoc = 3;
+    const GLint texSamplerLoc = 4;
+    // Ambient Light
+    const GLint ambientLightColorLoc = 5;
+    const GLint ambientReflectionLoc = 6; //ka
+    // Point Light
+    const GLint lightPositionLoc = 7;
+    const GLint diffuseLightColorLoc = 8;
+    const GLint diffuseReflectionLoc = 9; //kd
+
 
     // Associates our transform matrix
-    loc = glGetUniformLocation(Renderer::currentProgram, "transform");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+
+    // Associates our color
+    glUniform4f(colorLoc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
     if (textureObject != nullptr)
     {
@@ -156,9 +169,14 @@ void Renderer::DrawInternal(
         textureObject->Bind();
 
         // Texture unit to associate sampler with.
-        loc = glGetUniformLocation(Renderer::currentProgram, "texSampler");
-        glUniform1i(loc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+        glUniform1i(texSamplerLoc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
     }
+
+    glUniform3f(ambientLightColorLoc, 1.0f, 0.0f, 0.0f);
+    glUniform1f(ambientReflectionLoc, 0.2f);
+    glUniform3f(lightPositionLoc, 0.0f, 1.0f, 0.0f);
+    glUniform3f(diffuseLightColorLoc, 1.0f, 1.0f, 1.0f);
+    glUniform1f(diffuseReflectionLoc, 1.0f);
 
     if (wireframeMode)
         mode = GL_LINE_LOOP;

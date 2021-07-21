@@ -17,12 +17,15 @@ layout(location = 2) uniform mat4 projection;
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 inTexPosition;
+layout(location = 2) in vec3 normal;
 
 ////////////////////////////////////////
 // Outputs
 ////////////////////////////////////////
 
-layout(location = 0) out vec2 texPosition;
+layout(location = 0) out vec3 outPosition;
+layout(location = 1) out vec2 outTexPosition;
+layout(location = 2) out vec3 outNormal;
 
 ////////////////////////////////////////
 // Code
@@ -30,6 +33,9 @@ layout(location = 0) out vec2 texPosition;
 
 void main()
 {
+    outPosition = position;
+    outTexPosition = inTexPosition;
+    outNormal = normal;
+
     gl_Position = projection * view * transform * vec4(position, 1.0);
-    texPosition = inTexPosition;
 }
