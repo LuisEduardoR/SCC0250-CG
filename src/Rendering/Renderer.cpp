@@ -15,7 +15,8 @@ Matrix4x4 Renderer::projection = Matrix4x4::Identity;
 Matrix4x4 Renderer::view = Matrix4x4::Identity;
 
 //Current array buffer bound to the renderer
-GLuint Renderer::arrayBuffer{ 0 };
+GLuint Renderer::vertexBuffer{ 0 };
+GLuint Renderer::vertexArray{ 0 };
 
 bool Renderer::wireframeMode{ false };
 
@@ -23,7 +24,7 @@ bool Renderer::wireframeMode{ false };
 void Renderer::Init() {
 
     Renderer::currentProgram = 0;
-    Renderer::arrayBuffer = 0;
+    Renderer::vertexBuffer = 0;
 
     // Initializes GLEW to handle OpenGL functions
     GLint result = glewInit();
@@ -35,7 +36,7 @@ void Renderer::Init() {
 
 // Destroys the renderer
 void Renderer::Destroy() {
-    glDeleteBuffers(1, &(Renderer::arrayBuffer));
+    glDeleteBuffers(1, &(Renderer::vertexBuffer));
 }
 
 // Clears our color program with a certain color
@@ -84,19 +85,26 @@ void Renderer::SetProjectionMatrix(const Matrix4x4& projectionMatrix)
 
 // Creates an array buffer (if one was already created re-uses it)
 void Renderer::CreateArrayBuffer() {
-    
+
     // If the buffer already exists return
-    if(arrayBuffer > 0)
+    if(vertexBuffer > 0)
         return;
 
-    // Creates our buffer
+    // Creates our vertex array object (VAO)
+    // Needed for core profile, not on compatibility mode.
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+
+    // Creates our vertex buffer object (VBO)
     GLuint buffer;
     glGenBuffers(1, &buffer);
-    
-    // Sets our buffer as the GL_ARRAY_BUFFER
-    Renderer::arrayBuffer = buffer;
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
+    // Sets our array as current.
+    Renderer::vertexArray = vao;
+    glBindVertexArray(vao);
+    // Sets our buffer as the GL_ARRAY_BUFFER
+    Renderer::vertexBuffer = buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
 }
 
 // Draws an object directly interacting with our graphics API
@@ -130,7 +138,7 @@ void Renderer::DrawInternal(
     glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, data_size / count,
             reinterpret_cast<void*>(3 * sizeof(float)));
     // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
-     
+
     // Associates our color
     loc = glGetUniformLocation(Renderer::currentProgram, "color");
     glUniform4f(loc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
@@ -203,7 +211,7 @@ void Renderer::DrawSkybox(
 
 void Renderer::ToggleWireframe()
 {
-    wireframeMode = !wireframeMode;    
+    wireframeMode = !wireframeMode;
 
     if (wireframeMode)
         std::cout << "Wireframe mode:\t enabled.\n";

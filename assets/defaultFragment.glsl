@@ -1,9 +1,32 @@
-varying vec2 texPosition;
+#version 420 core
+// This is only available in version 4.30,
+// but my 10 year old gpu only supports up to 4.20
+#extension GL_ARB_explicit_uniform_location : require
 
-uniform vec4 color;
-uniform sampler2D texSampler;
+////////////////////////////////////////
+// Uniforms
+////////////////////////////////////////
+
+layout(location = 3) uniform vec4 color;
+layout(location = 4) uniform sampler2D texSampler;
+
+////////////////////////////////////////
+// Inputs
+////////////////////////////////////////
+
+layout(location = 0) in vec2 texPosition;
+
+////////////////////////////////////////
+// Outputs
+////////////////////////////////////////
+
+layout(location = 0) out vec4 outColor;
+
+////////////////////////////////////////
+// Code
+////////////////////////////////////////
 
 void main()
 {
-    gl_FragColor = texture2D(texSampler, texPosition);
+    outColor = texture(texSampler, texPosition);
 }

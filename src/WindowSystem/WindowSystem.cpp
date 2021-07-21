@@ -25,19 +25,20 @@ GLFWwindow* WindowSystem::mainWindow{ nullptr };
 
 // Initializes the windom system
 void WindowSystem::Init() {
-    
+
     // Initializes GLFW
     glfwInit();
 
     // Set a hint for the next glfwCreateWindowCall.
     // Makes our window invisible for now
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-	// Make window float on i3
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	// glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	// glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-	// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	// glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    // Make window float on i3
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    // Use OpenGL 4.2 Core profile.
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
     // Creates our window
     WindowSystem::mainWindow = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);

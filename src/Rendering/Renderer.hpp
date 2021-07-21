@@ -64,8 +64,11 @@ private:
     // Current program being used by the renderer
     static GLuint currentProgram;
 
-    // Current array buffer bound to the renderer
-    static GLuint arrayBuffer;
+    // Current vertex array buffer (VBO) bound to the renderer
+    static GLuint vertexBuffer;
+
+    // Current vertex array (VAO) bound to the renderer
+    static GLuint vertexArray;
 
     // Creates an array buffer (if one was already created re-uses it)
     static void CreateArrayBuffer();
@@ -86,11 +89,11 @@ public:
             size_t count,
             const Matrix4x4& transform,
             TextureObject* textureObject);
-}; 
+};
 
 template<class T>
 void Renderer::Draw(const T& object, const Matrix4x4& transform) {
-    
+
     // Draws a mesh applying the necessary matrixes
     if constexpr (std::is_same_v<T, Mesh>)
     {
@@ -113,7 +116,7 @@ void Renderer::Draw(const T& object, const Matrix4x4& transform) {
                             transform,
                             object.GetTexture().get()
                         );
-                        
+
         }
     }
     else
