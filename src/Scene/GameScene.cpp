@@ -214,8 +214,8 @@ GameScene::GameScene()
 
     // Creates the armor
     CreateItem(
-        "./assets/weapon.obj",
-        "./assets/weapon.png",
+        "./assets/armor.obj",
+        "./assets/armor.png",
         defaultShader,
         Vector3{ 3.00f, 0.25f, 6.00f },
         Vector3{ 0.0f, 0.0f, 0.0f }
