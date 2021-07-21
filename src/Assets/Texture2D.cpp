@@ -2,16 +2,17 @@
 
 # include <SDL2/SDL_image.h>
 # include <SDL2/SDL_surface.h>
-# include "AssetLoader.hpp"
+# include "AssetLibrary.hpp"
 
+# include <memory>
 # include <stdexcept>
 
 template<>
-auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
-{
+void AssetLibrary<Texture2D>::LoadAsset(const std::string& path) {
+
 	// Load texture
 	std::unique_ptr<SDL_Surface, void (*)(SDL_Surface*)> image{
-		IMG_Load(filename.data()),
+		IMG_Load(path.data()),
 		// Custom deleter, so we don't leak memory, even if an exception is thrown.
 		SDL_FreeSurface	
 	};
@@ -19,7 +20,7 @@ auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
 	if (image == nullptr)
 	{
 		std::string msg{ "Failed to load image from file: " };
-		msg.append(filename);
+		msg.append(path);
 		msg.append("\n\tDue to: ");
 		msg.append(IMG_GetError());
 
@@ -31,7 +32,7 @@ auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
 	if (image == nullptr)
 	{
 		std::string msg{ "Failed to load image from file: " };
-		msg.append(filename);
+		msg.append(path);
 		msg.append("\n\tDue to: ");
 		msg.append(IMG_GetError());
 
@@ -49,11 +50,16 @@ auto AssetLoader<Texture2D>::LoadAsset(const std::string& filename) -> Texture2D
 	std::copy(begin, end, pixels.begin());
 	SDL_UnlockSurface(image.get());
 
-	return Texture2D(std::move(pixels),
+	// Adds the asset to library
+    library[path] = std::make_shared<Texture2D> (
+		std::move(
+			Texture2D(std::move(pixels),
 			static_cast<std::size_t>(image->w),
 			static_cast<std::size_t>(image->h),
 			Texture2D::PixelFormat::RGBA,
-			Texture2D::PixelType::U8);
+			Texture2D::PixelType::U8)
+		)
+	);
 }
 
 namespace

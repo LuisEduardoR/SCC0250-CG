@@ -17,13 +17,13 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
 set(COMMON_SOURCES
+    src/Assets/AssetLibrary.cpp
+    src/Assets/AssetLibrary.hpp
     src/Assets/Texture2D.hpp
-    src/Assets/WavefrontParser.hpp
     src/Assets/Texture2D.cpp
-    src/Assets/AssetLoader.cpp
-    src/Assets/WavefrontObject.hpp
-    src/Assets/AssetLoader.hpp
+    src/Assets/WavefrontParser.hpp
     src/Assets/WavefrontObject.cpp
+    src/Assets/WavefrontObject.hpp
     src/Exceptions/Exceptions.hpp
     src/Exceptions/Exceptions.cpp
     src/Components/ItemAnimator.hpp

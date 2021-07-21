@@ -30,8 +30,6 @@
 # include "Scene/GameScene.hpp"
 # include "Physics/Collider.hpp"
 
-# include "Assets/AssetLoader.hpp"
-
 # include <chrono>
 
 # define DISPLAY_DELTA_TIME false

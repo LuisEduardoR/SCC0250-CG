@@ -25,11 +25,29 @@ class GameScene : public Adven::Scene
 {
 
 public:
+
     GameScene();
+
     ~GameScene() override = default;
+
 private:
-    void CreateStaticMesh(const Mesh& mesh, std::shared_ptr<Shader> shader, const Vector3& position, const Vector3& rotation);
-    void CreateItem(const Mesh& mesh, std::shared_ptr<Shader> shader, const Vector3& position, const Vector3& rotation);
+
+    void CreateObject(
+        const std::string modelPath, 
+        const std::string texturePath, 
+        std::shared_ptr<Shader> shader, 
+        const Vector3& position, 
+        const Vector3& rotation
+    );
+
+    void CreateItem(
+        const std::string modelPath, 
+        const std::string texturePath, 
+        std::shared_ptr<Shader> shader, 
+        const Vector3& position, 
+        const Vector3& rotation
+    );
+
 };
 
 #endif /* end of include guard: GAME_SCENE_HPP */

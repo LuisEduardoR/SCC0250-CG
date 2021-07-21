@@ -60,6 +60,7 @@
         "forward_list": "cpp",
         "list": "cpp",
         "unordered_set": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "assetloader.hpp": "c"
     }
 }
