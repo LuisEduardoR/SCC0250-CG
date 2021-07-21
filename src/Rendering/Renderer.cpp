@@ -9,6 +9,7 @@
 
 # include "RenderData.hpp"
 # include "RenderStateChange.hpp"
+#include <limits>
 
 GLuint Renderer::currentProgram{ 0 };
 Matrix4x4 Renderer::projection = Matrix4x4::Identity;
@@ -150,8 +151,10 @@ void Renderer::DrawInternal(
     const GLint ambientReflectionLoc = 6; //ka
     // Point Light
     const GLint lightPositionLoc = 7;
-    const GLint diffuseLightColorLoc = 8;
+    const GLint lightColorLoc = 8;
     const GLint diffuseReflectionLoc = 9; //kd
+    const GLint specularReflectionLoc = 10; //ks
+    const GLint specularReflectionExpLoc = 11; //ns
 
 
     // Associates our transform matrix
@@ -172,11 +175,13 @@ void Renderer::DrawInternal(
         glUniform1i(texSamplerLoc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
     }
 
-    glUniform3f(ambientLightColorLoc, 1.0f, 0.0f, 0.0f);
-    glUniform1f(ambientReflectionLoc, 0.2f);
-    glUniform3f(lightPositionLoc, 0.0f, 1.0f, 0.0f);
-    glUniform3f(diffuseLightColorLoc, 1.0f, 1.0f, 1.0f);
-    glUniform1f(diffuseReflectionLoc, 1.0f);
+    glUniform3f(ambientLightColorLoc, 0.2f, 0.2f, 0.8f);
+    glUniform1f(ambientReflectionLoc, 0.3f);
+    glUniform3f(lightPositionLoc, 3.0f, 5.0f, 2.0f);
+    glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+    glUniform1f(diffuseReflectionLoc, 0.5f);
+    glUniform1f(specularReflectionLoc, 1.0f);
+    glUniform1f(specularReflectionExpLoc, 10.0f);
 
     if (wireframeMode)
         mode = GL_LINE_LOOP;

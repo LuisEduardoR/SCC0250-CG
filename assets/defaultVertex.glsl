@@ -7,7 +7,7 @@
 // Uniforms
 ////////////////////////////////////////
 
-layout(location = 0) uniform mat4 transform;
+layout(location = 0) uniform mat4 model;
 layout(location = 1) uniform mat4 view;
 layout(location = 2) uniform mat4 projection;
 
@@ -33,9 +33,9 @@ layout(location = 2) out vec3 outNormal;
 
 void main()
 {
-    outPosition = position;
+    outPosition = vec3(model * vec4(position, 1.0));;
     outTexPosition = inTexPosition;
-    outNormal = normal;
+    outNormal = vec3(model * vec4(normal, 1.0));
 
-    gl_Position = projection * view * transform * vec4(position, 1.0);
+    gl_Position = projection * view * model * vec4(position, 1.0);
 }
