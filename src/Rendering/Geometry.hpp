@@ -15,18 +15,16 @@
 # define CONST_PI 3.14159265358979323846f
 
 
-# include "Color.hpp"
-# include "RenderData.hpp"
-# include "RenderStateChange.hpp"
-# include "TextureObject.hpp"
 # include "../Assets/WavefrontObject.hpp"
+# include "../Assets/WavefrontMaterial.hpp"
 # include "../Math/Vector.hpp"
 
 # include <GL/glew.h>
-# include <cmath>
 # include <vector>
 # include <memory>
-# include <algorithm>
+
+class Material;
+class Shader;
 
 class Mesh final {
 public:
@@ -41,11 +39,12 @@ public:
         GLenum mode; // DrawMode
         GLint first; // Start index on the associated buffer
         GLsizei count; // Element count on the buffer
+        std::shared_ptr<Material> material;
     };
 
 
     Mesh(std::vector<VertexInput>&& vertices);
-    Mesh(std::shared_ptr<WavefrontObject> object);
+    Mesh(const WavefrontObject& object, std::shared_ptr<Shader> shader = nullptr);
 
     Mesh(const Mesh& other) = default;
     Mesh(Mesh&& other) = default;
@@ -53,17 +52,13 @@ public:
     auto operator=(const Mesh& other) -> Mesh& = default;
     auto operator=(Mesh&& other) -> Mesh& = default;
 
-
     auto GetVertexInput() const -> const std::vector<VertexInput>&;
     auto GetDrawCalls() const -> const std::vector<DrawCall>&;
-    auto GetTexture() const -> std::shared_ptr<TextureObject>;
-
-    auto SetTexture(std::shared_ptr<TextureObject> texture) -> void;
+    /* auto GetMaterial() const -> std::shared_ptr<Material>; */
 
 private:
     std::vector<VertexInput> vertexInputBuffer;
     std::vector<DrawCall> drawCalls;
-    std::shared_ptr<TextureObject> texture;
 };
 
 # endif /* end of include guard: GEOMETRY_HPP */

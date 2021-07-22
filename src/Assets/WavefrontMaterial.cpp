@@ -8,14 +8,17 @@
 # include "WavefrontMaterialParser.hpp"
 
 template<>
-void AssetLibrary<WavefrontMaterial>::LoadAsset(const std::string& path) {
+void AssetLibrary<WavefrontMaterialLibrary>::LoadAsset(const std::string& path) {
 
     std::ifstream file = OpenFile(path);
     std::vector<WavefrontMaterial> materials = WavefrontMaterialParser<>::ParseMaterials(file);
+    WavefrontMaterialLibrary matLibrary{};
     for(auto&& material : materials) {
-        library[material.materialName + '@' + path] = std::make_shared<WavefrontMaterial>(
-            std::move(material)
-        );
+
+        matLibrary[material.materialName] = material;
     }
+
+    library[path] = std::make_shared<WavefrontMaterialLibrary>(matLibrary);
+
     CloseFile(file);
 }

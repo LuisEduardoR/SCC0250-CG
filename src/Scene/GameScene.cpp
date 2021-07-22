@@ -14,6 +14,7 @@
 # include "../Assets/AssetLibrary.hpp"
 # include "../Assets/Texture2D.hpp"
 # include "../Assets/WavefrontObject.hpp"
+# include "../Assets/WavefrontMaterial.hpp"
 # include "../Components/Camera.hpp"
 # include "../Components/Transform.hpp"
 # include "../Components/Moveable.hpp"
@@ -32,43 +33,34 @@ using namespace Adven;
 
 // Creates a regular object on the current scene
 void GameScene::CreateObject(
-    const std::string modelPath, 
-    const std::string texturePath, 
-    std::shared_ptr<Shader> shader, 
-    const Vector3& position, 
+    const std::string modelPath,
+    const std::string texturePath,
+    std::shared_ptr<Shader> shader,
+    const Vector3& position,
     const Vector3& rotation
 ) {
-    
-    auto texture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
-    texture->UploadTexture(0, AssetLibrary<Texture2D>::RequireAsset(texturePath));
 
-    Mesh mesh { AssetLibrary<WavefrontObject>::RequireAsset(modelPath) };
-    mesh.SetTexture(texture);
+    Mesh mesh { *AssetLibrary<WavefrontObject>::RequireAsset(modelPath), shader };
 
     GameObject& gameObject = AddGameObject({});
     gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
-    gameObject.AddComponent<RendererComponent<Mesh>>(mesh, shader);
+    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
 
 }
 
 // Creates an item on the current scene
 void GameScene::CreateItem(
-    const std::string modelPath, 
-    const std::string texturePath, 
-    std::shared_ptr<Shader> shader, 
-    const Vector3& position, 
+    const std::string modelPath,
+    const std::string texturePath,
+    std::shared_ptr<Shader> shader,
+    const Vector3& position,
     const Vector3& rotation
 ) {
-    
-    auto texture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
-    texture->UploadTexture(0, AssetLibrary<Texture2D>::RequireAsset(texturePath));
-
-    Mesh mesh { AssetLibrary<WavefrontObject>::RequireAsset(modelPath) };
-    mesh.SetTexture(texture);
+    Mesh mesh { *AssetLibrary<WavefrontObject>::RequireAsset(modelPath), shader };
 
     GameObject& gameObject = AddGameObject({});
     gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
-    gameObject.AddComponent<RendererComponent<Mesh>>(mesh, shader);
+    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
     // Items have an special animation.
     gameObject.AddComponent<ItemAnimator>(0.15f, 0.50f);
 
@@ -229,13 +221,13 @@ GameScene::GameScene()
     player.AddComponent<Moveable>();
     player.AddComponent<Player>();
 
-    // Loads the data for the skybox.  
+    // Loads the data for the skybox.
     auto skyboxShader = std::make_shared<Shader>(
         *AssetLibrary<std::string>::RequireAsset("./assets/skyboxVertex.glsl"),
         *AssetLibrary<std::string>::RequireAsset("./assets/skyboxFragment.glsl")
     );
 
-    std::array<std::shared_ptr<Texture2D>, 6> skybox = 
+    std::array<std::shared_ptr<Texture2D>, 6> skybox =
     {{
         AssetLibrary<Texture2D>::RequireAsset("./assets/skybox/underwater/uw_ft.jpg"),
         AssetLibrary<Texture2D>::RequireAsset("./assets/skybox/underwater/uw_bk.jpg"),
@@ -247,8 +239,8 @@ GameScene::GameScene()
     auto skyboxTexture = std::make_shared<TextureObject>(TextureObject::Type::TextureCubeMap);
     skyboxTexture->UploadTexture(0, skybox);
 
-    Mesh cubeMesh { AssetLibrary<WavefrontObject>::RequireAsset("./assets/cube.obj") };
-    cubeMesh.SetTexture(skyboxTexture);
+    Mesh cubeMesh { *AssetLibrary<WavefrontObject>::RequireAsset("./assets/cube.obj") };
+    //cubeMesh.SetTexture(skyboxTexture);
 
     // Adds the camera with skybox.
     player.AddComponent<Camera>(true, cubeMesh, skyboxShader);

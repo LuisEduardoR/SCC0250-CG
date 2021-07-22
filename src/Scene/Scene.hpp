@@ -35,8 +35,8 @@ namespace Adven
             currentScene->Start();
         }
     private:
-        std::list<GameObject> rootObjects;
         std::list<GameObject*> toUpdateObjects;
+        std::list<GameObject> rootObjects;
     public:
         virtual ~Scene() = default;
         virtual void Start() final override;

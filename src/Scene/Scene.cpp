@@ -38,7 +38,7 @@ void Scene::VBlankUpdate()
     {
         gameObject->VBlankUpdate();
     }
-} 
+}
 
 GameObject& Scene::AddGameObject(GameObject&& gameObject)
 {
@@ -51,7 +51,7 @@ void Scene::RemoveGameObject(const GameObject& gameObject)
 {
     auto compare = [&gameObject](const GameObject& gameObject2)
     {
-         return &gameObject == &gameObject2; 
+         return &gameObject == &gameObject2;
     };
     RemoveGameObject(compare);
 }

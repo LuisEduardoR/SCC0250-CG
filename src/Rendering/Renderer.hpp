@@ -18,6 +18,7 @@
 # include "Shader.hpp"
 # include "Geometry.hpp"
 # include "Color.hpp"
+# include "TextureObject.hpp"
 
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -81,14 +82,14 @@ private:
             GLenum mode,
             const Color& color = Color::white,
             const Matrix4x4& transform = Matrix4x4::Identity,
-            TextureObject* texture = nullptr);
+            Material* material = nullptr);
 public:
     static void DrawSkybox(
             const void* data,
             size_t data_size,
             size_t count,
             const Matrix4x4& transform,
-            TextureObject* textureObject);
+            TextureObject* texture);
 };
 
 template<class T>
@@ -114,7 +115,7 @@ void Renderer::Draw(const T& object, const Matrix4x4& transform) {
                             drawCall.mode,
                             Color::white,
                             transform,
-                            object.GetTexture().get()
+                            drawCall.material.get()
                         );
 
         }

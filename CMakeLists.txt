@@ -89,6 +89,8 @@ set(COMMON_SOURCES
     src/Rendering/GLObject.hpp
     src/Rendering/Shader.hpp
     src/Rendering/Color.hpp
+    src/Rendering/Material.cpp
+    src/Rendering/Material.hpp
 )
 
 add_executable(main

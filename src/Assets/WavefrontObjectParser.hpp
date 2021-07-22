@@ -58,6 +58,7 @@ private:
     auto ParseMaterialLibrary();
     auto ParseObjectName();
     auto ParseGroupNames();
+    auto ParseMaterialName();
     auto ParseSmoothingGroup();
     auto ParseMergeGroup();
 private:
@@ -125,6 +126,10 @@ auto WavefrontObjectParser<Traits, Allocator>::ParseObject()
         else if (command == u8"g")
         {
             ParseGroupNames();
+        }
+        else if (command == u8"usemtl")
+        {
+            ParseMaterialName();
         }
         else return false;
 
@@ -373,6 +378,25 @@ auto WavefrontObjectParser<Traits, Allocator>::ParseGroupNames()
     }
 
     elementMetadata.groupNames = std::make_shared<std::vector<std::string>>(groups);
+}
+
+template<typename Traits, typename Allocator>
+auto WavefrontObjectParser<Traits, Allocator>::ParseMaterialName()
+{
+    ioutils::ReadWhile(sourceStream, { Space });
+    std::string filename;
+    ioutils::ReadUntil(sourceStream, SpaceOrLineEnd, filename);
+
+    if (!filename.empty())
+    {
+        elementMetadata.materialName = std::make_shared<std::string>(filename);
+    }
+    else
+    {
+        throw WavefrontParserException(*this,
+                "Must specify object name for usemtl command\n"
+                "\tformat: usemtl material_name");
+    }
 }
 
 #endif /* end of include guard: AMN_WAVEFRONT_OBJECT_PARSER__HPP */

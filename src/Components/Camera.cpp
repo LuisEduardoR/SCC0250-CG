@@ -68,9 +68,10 @@ void Camera::RenderSkybox()
                         sizeof(Mesh::VertexInput) * drawCall.count,
                         drawCall.count,
                         transform->WorldMatrix(),
-                        skybox.GetTexture().get()
+                        nullptr
+                        /* skybox.GetTexture().get() */
                     );
-                    
+
     }
 }
 

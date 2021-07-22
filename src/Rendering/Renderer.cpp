@@ -9,7 +9,7 @@
 
 # include "RenderData.hpp"
 # include "RenderStateChange.hpp"
-#include <limits>
+# include "Material.hpp"
 
 GLuint Renderer::currentProgram{ 0 };
 Matrix4x4 Renderer::projection = Matrix4x4::Identity;
@@ -116,7 +116,7 @@ void Renderer::DrawInternal(
         GLenum mode,
         const Color& color,
         const Matrix4x4& transform,
-        TextureObject* textureObject)
+        Material* material)
 {
 
     // Creates our array buffer
@@ -144,41 +144,15 @@ void Renderer::DrawInternal(
     glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, data_size / count, 0); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
     const GLint transformLoc = 0;
-    const GLint colorLoc = 3;
-    const GLint texSamplerLoc = 4;
-    // Ambient Light
-    const GLint ambientLightColorLoc = 5;
-    const GLint ambientReflectionLoc = 6; //ka
-    // Point Light
-    const GLint diffuseReflectionLoc = 7; //kd
-    const GLint specularReflectionLoc = 8; //ks
-    const GLint specularReflectionExpLoc = 9; //ns
     const GLint lightsLoc = 10;
 
+    if (material != nullptr)
+    {
+        material->Bind();
+    }
 
     // Associates our transform matrix
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
-
-    // Associates our color
-    glUniform4f(colorLoc, color.r, color.g, color.b, color.a); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
-
-    if (textureObject != nullptr)
-    {
-        GLint textureUnit{ 0 };
-        // Texture unit to activate
-        glActiveTexture(GL_TEXTURE0 + textureUnit);
-        // Binds texture to above texture unit.
-        textureObject->Bind();
-
-        // Texture unit to associate sampler with.
-        glUniform1i(texSamplerLoc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
-    }
-
-    glUniform3f(ambientLightColorLoc, 0.2f, 0.2f, 0.8f);
-    glUniform1f(ambientReflectionLoc, 0.3f);
-    glUniform1f(diffuseReflectionLoc, 0.5f);
-    glUniform1f(specularReflectionLoc, 1.0f);
-    glUniform1f(specularReflectionExpLoc, 10.0f);
 
     // lights[0].position
     glUniform3f(lightsLoc, 3.0f, 5.0f, 2.0f);

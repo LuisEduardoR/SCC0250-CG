@@ -137,7 +137,7 @@ auto WavefrontMaterialParser<Traits, Allocator>::ParseMaterials()
             if (!ioutils::Contains(LineEnd, sourceStream.peek()))
             {
                 std::string filename;
-                ioutils::ReadUntil(sourceStream, SpaceOrLineEnd);
+                ioutils::ReadUntil(sourceStream, SpaceOrLineEnd, filename);
                 materials.back().diffuseReflectivityMap = std::move(filename);
             }
             else throw WavefrontParserException(*this,
