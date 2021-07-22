@@ -29,8 +29,8 @@ LINKER_LINUX = -lglfw -lGL -lGLEW -lm -lSDL2 -lSDL2_image
 LINKER_WINDOWS = -lglfw3 -lglew32 -lSDL2main -lSDL2 -lSDL2_image -lopengl32
 
 # Compilation flags
-RELEASE_FLAGS = -O3
-DEBUG_FLAGS = -g
+RELEASE_FLAGS = -O3 -U _GNU_SOURCE
+DEBUG_FLAGS = -g -U _GNU_SOURCE
 
 # Compile program in Linux using release mode
 linux:

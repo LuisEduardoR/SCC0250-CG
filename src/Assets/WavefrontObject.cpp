@@ -5,16 +5,14 @@
 
 # include "AssetLibrary.hpp"
 # include "FileOperations.hpp"
-# include "WavefrontParser.hpp"
+# include "WavefrontObjectParser.hpp"
 
 template<>
 void AssetLibrary<WavefrontObject>::LoadAsset(const std::string& path) {
 
-    std::ifstream file = OpenFile(path);     
+    std::ifstream file = OpenFile(path);
     library[path] = std::make_shared<WavefrontObject>(
-        std::move(
-            WavefrontParser<>::ParseObject(file)
-        )
+            WavefrontObjectParser<>::ParseObject(file)
     );
     CloseFile(file);
 }

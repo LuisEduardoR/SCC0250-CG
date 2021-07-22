@@ -8,11 +8,11 @@
 /* para linux, instalar os pacotes libglfw3-dev mesa-common-dev libglew-dev */
 /* para compilar no linux: make linux */
 
-/* para windows, instalar o MSYS2 e as depedências: 
+/* para windows, instalar o MSYS2 e as depedências:
 
-    mingw-w64-x86_64-toolchain, 
-    mingw-w64-x86_64-glfw, 
-    mingw-w64-x86_64-glew, 
+    mingw-w64-x86_64-toolchain,
+    mingw-w64-x86_64-glfw,
+    mingw-w64-x86_64-glew,
     e mingw-w64-x86_64-glm
 
     adicionar "C:\msys64\mingw64\bin" ao PATH (se o MSYS2 foi instalado no local padrão)
@@ -31,12 +31,13 @@
 # include "Physics/Collider.hpp"
 
 # include <chrono>
+# include <cstring>
 
 # define DISPLAY_DELTA_TIME false
 
 using namespace Adven;
 
-int main(void) {
+void run(void) {
 
     // Creates our window system (initializes GLFW)
     WindowSystem::Init();
@@ -76,7 +77,7 @@ int main(void) {
         // Renders skybox with custom view
         camera->RenderSkybox();
         // Set view matrix to camera's or identity in case camera has been deleted.
-        Renderer::SetViewMatrix(camera ? camera->ViewMatrix() : Matrix4x4::Identity);            
+        Renderer::SetViewMatrix(camera ? camera->ViewMatrix() : Matrix4x4::Identity);
 
         // Updates the scene
         Scene::currentScene->VDrawUpdate();
@@ -90,12 +91,12 @@ int main(void) {
 
         // Gets the end time.
         uint64_t endTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        
+
         // Calculates our frame time delta
         Time::DeltaTime = (endTime - startTime) / 1000.0f;
         Time::Time += Time::DeltaTime;
         # if DISPLAY_DELTA_TIME
-            std::cout << "DeltaTime: " << Time::DeltaTime << " FPS: " << 1.0f / Time::DeltaTime << "\n"; 
+            std::cout << "DeltaTime: " << Time::DeltaTime << " FPS: " << 1.0f / Time::DeltaTime << "\n";
         # endif
     }
 
@@ -103,6 +104,65 @@ int main(void) {
     Renderer::Destroy();
     WindowSystem::Destroy();
 
-    return EXIT_SUCCESS;
-
 }
+
+auto PrintNestedException(const std::exception& e, std::size_t level = 0) -> void
+{
+	std::cerr << level << " exception: " << e.what() << '\n';
+
+	if (const auto* systemError = dynamic_cast<const std::system_error*>(&e);
+			systemError != nullptr && systemError->code())
+	{
+		std::cerr << level << " was caused by system error(Code "
+			<< systemError->code().value();
+
+		std::array<char, 1024> errorMsg{};
+		int result = strerror_r(systemError->code().value(), errorMsg.data(), errorMsg.size());
+
+		if (result == 0)
+		{
+				std::cerr << "): " << errorMsg.data() << '\n';
+		}
+		else
+		{
+			std::cerr << "): Failed to get error message for error code.\n";
+		}
+	}
+
+	try
+	{
+		std::rethrow_if_nested(e);
+	}
+	catch(const std::exception& e)
+	{
+		PrintNestedException(e, level + 1);
+	}
+	catch(...)
+	{
+		std::cerr << level << " caught nested exception not derived from std::exception! \n";
+	}
+}
+
+/// Techinically throwing exceptions from main is undefined behaviour (why???)
+/// So catch them here and run the app code in another function.
+auto main() -> int
+{
+	try
+	{
+		run();
+
+        return EXIT_SUCCESS;
+	}
+	catch(std::exception& e)
+	{
+		std::cerr << "main(): Crashed with exception:\n";
+		PrintNestedException(e);
+
+		return EXIT_FAILURE;
+	}
+	catch(...)
+	{
+		std::cerr << "main(): Crashed with exception not derived from std::exception! \n";
+	}
+}
+

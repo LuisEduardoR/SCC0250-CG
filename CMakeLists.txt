@@ -22,6 +22,10 @@ set(COMMON_SOURCES
     src/Assets/Texture2D.hpp
     src/Assets/Texture2D.cpp
     src/Assets/WavefrontParser.hpp
+    src/Assets/WavefrontMaterialParser.hpp
+    src/Assets/WavefrontMaterial.cpp
+    src/Assets/WavefrontMaterial.hpp
+    src/Assets/WavefrontObjectParser.hpp
     src/Assets/WavefrontObject.cpp
     src/Assets/WavefrontObject.hpp
     src/Exceptions/Exceptions.hpp
@@ -106,7 +110,7 @@ foreach(TARGET ${EXE_TARGETS})
             ${SDL2_IMAGE_INCLUDE_DIRS}
     )
 
-    target_link_libraries(${TARGET} 
+    target_link_libraries(${TARGET}
         PRIVATE
             #GL
             #GLEW

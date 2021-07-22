@@ -18,6 +18,8 @@
 # include <memory>
 # include <string>
 
+class WavefrontMaterial;
+
 template<typename T>
 class AssetLibrary {
 
@@ -49,6 +51,7 @@ private:
 template class AssetLibrary<std::string>;
 template class AssetLibrary<Texture2D>;
 template class AssetLibrary<WavefrontObject>;
+template class AssetLibrary<WavefrontMaterial>;
 
 /*
  * Specializations. Might be defined on the T type cpp file.
@@ -62,5 +65,8 @@ void AssetLibrary<Texture2D>::LoadAsset(const std::string& path);
 
 template<>
 void AssetLibrary<WavefrontObject>::LoadAsset(const std::string& path);
+
+template<>
+void AssetLibrary<WavefrontMaterial>::LoadAsset(const std::string& path);
 
 # endif /* end of include guard: ASSET_LIBRARY_HPP */
