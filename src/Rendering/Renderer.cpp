@@ -150,11 +150,10 @@ void Renderer::DrawInternal(
     const GLint ambientLightColorLoc = 5;
     const GLint ambientReflectionLoc = 6; //ka
     // Point Light
-    const GLint lightPositionLoc = 7;
-    const GLint lightColorLoc = 8;
-    const GLint diffuseReflectionLoc = 9; //kd
-    const GLint specularReflectionLoc = 10; //ks
-    const GLint specularReflectionExpLoc = 11; //ns
+    const GLint diffuseReflectionLoc = 7; //kd
+    const GLint specularReflectionLoc = 8; //ks
+    const GLint specularReflectionExpLoc = 9; //ns
+    const GLint lightsLoc = 10;
 
 
     // Associates our transform matrix
@@ -177,11 +176,19 @@ void Renderer::DrawInternal(
 
     glUniform3f(ambientLightColorLoc, 0.2f, 0.2f, 0.8f);
     glUniform1f(ambientReflectionLoc, 0.3f);
-    glUniform3f(lightPositionLoc, 3.0f, 5.0f, 2.0f);
-    glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
     glUniform1f(diffuseReflectionLoc, 0.5f);
     glUniform1f(specularReflectionLoc, 1.0f);
     glUniform1f(specularReflectionExpLoc, 10.0f);
+
+    // lights[0].position
+    glUniform3f(lightsLoc, 3.0f, 5.0f, 2.0f);
+    // lights[0].color
+    glUniform3f(lightsLoc + 1, 1.0f, 1.0f, 1.0f);
+    // lights[1].position
+    glUniform3f(lightsLoc + 2, -3.0f, 5.0f, -2.0f);
+    // lights[1].color
+    glUniform3f(lightsLoc + 3, 0.0f, 1.0f, 0.0f);
+
 
     if (wireframeMode)
         mode = GL_LINE_LOOP;
