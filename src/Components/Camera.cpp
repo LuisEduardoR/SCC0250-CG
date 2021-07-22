@@ -31,7 +31,7 @@ void Camera::MainCamera(Camera* camera)
 /**
  * Instance methods
  */
-Camera::Camera(bool makeMain, Mesh skybox, std::shared_ptr<Shader> skyboxShader) : skybox(skybox), skyboxShader(skyboxShader)
+Camera::Camera(bool makeMain, Mesh skybox) : skybox(skybox)
 {
     if (makeMain)
     {
@@ -48,7 +48,6 @@ Camera::~Camera()
 
 void Camera::RenderSkybox()
 {
-    Renderer::SetProgram(*skyboxShader.get());
     auto* transform = GetGameObject()->GetComponent<Transform>();
     Renderer::SetViewMatrix(Matrix4x4::Camera({}, transform->WorldRotation(),
         { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f }));
@@ -68,8 +67,7 @@ void Camera::RenderSkybox()
                         sizeof(Mesh::VertexInput) * drawCall.count,
                         drawCall.count,
                         transform->WorldMatrix(),
-                        nullptr
-                        /* skybox.GetTexture().get() */
+                        drawCall.material.get()
                     );
 
     }
@@ -77,7 +75,7 @@ void Camera::RenderSkybox()
 
 auto Camera::Clone() const -> std::unique_ptr<Component>
 {
-    return std::make_unique<Camera>(false, skybox, skyboxShader);
+    return std::make_unique<Camera>(false, skybox);
 }
 
 Matrix4x4 Camera::ViewMatrix() const

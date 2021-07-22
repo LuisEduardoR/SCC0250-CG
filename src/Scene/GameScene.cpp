@@ -239,10 +239,14 @@ GameScene::GameScene()
     auto skyboxTexture = std::make_shared<TextureObject>(TextureObject::Type::TextureCubeMap);
     skyboxTexture->UploadTexture(0, skybox);
 
+    auto skyboxMaterial = std::make_shared<SkyboxMaterial>(skyboxShader, skyboxTexture);
+
     Mesh cubeMesh { *AssetLibrary<WavefrontObject>::RequireAsset("./assets/cube.obj") };
-    //cubeMesh.SetTexture(skyboxTexture);
+    for (std::size_t i = 0; i < 6; i++)
+    {
+        cubeMesh.SetMaterial(0, skyboxMaterial);
+    }
 
     // Adds the camera with skybox.
-    player.AddComponent<Camera>(true, cubeMesh, skyboxShader);
-
+    player.AddComponent<Camera>(true, cubeMesh);
 }

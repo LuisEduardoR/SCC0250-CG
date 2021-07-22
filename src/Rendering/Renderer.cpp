@@ -177,7 +177,7 @@ void Renderer::DrawSkybox(
     size_t data_size,
     size_t count,
     const Matrix4x4& transform,
-    TextureObject* textureObject)
+    Material* material)
 {
     // Creates our array buffer
     CreateArrayBuffer();
@@ -196,17 +196,9 @@ void Renderer::DrawSkybox(
     glDepthMask(GL_FALSE);
     // ... set view and projection matrix
 
-    if (textureObject != nullptr)
+    if (material != nullptr)
     {
-        GLint textureUnit{ 0 };
-        // Texture unit to activate
-        glActiveTexture(GL_TEXTURE0 + textureUnit);
-        // Binds texture to above texture unit.
-        textureObject->Bind();
-
-        // Texture unit to associate sampler with.
-        loc = glGetUniformLocation(Renderer::currentProgram, "texSampler");
-        glUniform1i(loc, textureUnit); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+        material->Bind();
     }
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, count);

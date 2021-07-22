@@ -52,3 +52,25 @@ auto DefaultMaterial::Bind() -> void
         glUniform1i(LOCATION_TEXTURE, textureUnit);
     }
 }
+
+SkyboxMaterial::SkyboxMaterial(
+    std::shared_ptr<Shader> shader,
+    std::shared_ptr<TextureObject> texture)
+    : Material(shader), texture(texture) {}
+
+auto SkyboxMaterial::Bind() -> void
+{
+    Material::Bind();
+
+    if (texture != nullptr)
+    {
+        GLint textureUnit{ 0 };
+        // Texture unit to activate
+        glActiveTexture(GL_TEXTURE0 + textureUnit);
+        // Binds texture to above texture unit.
+        texture->Bind();
+
+        // Texture unit to associate sampler with.
+        glUniform1i(LOCATION_TEXTURE, textureUnit);
+    }
+}

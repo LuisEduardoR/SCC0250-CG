@@ -86,12 +86,12 @@ auto Mesh::GetDrawCalls() const -> const std::vector<DrawCall>&
     return drawCalls;
 }
 
-/* auto Mesh::GetMaterial() const -> std::shared_ptr<Material> */
-/* { */
-/*     return material; */
-/* } */
+auto Mesh::GetMaterial(std::size_t face) const -> std::shared_ptr<Material>
+{
+    return drawCalls.at(face).material;
+}
 
-/* auto Mesh::SetMaterial(std::shared_ptr<Material> material) -> void */
-/* { */
-/*     this->material = material; */
-/* } */
+auto Mesh::SetMaterial(std::size_t face, std::shared_ptr<Material> material) -> void
+{
+    drawCalls.at(face).material = material;
+}

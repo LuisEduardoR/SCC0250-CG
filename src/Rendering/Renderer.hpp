@@ -89,7 +89,7 @@ public:
             size_t data_size,
             size_t count,
             const Matrix4x4& transform,
-            TextureObject* texture);
+            Material* material);
 };
 
 template<class T>

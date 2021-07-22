@@ -94,4 +94,29 @@ private:
     float specularExponent;
 };
 
+
+class SkyboxMaterial : public Material {
+public:
+
+    // Transformation
+    static constexpr GLint LOCATION_VIEW{ 1 };
+
+    // Base color
+    static constexpr GLint LOCATION_TEXTURE{ 4 };
+public:
+    SkyboxMaterial(std::shared_ptr<Shader> shader, std::shared_ptr<TextureObject> texture);
+
+    SkyboxMaterial(const SkyboxMaterial& other) = default;
+    SkyboxMaterial(SkyboxMaterial&& other) = default;
+
+    auto operator=(const SkyboxMaterial& other) -> SkyboxMaterial& = default;
+    auto operator=(SkyboxMaterial&& other) -> SkyboxMaterial& = default;
+
+    ~SkyboxMaterial() override = default;
+public:
+    auto Bind() -> void override;
+private:
+    std::shared_ptr<TextureObject> texture;
+};
+
 # endif /* end of include guard: MATERIAL_HPP */

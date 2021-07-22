@@ -54,8 +54,9 @@ public:
 
     auto GetVertexInput() const -> const std::vector<VertexInput>&;
     auto GetDrawCalls() const -> const std::vector<DrawCall>&;
-    /* auto GetMaterial() const -> std::shared_ptr<Material>; */
+    auto GetMaterial(std::size_t face) const -> std::shared_ptr<Material>;
 
+    auto SetMaterial(std::size_t face, std::shared_ptr<Material> material) -> void;
 private:
     std::vector<VertexInput> vertexInputBuffer;
     std::vector<DrawCall> drawCalls;

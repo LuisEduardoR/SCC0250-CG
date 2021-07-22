@@ -26,18 +26,17 @@ namespace Adven
         // Sets or clears the main camera. nullptr to clear.
         static void MainCamera(Camera* camera);
     public:
-        Camera(bool makeMain, Mesh skybox, std::shared_ptr<Shader> skyboxShader);
+        Camera(bool makeMain, Mesh skybox);
     public:
         ~Camera() override;
     public:
         /// Clone a camera. Cloning a mainCamera does not make the clone main.
         [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
-    public: 
+    public:
         [[nodiscard]] Matrix4x4 ViewMatrix() const;
         void RenderSkybox();
 
     private:
-        std::shared_ptr<Shader> skyboxShader;
         Mesh skybox;
     };
 }
