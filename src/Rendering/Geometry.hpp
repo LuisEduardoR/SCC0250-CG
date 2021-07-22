@@ -43,8 +43,8 @@ public:
     };
 
 
-    Mesh(std::vector<VertexInput>&& vertices);
-    Mesh(const WavefrontObject& object, std::shared_ptr<Shader> shader = nullptr);
+    explicit Mesh(std::vector<VertexInput>&& vertices);
+    explicit Mesh(const WavefrontObject& object);
 
     Mesh(const Mesh& other) = default;
     Mesh(Mesh&& other) = default;

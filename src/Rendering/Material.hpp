@@ -74,7 +74,10 @@ public:
     // Point Lights
     static constexpr GLint LOCATION_LIGHTS{ 10 };
 public:
-    DefaultMaterial(std::shared_ptr<Shader> shader, const WavefrontMaterial& material);
+    DefaultMaterial(
+        std::shared_ptr<Shader> shader,
+        const WavefrontMaterial& material,
+        std::shared_ptr<TextureObject> texture);
 
     DefaultMaterial(const DefaultMaterial& other) = default;
     DefaultMaterial(DefaultMaterial&& other) = default;

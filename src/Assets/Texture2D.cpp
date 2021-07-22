@@ -4,17 +4,20 @@
 # include <SDL2/SDL_surface.h>
 # include "AssetLibrary.hpp"
 
+# include <iostream>
 # include <memory>
 # include <stdexcept>
 
 template<>
 void AssetLibrary<Texture2D>::LoadAsset(const std::string& path) {
 
+    std::cout << "Loading " << path << '\n';
+
 	// Load texture
 	std::unique_ptr<SDL_Surface, void (*)(SDL_Surface*)> image{
 		IMG_Load(path.data()),
 		// Custom deleter, so we don't leak memory, even if an exception is thrown.
-		SDL_FreeSurface	
+		SDL_FreeSurface
 	};
 
 	if (image == nullptr)
@@ -27,7 +30,7 @@ void AssetLibrary<Texture2D>::LoadAsset(const std::string& path) {
 		throw std::runtime_error(msg);
 	}
 
-	image.reset(SDL_ConvertSurfaceFormat(image.get(), SDL_PIXELFORMAT_RGBA32, 0)); 
+	image.reset(SDL_ConvertSurfaceFormat(image.get(), SDL_PIXELFORMAT_RGBA32, 0));
 
 	if (image == nullptr)
 	{
@@ -60,6 +63,8 @@ void AssetLibrary<Texture2D>::LoadAsset(const std::string& path) {
 			Texture2D::PixelType::U8)
 		)
 	);
+
+    std::cout << "LOADED " << path << '\n';
 }
 
 namespace
@@ -122,7 +127,7 @@ Texture2D::Texture2D(std::vector<std::byte>&& pixels,
 		std::size_t width,
 		std::size_t height,
 		PixelFormat format,
-		PixelType type) : 
+		PixelType type) :
 	height(height),
 	width(width),
 	pitch(width * PixelFormatNumComponents(format) *  PixelTypeBytes(type)),

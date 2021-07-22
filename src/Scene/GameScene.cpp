@@ -7,7 +7,9 @@
 
 # include "GameScene.hpp"
 
+# include <filesystem>
 # include <memory>
+# include <stdexcept>
 # include <vector>
 # include <random>
 
@@ -31,36 +33,98 @@
 
 using namespace Adven;
 
+namespace {
+std::shared_ptr<Mesh> LoadObj(std::string modelPath, std::shared_ptr<Shader> shader) {
+    auto modelObj{ AssetLibrary<WavefrontObject>::RequireAsset(modelPath) };
+    auto mesh = std::make_shared<Mesh>(*modelObj);
+
+    auto modelDirectory = std::filesystem::path(modelPath).parent_path();
+
+    // Load referenced material libraries (aka mtl files)
+    WavefrontMaterialLibrary materialLibrary;
+    for (const auto& materialLibraryFile : modelObj->materialLibraryFiles)
+    {
+        auto matLib = AssetLibrary<WavefrontMaterialLibrary>
+            ::RequireAsset(modelDirectory / materialLibraryFile);
+
+        // Merge the library maps.
+        materialLibrary.insert(matLib->begin(), matLib->end());
+    }
+
+    std::unordered_map<std::string, std::shared_ptr<Material>> materials;
+    std::size_t i = 0;
+    for (const WavefrontObject::Element<WavefrontObject::Face>& face : modelObj->faces)
+    {
+        if (face.metadata.materialName != nullptr)
+        {
+            try
+            {
+                mesh->SetMaterial(i, materials.at(*face.metadata.materialName));
+                continue;
+            }
+            catch(const std::out_of_range&) {}
+
+            try
+            {
+                auto wMaterial = materialLibrary.at(*face.metadata.materialName);
+
+                std::shared_ptr<TextureObject> texture;
+                if (wMaterial.diffuseReflectivityMap.has_value()) {
+                    // FIXME: Fix relative path workaround
+                    auto texture2d = AssetLibrary<Texture2D>::RequireAsset(
+                            modelDirectory / wMaterial.diffuseReflectivityMap.value());
+
+                    texture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
+                    texture->UploadTexture(0, texture2d);
+                }
+
+                auto material = std::make_shared<DefaultMaterial>(shader, wMaterial, texture);
+                mesh->SetMaterial(i, material);
+                materials[*face.metadata.materialName] = material;
+            }
+            catch(const std::out_of_range&)
+            {
+                throw std::runtime_error(std::string("Failed to find material: ")
+                        + *face.metadata.materialName
+                        + " while loading "
+                        + modelPath + '\n');
+            }
+        }
+        i++;
+    }
+
+    return mesh;
+}
+}
+
 // Creates a regular object on the current scene
 void GameScene::CreateObject(
     const std::string modelPath,
-    const std::string texturePath,
     std::shared_ptr<Shader> shader,
     const Vector3& position,
     const Vector3& rotation
 ) {
-
-    Mesh mesh { *AssetLibrary<WavefrontObject>::RequireAsset(modelPath), shader };
+    // FIXME: Don't allocated duplicated meshes
+    std::shared_ptr<Mesh> mesh = LoadObj(modelPath, shader);
 
     GameObject& gameObject = AddGameObject({});
     gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
-    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
+    gameObject.AddComponent<RendererComponent<Mesh>>(*mesh);
 
 }
 
 // Creates an item on the current scene
 void GameScene::CreateItem(
     const std::string modelPath,
-    const std::string texturePath,
     std::shared_ptr<Shader> shader,
     const Vector3& position,
     const Vector3& rotation
 ) {
-    Mesh mesh { *AssetLibrary<WavefrontObject>::RequireAsset(modelPath), shader };
+    std::shared_ptr<Mesh> mesh = LoadObj(modelPath, shader);
 
     GameObject& gameObject = AddGameObject({});
     gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
-    gameObject.AddComponent<RendererComponent<Mesh>>(mesh);
+    gameObject.AddComponent<RendererComponent<Mesh>>(*mesh);
     // Items have an special animation.
     gameObject.AddComponent<ItemAnimator>(0.15f, 0.50f);
 
@@ -94,7 +158,6 @@ GameScene::GameScene()
     // Creates the Crawler
     CreateObject(
         "./assets/crawler.obj",         // Model path
-        "./assets/Crawler.png",         // Texture path
         defaultShader,                  // Shader
         Vector3{ 0.0f, 0.0f, 2.0f },    // Position
         Vector3{ 0.0f, 0.0f, 0.0f }     // Rotation
@@ -103,7 +166,6 @@ GameScene::GameScene()
     // Creates the lab tank
     CreateObject(
         "./assets/labtank.obj",
-        "./assets/tech_ATLAS.png",
         defaultShader,
         Vector3{ 0.0f, 0.0f, 0.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
@@ -112,7 +174,6 @@ GameScene::GameScene()
     // Creates the table
     CreateObject(
         "./assets/table.obj",
-        "./assets/props_ATLAS.png",
         defaultShader,
         Vector3{ 2.0f, 0.0f, 0.0f },
         Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f }
@@ -121,7 +182,6 @@ GameScene::GameScene()
     // Creates the kelp
     CreateObject(
         "./assets/kelp.obj",
-        "./assets/outside_ATLAS.png",
         defaultShader,
         Vector3{ -3.0f, 0.0f, 8.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
@@ -130,21 +190,18 @@ GameScene::GameScene()
     // Creates the rocks
     CreateObject(
         "./assets/rock.obj",
-        "./assets/Rock.png",
         defaultShader,
         Vector3{ -11.0f, 0.0f, -14.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
     );
     CreateObject(
         "./assets/rock.obj",
-        "./assets/Rock.png",
         defaultShader,
         Vector3{ 11.0f, 0.0f, -10.0f },
         Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f }
     );
     CreateObject(
         "./assets/rock.obj",
-        "./assets/Rock.png",
         defaultShader,
         Vector3{ 0.0f, 0.0f, -8.0f },
         Vector3{ CONST_PI / 2.0f, 0.0f, CONST_PI / 2.0f }
@@ -153,7 +210,6 @@ GameScene::GameScene()
     // Creates the scenery wall
     CreateObject(
         "./assets/sceneryWall.obj",
-        "./assets/Wall.png",
         defaultShader,
         Vector3{ 0.0f, 0.0f, 0.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
@@ -162,7 +218,6 @@ GameScene::GameScene()
     // Creates the scenery metal beam
     CreateObject(
         "./assets/sceneryBeam.obj",
-        "./assets/Beam.png",
         defaultShader,
         Vector3{ 0.0f, 0.0f, 0.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
@@ -171,7 +226,6 @@ GameScene::GameScene()
     // Creates the scenery concrete
     CreateObject(
         "./assets/sceneryConcrete.obj",
-        "./assets/Concrete.png",
         defaultShader,
         Vector3{ 0.0f, 0.0f, 0.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
@@ -180,7 +234,6 @@ GameScene::GameScene()
     // Creates the scenery sand
     CreateObject(
         "./assets/scenerySand.obj",
-        "./assets/Sand.png",
         defaultShader,
         Vector3{ 0.0f, 0.0f, 0.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
@@ -189,7 +242,6 @@ GameScene::GameScene()
     // Creates the scenery rock
     CreateObject(
         "./assets/sceneryRock.obj",
-        "./assets/Rock.png",
         defaultShader,
         Vector3{ 0.0f, 0.0f, 0.0f },
         Vector3{ 0.0f, 0.0f, 0.0f }
@@ -198,7 +250,6 @@ GameScene::GameScene()
     // Creates the weapon
     CreateItem(
         "./assets/weapon.obj",
-        "./assets/weapon.png",
         defaultShader,
         Vector3{ 2.0f, 1.25f, 0.0f },
         Vector3{ 0.0f, CONST_PI / 2.0f, 0.0f }
@@ -207,7 +258,6 @@ GameScene::GameScene()
     // Creates the armor
     CreateItem(
         "./assets/armor.obj",
-        "./assets/armor.png",
         defaultShader,
         Vector3{ 3.00f, 0.25f, 6.00f },
         Vector3{ 0.0f, 0.0f, 0.0f }

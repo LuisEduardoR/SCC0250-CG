@@ -33,18 +33,16 @@ public:
 private:
 
     void CreateObject(
-        const std::string modelPath, 
-        const std::string texturePath, 
-        std::shared_ptr<Shader> shader, 
-        const Vector3& position, 
+        const std::string modelPath,
+        std::shared_ptr<Shader> shader,
+        const Vector3& position,
         const Vector3& rotation
     );
 
     void CreateItem(
-        const std::string modelPath, 
-        const std::string texturePath, 
-        std::shared_ptr<Shader> shader, 
-        const Vector3& position, 
+        const std::string modelPath,
+        std::shared_ptr<Shader> shader,
+        const Vector3& position,
         const Vector3& rotation
     );
 

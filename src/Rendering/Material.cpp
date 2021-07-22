@@ -13,22 +13,14 @@ auto Material::Bind() -> void
 
 DefaultMaterial::DefaultMaterial(
     std::shared_ptr<Shader> shader,
-    const WavefrontMaterial& material)
-    : Material(shader)
+    const WavefrontMaterial& material,
+    std::shared_ptr<TextureObject> texture)
+    : Material(shader), texture(texture)
 {
     ambientReflectivity = material.ambientReflectivity.value_or(Vector3{});
     diffuseReflectivity = material.diffuseReflectivity.value_or(Vector3{});
     specularReflectivity = material.specularReflectivity.value_or(Vector3{});
     specularExponent = material.specularExponent.value_or(0.0f);
-
-    if (material.diffuseReflectivityMap.has_value()) {
-        // TODO: Fix relative path workaround
-        auto texture2d = AssetLibrary<Texture2D>::RequireAsset(
-                "assets/" + material.diffuseReflectivityMap.value());
-
-        texture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
-        texture->UploadTexture(0, texture2d);
-    }
 }
 
 auto DefaultMaterial::Bind() -> void

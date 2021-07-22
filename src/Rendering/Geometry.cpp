@@ -18,7 +18,7 @@
 
 Mesh::Mesh(std::vector<VertexInput>&& vertices) : vertexInputBuffer(std::move(vertices)) {}
 
-Mesh::Mesh(const WavefrontObject& object, std::shared_ptr<Shader> shader)
+Mesh::Mesh(const WavefrontObject& object)
 {
     GLint start{ 0 };
 
@@ -47,31 +47,8 @@ Mesh::Mesh(const WavefrontObject& object, std::shared_ptr<Shader> shader)
             vertexInputBuffer.push_back(vertexInput);
         }
 
-        std::shared_ptr<Material> material{ nullptr };
-        if (shader != nullptr && face.metadata.materialName != nullptr)
-        {
-            for (const auto& materialLibraryFile : object.materialLibraryFiles)
-            {
-                // TODO: Fix relative path workaround
-                auto materialLibrary = AssetLibrary<WavefrontMaterialLibrary>
-                    ::RequireAsset("assets/" + materialLibraryFile);
-
-                try
-                {
-                    auto wMaterial = materialLibrary->at(*face.metadata.materialName);
-                    material = std::make_shared<DefaultMaterial>(shader, wMaterial);
-                }
-                catch(const std::out_of_range&)
-                {
-                    continue;
-                }
-
-                break;
-            }
-        }
-
         GLint vertexCount{ static_cast<GLint>(face.data.vertexIndexes.size()) };
-        drawCalls.push_back({ GL_TRIANGLE_FAN, start, vertexCount, material });
+        drawCalls.push_back({ GL_TRIANGLE_FAN, start, vertexCount, nullptr });
         start += vertexCount;
     }
 }
