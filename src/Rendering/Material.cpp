@@ -1,8 +1,11 @@
 # include "Material.hpp"
 
 # include "Renderer.hpp"
+# include "TextureObject.hpp"
 # include "../Assets/AssetLibrary.hpp"
-#include "TextureObject.hpp"
+# include "../Components/GameObject.hpp"
+# include "../Components/Light.hpp"
+# include "../Components/Transform.hpp"
 
 Material::Material(std::shared_ptr<Shader> shader) : shader(shader) {}
 
@@ -42,6 +45,18 @@ auto DefaultMaterial::Bind() -> void
 
         // Texture unit to associate sampler with.
         glUniform1i(LOCATION_TEXTURE, textureUnit);
+    }
+
+    for (std::size_t i = 0; i < Light::lights.size() && i < MAX_LIGHTS; i++)
+    {
+        if(auto* transform = Light::lights[i]->GetGameObject()->GetComponent<Transform>())
+        {
+            Vector3 position = transform->WorldPosition();
+            Vector3 color = Light::lights[i]->color;
+
+            glUniform3f(LOCATION_LIGHTS + i * 6, position.x, position.y, position.z);
+            glUniform3f(LOCATION_LIGHTS + i * 6 + 1, color.x, color.y, color.z);
+        }
     }
 }
 

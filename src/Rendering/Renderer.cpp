@@ -154,16 +154,6 @@ void Renderer::DrawInternal(
     // Associates our transform matrix
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, transform.DataFlat().data()); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
 
-    // lights[0].position
-    glUniform3f(lightsLoc, 3.0f, 5.0f, 2.0f);
-    // lights[0].color
-    glUniform3f(lightsLoc + 1, 1.0f, 1.0f, 1.0f);
-    // lights[1].position
-    glUniform3f(lightsLoc + 2, -3.0f, 5.0f, -2.0f);
-    // lights[1].color
-    glUniform3f(lightsLoc + 3, 0.0f, 1.0f, 0.0f);
-
-
     if (wireframeMode)
         mode = GL_LINE_LOOP;
 

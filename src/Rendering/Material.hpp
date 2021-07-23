@@ -44,14 +44,9 @@ private:
     std::shared_ptr<Shader> shader;
 };
 
-struct Light final {
-    Vector3 position;
-    Vector3 color;
-};
-
 class DefaultMaterial : public Material {
 public:
-    static constexpr std::size_t MAX_LIGHTS{ 2 };
+    static constexpr std::size_t MAX_LIGHTS{ 10 };
 
     // Transformation
     static constexpr GLint LOCATION_MODEL{ 0 };

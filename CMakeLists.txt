@@ -48,6 +48,8 @@ set(COMMON_SOURCES
     src/Components/Component.hpp
     src/Components/Moveable.cpp
     src/Components/Camera.cpp
+    src/Components/Light.cpp
+    src/Components/Light.hpp
     src/Components/TimedSpawner.cpp
     src/WindowSystem/WindowSystem.cpp
     src/WindowSystem/WindowSystem.hpp

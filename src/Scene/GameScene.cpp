@@ -19,6 +19,7 @@
 # include "../Assets/WavefrontMaterial.hpp"
 # include "../Components/Camera.hpp"
 # include "../Components/Transform.hpp"
+# include "../Components/Light.hpp"
 # include "../Components/Moveable.hpp"
 # include "../Components/Player.hpp"
 # include "../Components/RendererComponent.hpp"
@@ -262,6 +263,21 @@ GameScene::GameScene()
         Vector3{ 3.00f, 0.25f, 6.00f },
         Vector3{ 0.0f, 0.0f, 0.0f }
     );
+
+    // LIGHTS =========================================================
+
+    // Light 1
+    {
+        GameObject& gameObject = AddGameObject({});
+        gameObject.AddComponent<Transform>(Vector3{ 3.0f, 5.0f, 2.0f });
+        gameObject.AddComponent<Light>(Vector3{ 1.0f, 1.0f, 1.0f });
+    }
+    // Light 2
+    {
+        GameObject& gameObject = AddGameObject({});
+        gameObject.AddComponent<Transform>(Vector3{ -3.0f, 5.0f, -2.0f });
+        gameObject.AddComponent<Light>(Vector3{ 0.0f, 1.0f, 0.0f });
+    }
 
     // Creates the player =============================================
     GameObject& player = AddGameObject({});

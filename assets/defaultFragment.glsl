@@ -3,7 +3,7 @@
 // but my 10 year old gpu only supports up to 4.20
 #extension GL_ARB_explicit_uniform_location : require
 
-#define MAX_LIGHTS 2
+#define MAX_LIGHTS 10
 
 struct Light
 {
