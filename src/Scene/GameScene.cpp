@@ -351,5 +351,10 @@ GameScene::GameScene()
     }
 
     // Adds the camera with skybox.
-    player.AddComponent<Camera>(true, Color(1, 3, 42), cubeMesh);
+    player.AddComponent<Camera>(true, cubeMesh);
+
+    // Configures the renderer
+    Renderer::SetAmbientLightColor(Color(1, 3, 42));
+    Renderer::SetAmbientLightIntensity(1.0f);
+
 }

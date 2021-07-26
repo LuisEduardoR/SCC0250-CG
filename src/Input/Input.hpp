@@ -50,6 +50,8 @@ public:
     static State space;
     static State shift;
     static State p;
+    static State o;
+    static State u;
     static State esc;
 
     static Vector2 mousePosition;

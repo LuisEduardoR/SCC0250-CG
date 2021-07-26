@@ -10,6 +10,7 @@
 # include "GameObject.hpp"
 # include "Moveable.hpp"
 # include "Transform.hpp"
+# include "Camera.hpp"
 
 # include "../Time/Time.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -43,11 +44,34 @@ void Player::Start()
     fov = 2.0f;
 }
 
+# define AMBIENT_LIGHT_INTENSITY_STEP 2.5f
+
 void Player::VDrawUpdate()
 {
-    if (Input::p == Input::State::Down)
+
+    float ambientLightIntensity = Renderer::GetAmbientLightIntensity();
+
+    // Increases ambient light intensity.
+    if (Input::u == Input::State::Down || Input::u == Input::State::Held) {
+        ambientLightIntensity += AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
+        Renderer::SetAmbientLightIntensity(ambientLightIntensity);
+    }
+
+    // Decreases ambient light intensity.
+    if (Input::p == Input::State::Down || Input::p == Input::State::Held) {
+        ambientLightIntensity -= AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
+        if(ambientLightIntensity < 0.0f) {
+            ambientLightIntensity = 0.0f;
+        }
+        Renderer::SetAmbientLightIntensity(ambientLightIntensity);
+
+    }
+
+    // Toggle wireframe rendering
+    if (Input::o == Input::State::Down)
         Renderer::ToggleWireframe();
 
+    // Locks and unlocks the cursor
     if (Input::esc == Input::State::Down)
         WindowSystem::SetCursorMode(WindowSystem::CursorMode::Normal);
     else if (Input::leftMouse == Input::State::Down)

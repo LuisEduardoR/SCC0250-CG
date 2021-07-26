@@ -133,8 +133,10 @@ A breakdown of the **src/** directory and it's sub-directories is found below:
 
 **Mouse**               Look around
 
-**P:**                  Toggle wire-frame
+**O:**                  Toggle wire-frame
 
-**Left/right arrows:**  Toggle FoV
+**U/P:**                Increase/Decrease ambient light intensity
+
+**Left/right arrows:**  Increase/Decrease FoV
 
 **ESC:**                Free cursor and reset camera

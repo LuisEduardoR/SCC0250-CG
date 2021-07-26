@@ -27,7 +27,7 @@ namespace Adven
         // Sets or clears the main camera. nullptr to clear.
         static void MainCamera(Camera* camera);
     public:
-        Camera(bool makeMain, Color ambientLightColor, Mesh skybox);
+        Camera(bool makeMain, Mesh skybox);
     public:
         ~Camera() override;
     public:
@@ -36,12 +36,9 @@ namespace Adven
     public:
         [[nodiscard]] Matrix4x4 ViewMatrix() const;
         void RenderSkybox();
-    public:
-        Color GetAmbientLightColor();
 
     private:
         Mesh skybox;
-        Color ambientLightColor;
     };
 }
 

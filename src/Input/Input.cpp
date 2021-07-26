@@ -68,6 +68,8 @@ Input::State Input::down = State::Released;
 Input::State Input::space = State::Released;
 Input::State Input::shift = State::Released;
 Input::State Input::p = State::Released;
+Input::State Input::o = State::Released;
+Input::State Input::u = State::Released;
 Input::State Input::esc = State::Released;
 
 // Process key input
@@ -140,6 +142,20 @@ void Input::ProcessKey(GLFWwindow *window, int keyCode, int scanCode, int action
             p = State::Up;
         break;
 
+     case GLFW_KEY_O:
+        if (action == GLFW_PRESS)
+            o = State::Down;
+        else if (action == GLFW_RELEASE)
+            o = State::Up;
+        break;
+
+     case GLFW_KEY_U:
+        if (action == GLFW_PRESS)
+            u = State::Down;
+        else if (action == GLFW_RELEASE)
+            u = State::Up;
+        break;
+
     case GLFW_KEY_ESCAPE:
         if (action == GLFW_PRESS)
             esc = State::Down;
@@ -210,6 +226,16 @@ void Input::Update()
         p = State::Held;
     else if (p == State::Up)
         p = State::Released;
+
+    if (o == State::Down)
+        o = State::Held;
+    else if (o == State::Up)
+        o = State::Released;
+
+    if (u == State::Down)
+        u = State::Held;
+    else if (u == State::Up)
+        u = State::Released;
 
     if (esc == State::Down)
         esc = State::Held;
