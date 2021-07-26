@@ -44,18 +44,28 @@ void Player::Start()
     fov = 2.0f;
 }
 
+# define AMBIENT_LIGHT_INTENSITY_STEP 2.5f
+
 void Player::VDrawUpdate()
 {
-    
-    auto camera = Camera::MainCamera();
+
+    float ambientLightIntensity = Renderer::GetAmbientLightIntensity();
 
     // Increases ambient light intensity.
-    if (Input::u == Input::State::Down || Input::u == Input::State::Held)
-        camera->IncreaseAmbientLightIntensity();
+    if (Input::u == Input::State::Down || Input::u == Input::State::Held) {
+        ambientLightIntensity += AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
+        Renderer::SetAmbientLightIntensity(ambientLightIntensity);
+    }
 
     // Decreases ambient light intensity.
-    if (Input::p == Input::State::Down || Input::p == Input::State::Held)
-        camera->DecreaseAmbientLightIntensity();
+    if (Input::p == Input::State::Down || Input::p == Input::State::Held) {
+        ambientLightIntensity -= AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
+        if(ambientLightIntensity < 0.0f) {
+            ambientLightIntensity = 0.0f;
+        }
+        Renderer::SetAmbientLightIntensity(ambientLightIntensity);
+
+    }
 
     // Toggle wireframe rendering
     if (Input::o == Input::State::Down)

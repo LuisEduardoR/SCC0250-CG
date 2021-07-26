@@ -15,7 +15,6 @@
 
 union Matrix4x4;
 
-# define AMBIENT_LIGHT_INTENSITY_STEP 2.5f
 namespace Adven
 {
     class Camera : public Component
@@ -28,7 +27,7 @@ namespace Adven
         // Sets or clears the main camera. nullptr to clear.
         static void MainCamera(Camera* camera);
     public:
-        Camera(bool makeMain, Color ambientLightColor, Mesh skybox);
+        Camera(bool makeMain, Mesh skybox);
     public:
         ~Camera() override;
     public:
@@ -37,21 +36,9 @@ namespace Adven
     public:
         [[nodiscard]] Matrix4x4 ViewMatrix() const;
         void RenderSkybox();
-    public:
-
-        // Gets the ambient light color modified by intensity.
-        Color GetAmbientLightColor();
-
-        // Increases the ambient light intensity.
-        void IncreaseAmbientLightIntensity();
-
-        // Decreases the ambient light intensity.
-        void DecreaseAmbientLightIntensity();
 
     private:
         Mesh skybox;
-        Color ambientLightColor;
-        float ambientLightIntensity;
     };
 }
 

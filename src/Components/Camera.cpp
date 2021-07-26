@@ -33,7 +33,7 @@ void Camera::MainCamera(Camera* camera)
 /**
  * Instance methods
  */
-Camera::Camera(bool makeMain, Color ambientLightColor, Mesh skybox) : ambientLightColor(ambientLightColor), ambientLightIntensity(1.0f), skybox(skybox)
+Camera::Camera(bool makeMain, Mesh skybox) : skybox(skybox)
 {
     if (makeMain)
     {
@@ -77,7 +77,7 @@ void Camera::RenderSkybox()
 
 auto Camera::Clone() const -> std::unique_ptr<Component>
 {
-    return std::make_unique<Camera>(false, ambientLightColor, skybox);
+    return std::make_unique<Camera>(false, skybox);
 }
 
 Matrix4x4 Camera::ViewMatrix() const
@@ -85,31 +85,6 @@ Matrix4x4 Camera::ViewMatrix() const
     auto* transform = GetGameObject()->GetComponent<Transform>();
     return Matrix4x4::Camera(transform->WorldPosition(), transform->WorldRotation(),
         { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
-}
-
-Color Camera::GetAmbientLightColor() 
-{
-    return Color(
-                    ambientLightColor.r * ambientLightIntensity, 
-                    ambientLightColor.g * ambientLightIntensity, 
-                    ambientLightColor.b * ambientLightIntensity
-                );
-}
-
-void Camera::IncreaseAmbientLightIntensity(){
-    
-    ambientLightIntensity += AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
-
-}
-
-void Camera::DecreaseAmbientLightIntensity(){
-
-    ambientLightIntensity -= AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
-
-    if(ambientLightIntensity < 0.0f) {
-        ambientLightIntensity = 0.0f;
-    }
-
 }
 
 }

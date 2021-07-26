@@ -21,11 +21,18 @@ GLuint Renderer::vertexArray{ 0 };
 
 bool Renderer::wireframeMode{ false };
 
+// Ambient light settings
+Color Renderer::ambientLightColor{ Color::black };
+float Renderer::ambientLightIntensity{ 1.0f };
+
 // Initializes the renderer
 void Renderer::Init() {
 
     Renderer::currentProgram = 0;
     Renderer::vertexBuffer = 0;
+
+    Renderer::ambientLightColor = Color::black;
+    Renderer::ambientLightIntensity = 1.0f;
 
     // Initializes GLEW to handle OpenGL functions
     GLint result = glewInit();
@@ -33,6 +40,7 @@ void Renderer::Init() {
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+
 }
 
 // Destroys the renderer
@@ -106,6 +114,22 @@ void Renderer::CreateArrayBuffer() {
     // Sets our buffer as the GL_ARRAY_BUFFER
     Renderer::vertexBuffer = buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
+}
+
+void Renderer::SetAmbientLightColor(Color color) {
+    ambientLightColor = color;
+}
+
+Color Renderer::GetAmbientLightColor() {
+    return ambientLightColor;
+}
+
+void Renderer::SetAmbientLightIntensity(float intensity) {
+    ambientLightIntensity = intensity;
+}
+
+float Renderer::GetAmbientLightIntensity() {
+    return ambientLightIntensity;
 }
 
 // Draws an object directly interacting with our graphics API

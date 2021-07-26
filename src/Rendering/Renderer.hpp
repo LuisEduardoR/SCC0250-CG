@@ -62,6 +62,9 @@ private:
 
     static Matrix4x4 view;
 
+    static Color ambientLightColor;
+    static float ambientLightIntensity;
+
     // Current program being used by the renderer
     static GLuint currentProgram;
 
@@ -83,13 +86,22 @@ private:
             const Color& color = Color::white,
             const Matrix4x4& transform = Matrix4x4::Identity,
             Material* material = nullptr);
+
 public:
+
     static void DrawSkybox(
             const void* data,
             size_t data_size,
             size_t count,
             const Matrix4x4& transform,
             Material* material);
+
+    static void SetAmbientLightColor(Color color);
+    static Color GetAmbientLightColor();
+
+    static void SetAmbientLightIntensity(float intensity);
+    static float GetAmbientLightIntensity();
+            
 };
 
 template<class T>

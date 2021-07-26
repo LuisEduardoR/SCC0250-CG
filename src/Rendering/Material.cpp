@@ -31,9 +31,9 @@ auto DefaultMaterial::Bind() -> void
 {
     Material::Bind();
 
-    Color ambientColor = Adven::Camera::MainCamera()->GetAmbientLightColor();
+    Color ambientColor = Renderer::GetAmbientLightColor();
 
-    glUniform1f(LOCATION_AMBIENT_REFLECTIVITY, ambientReflectivity.x);
+    glUniform1f(LOCATION_AMBIENT_REFLECTIVITY, ambientReflectivity.x * Renderer::GetAmbientLightIntensity());
     glUniform3f(LOCATION_AMBIENT_LIGHT_COLOR, ambientColor.r, ambientColor.g, ambientColor.b);
     glUniform1f(LOCATION_DIFFUSE_REFLECTIVITY, diffuseReflectivity.x);
     glUniform1f(LOCATION_SPECULAR_REFLECTIVITY, specularReflectivity.x);
