@@ -23,6 +23,7 @@
 # include <iostream>
 # include <chrono>
 # include <cassert>
+# include <cmath>
 
 using namespace Adven;
 
@@ -45,12 +46,14 @@ void Voidmouth::Start()
 
 void Voidmouth::VDrawUpdate()
 {
-    if (transform->localPosition.Magnitude() - path[currentNode].Magnitude() <= 0.1f) // Check if node has been reached (not == because of floating point)
+    const float distance =
+        transform->localPosition.Magnitude() - path[currentNode].Magnitude();
+
+    if (std::abs(distance) <= 0.1f) // Check if node has been reached (not == because of floating point)
     {
         currentNode = currentNode + 1 < path.size() ? currentNode + 1 : 0;
         moveable->speed = (path[currentNode] - transform->localPosition).Normalized() * maxSpeed;
-        Vector4 rotation = { transform->localRotation, 1.0f };
-        Matrix4x4 rotationMatrix = Matrix4x4::LookAt(transform->localPosition, path[currentNode], Vector3(0.0f, 1.0f, 0.0f));
-        transform->localPosition = (Vector3) (rotationMatrix * rotation);
+
+        transform->localRotation.y = std::atan2(moveable->speed.x, moveable->speed.z);
     }
 }

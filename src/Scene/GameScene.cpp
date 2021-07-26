@@ -24,7 +24,7 @@
 # include "../Components/Player.hpp"
 # include "../Components/RendererComponent.hpp"
 # include "../Components/ItemAnimator.hpp"
-# include "../Components/VoidMouth.hpp"
+# include "../Components/Voidmouth.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
 # include "../Physics/CircleCollider.hpp"
@@ -148,9 +148,8 @@ void GameScene::CreateVoidMouth(
     gameObject.AddComponent<RendererComponent<Mesh>>(*mesh);
     // ! FIX: light position not updating
     gameObject.AddComponent<Light>(Color( 0.0f, 0.4f, 0.5f ));
-    // ! FIX: weird void mouth position
-    //gameObject.AddComponent<Moveable>();
-    //gameObject.AddComponent<Voidmouth>(path);
+    gameObject.AddComponent<Moveable>();
+    gameObject.AddComponent<Voidmouth>(path);
 
 }
 
@@ -310,8 +309,10 @@ GameScene::GameScene()
         Vector3{ 0.0f, 0.0f, 10.0f },
         Vector3{ 0.0f, 0.0f, 0.0f },
         {
-            { 0.0f, 0.0f, 10.0f},
-            { 5.0f, 0.0f, 10.0f}
+            { -10.0f, 0.0f, 10.0f},
+            { 10.0f, 0.0f, 10.0f},
+            { 10.0f, 0.0f, -10.0f},
+            { -10.0f, 0.0f, -10.0f},
         }
     );
 

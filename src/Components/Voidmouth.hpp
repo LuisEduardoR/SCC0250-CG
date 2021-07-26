@@ -46,7 +46,7 @@ private:
     Adven::Moveable* moveable;
     float maxSpeed { 4.0f };
     std::vector<Vector3> path;
-    int currentNode { 0 };
+    std::size_t currentNode { 0 };
 };
 
 #endif /* end of include guard: VOIDMOUTH_HPP */

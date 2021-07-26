@@ -51,6 +51,8 @@ set(COMMON_SOURCES
     src/Components/Light.cpp
     src/Components/Light.hpp
     src/Components/TimedSpawner.cpp
+    src/Components/Voidmouth.cpp
+    src/Components/Voidmouth.hpp
     src/WindowSystem/WindowSystem.cpp
     src/WindowSystem/WindowSystem.hpp
     src/Interfaces/IUpdatable.hpp
