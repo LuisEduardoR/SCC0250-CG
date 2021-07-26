@@ -1,13 +1,3 @@
-# Blender MTL File: 'None'
-# Material Count: 1
-
-newmtl weapon
-Ns 323.999994
-Ka 1.000000 1.000000 1.000000
-Kd 1.000000 1.000000 1.000000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 2
-map_Kd weapon.png
+version https://git-lfs.github.com/spec/v1
+oid sha256:466a96780d177c16958507ce99ea2636a49e877731767bc74bac62a6333a0e9d
+size 245

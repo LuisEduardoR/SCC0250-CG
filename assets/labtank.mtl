@@ -1,10 +1,3 @@
-newmtl labtank
-Ns 151.988433
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.315920 0.315920 0.315920
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 0.756219
-illum 9
-map_Kd tech_ATLAS.png
+version https://git-lfs.github.com/spec/v1
+oid sha256:bf8adfcfbdd14e94a3abb01a4b23e1af28d77733dd6ff39f93a3e81427abf1aa
+size 202
