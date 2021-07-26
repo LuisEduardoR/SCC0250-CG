@@ -117,7 +117,7 @@ auto PrintNestedException(const std::exception& e, std::size_t level = 0) -> voi
 			<< systemError->code().value();
 
 		std::array<char, 1024> errorMsg{};
-		int result = strerror_r(systemError->code().value(), errorMsg.data(), errorMsg.size());
+		int result = -1;//strerror_r(systemError->code().value(), errorMsg.data(), errorMsg.size());
 
 		if (result == 0)
 		{

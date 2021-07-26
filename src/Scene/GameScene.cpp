@@ -24,6 +24,7 @@
 # include "../Components/Player.hpp"
 # include "../Components/RendererComponent.hpp"
 # include "../Components/ItemAnimator.hpp"
+# include "../Components/VoidMouth.hpp"
 # include "../Math/Vector.hpp"
 # include "../Math/Matrix4x4.hpp"
 # include "../Physics/CircleCollider.hpp"
@@ -128,6 +129,28 @@ void GameScene::CreateItem(
     gameObject.AddComponent<RendererComponent<Mesh>>(*mesh);
     // Items have an special animation.
     gameObject.AddComponent<ItemAnimator>(0.15f, 0.50f);
+
+}
+
+// Creates a VoidMouth that roams the current scene
+void GameScene::CreateVoidMouth(
+    const std::string modelPath,
+    std::shared_ptr<Shader> shader,
+    const Vector3& position,
+    const Vector3& rotation,
+    const std::vector<Vector3>& path
+) {
+    // FIXME: Don't allocated duplicated meshes
+    std::shared_ptr<Mesh> mesh = LoadObj(modelPath, shader);
+
+    GameObject& gameObject = AddGameObject({});
+    gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
+    gameObject.AddComponent<RendererComponent<Mesh>>(*mesh);
+    // ! FIX: light position not updating
+    gameObject.AddComponent<Light>(Color( 0.0f, 0.4f, 0.5f ));
+    // ! FIX: weird void mouth position
+    //gameObject.AddComponent<Moveable>();
+    //gameObject.AddComponent<Voidmouth>(path);
 
 }
 
@@ -270,14 +293,27 @@ GameScene::GameScene()
     {
         GameObject& gameObject = AddGameObject({});
         gameObject.AddComponent<Transform>(Vector3{ 3.0f, 5.0f, 2.0f });
-        gameObject.AddComponent<Light>(Vector3{ 1.0f, 1.0f, 1.0f });
+        gameObject.AddComponent<Light>(Color{ 1.0f, 1.0f, 1.0f });
     }
     // Light 2
     {
         GameObject& gameObject = AddGameObject({});
         gameObject.AddComponent<Transform>(Vector3{ -3.0f, 5.0f, -2.0f });
-        gameObject.AddComponent<Light>(Vector3{ 0.0f, 1.0f, 0.0f });
+        gameObject.AddComponent<Light>(Color{ 0.0f, 1.0f, 0.0f });
     }
+
+    // VOID MOUTH (Moving light) ======================================
+
+    CreateVoidMouth(
+        "./assets/voidMouth.obj",
+        defaultShader,
+        Vector3{ 0.0f, 0.0f, 10.0f },
+        Vector3{ 0.0f, 0.0f, 0.0f },
+        {
+            { 0.0f, 0.0f, 10.0f},
+            { 5.0f, 0.0f, 10.0f}
+        }
+    );
 
     // Creates the player =============================================
     GameObject& player = AddGameObject({});
@@ -314,5 +350,5 @@ GameScene::GameScene()
     }
 
     // Adds the camera with skybox.
-    player.AddComponent<Camera>(true, cubeMesh);
+    player.AddComponent<Camera>(true, Color(1, 3, 42), cubeMesh);
 }

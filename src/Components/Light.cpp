@@ -1,11 +1,11 @@
 # include "Light.hpp"
 
 # include <algorithm>
-#include <memory>
+# include <memory>
 
 std::vector<Light*> Light::lights{};
 
-Light::Light(Vector3 color) : color(color)
+Light::Light(Color color) : color(color)
 {
     lights.push_back(this);
 }

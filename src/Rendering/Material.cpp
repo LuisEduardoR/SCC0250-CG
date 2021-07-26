@@ -3,6 +3,7 @@
 # include "Renderer.hpp"
 # include "TextureObject.hpp"
 # include "../Assets/AssetLibrary.hpp"
+# include "../Components/Camera.hpp"
 # include "../Components/GameObject.hpp"
 # include "../Components/Light.hpp"
 # include "../Components/Transform.hpp"
@@ -30,7 +31,10 @@ auto DefaultMaterial::Bind() -> void
 {
     Material::Bind();
 
+    Color ambientColor = Adven::Camera::MainCamera()->GetAmbientLightColor();
+
     glUniform1f(LOCATION_AMBIENT_REFLECTIVITY, ambientReflectivity.x);
+    glUniform3f(LOCATION_AMBIENT_LIGHT_COLOR, ambientColor.r, ambientColor.g, ambientColor.b);
     glUniform1f(LOCATION_DIFFUSE_REFLECTIVITY, diffuseReflectivity.x);
     glUniform1f(LOCATION_SPECULAR_REFLECTIVITY, specularReflectivity.x);
     glUniform1f(LOCATION_SPECULAR_EXPONENT, specularExponent);
@@ -52,10 +56,10 @@ auto DefaultMaterial::Bind() -> void
         if(auto* transform = Light::lights[i]->GetGameObject()->GetComponent<Transform>())
         {
             Vector3 position = transform->WorldPosition();
-            Vector3 color = Light::lights[i]->color;
+            Color color = Light::lights[i]->color;
 
             glUniform3f(LOCATION_LIGHTS + i * 6, position.x, position.y, position.z);
-            glUniform3f(LOCATION_LIGHTS + i * 6 + 1, color.x, color.y, color.z);
+            glUniform3f(LOCATION_LIGHTS + i * 6 + 1, color.r, color.g, color.b);
         }
     }
 }

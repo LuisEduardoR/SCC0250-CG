@@ -12,7 +12,7 @@
 # include <vector>
 
 # include "Component.hpp"
-# include "../Math/Vector.hpp"
+# include "../Rendering/Color.hpp"
 
 namespace Adven {
     class GameObject;
@@ -27,13 +27,13 @@ class Light : public Adven::Component
 public:
     static std::vector<Light*> lights;
 public:
-    Light(Vector3 color);
+    Light(Color color);
 public:
     ~Light() override;
 public:
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
 
-    Vector3 color;
+    Color color;
 private:
     Transform* transform;
 };

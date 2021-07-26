@@ -11,6 +11,7 @@
 # include "Component.hpp"
 # include "../Rendering/Geometry.hpp"
 # include "../Rendering/Shader.hpp"
+# include "../Rendering/Color.hpp"
 
 union Matrix4x4;
 
@@ -26,7 +27,7 @@ namespace Adven
         // Sets or clears the main camera. nullptr to clear.
         static void MainCamera(Camera* camera);
     public:
-        Camera(bool makeMain, Mesh skybox);
+        Camera(bool makeMain, Color ambientLightColor, Mesh skybox);
     public:
         ~Camera() override;
     public:
@@ -35,9 +36,12 @@ namespace Adven
     public:
         [[nodiscard]] Matrix4x4 ViewMatrix() const;
         void RenderSkybox();
+    public:
+        Color GetAmbientLightColor();
 
     private:
         Mesh skybox;
+        Color ambientLightColor;
     };
 }
 

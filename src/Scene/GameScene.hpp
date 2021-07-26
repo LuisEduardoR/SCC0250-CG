@@ -12,6 +12,7 @@
 # ifndef GAME_SCENE_HPP
 # define GAME_SCENE_HPP
 
+# include <vector>
 # include <memory>
 
 # include "Scene.hpp"
@@ -44,6 +45,14 @@ private:
         std::shared_ptr<Shader> shader,
         const Vector3& position,
         const Vector3& rotation
+    );
+
+    void CreateVoidMouth(
+        const std::string modelPath,
+        std::shared_ptr<Shader> shader,
+        const Vector3& position,
+        const Vector3& rotation,
+        const std::vector<Vector3>& path
     );
 
 };
