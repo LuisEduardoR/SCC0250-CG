@@ -46,7 +46,7 @@ std::shared_ptr<Mesh> LoadObj(std::string modelPath, std::shared_ptr<Shader> sha
     for (const auto& materialLibraryFile : modelObj->materialLibraryFiles)
     {
         auto matLib = AssetLibrary<WavefrontMaterialLibrary>
-            ::RequireAsset(modelDirectory / materialLibraryFile);
+            ::RequireAsset((modelDirectory / materialLibraryFile).string());
 
         // Merge the library maps.
         materialLibrary.insert(matLib->begin(), matLib->end());
@@ -73,7 +73,7 @@ std::shared_ptr<Mesh> LoadObj(std::string modelPath, std::shared_ptr<Shader> sha
                 if (wMaterial.diffuseReflectivityMap.has_value()) {
                     // FIXME: Fix relative path workaround
                     auto texture2d = AssetLibrary<Texture2D>::RequireAsset(
-                            modelDirectory / wMaterial.diffuseReflectivityMap.value());
+                            (modelDirectory / wMaterial.diffuseReflectivityMap.value()).string());
 
                     texture = std::make_shared<TextureObject>(TextureObject::Type::Texture2D);
                     texture->UploadTexture(0, texture2d);
