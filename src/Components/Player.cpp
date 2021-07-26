@@ -10,6 +10,7 @@
 # include "GameObject.hpp"
 # include "Moveable.hpp"
 # include "Transform.hpp"
+# include "Camera.hpp"
 
 # include "../Time/Time.hpp"
 # include "../Math/Matrix4x4.hpp"
@@ -45,9 +46,22 @@ void Player::Start()
 
 void Player::VDrawUpdate()
 {
-    if (Input::p == Input::State::Down)
+    
+    auto camera = Camera::MainCamera();
+
+    // Increases ambient light intensity.
+    if (Input::u == Input::State::Down || Input::u == Input::State::Held)
+        camera->IncreaseAmbientLightIntensity();
+
+    // Decreases ambient light intensity.
+    if (Input::p == Input::State::Down || Input::p == Input::State::Held)
+        camera->DecreaseAmbientLightIntensity();
+
+    // Toggle wireframe rendering
+    if (Input::o == Input::State::Down)
         Renderer::ToggleWireframe();
 
+    // Locks and unlocks the cursor
     if (Input::esc == Input::State::Down)
         WindowSystem::SetCursorMode(WindowSystem::CursorMode::Normal);
     else if (Input::leftMouse == Input::State::Down)

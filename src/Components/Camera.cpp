@@ -7,9 +7,11 @@
 
 #include "Camera.hpp"
 
-#include "../Math/Matrix4x4.hpp"
 #include "Transform.hpp"
 #include "GameObject.hpp"
+
+#include "../Time/Time.hpp"
+#include "../Math/Matrix4x4.hpp"
 #include "../Rendering/Renderer.hpp"
 #include "../WindowSystem/WindowSystem.hpp"
 
@@ -31,7 +33,7 @@ void Camera::MainCamera(Camera* camera)
 /**
  * Instance methods
  */
-Camera::Camera(bool makeMain, Color ambientLightColor, Mesh skybox) : ambientLightColor(ambientLightColor), skybox(skybox)
+Camera::Camera(bool makeMain, Color ambientLightColor, Mesh skybox) : ambientLightColor(ambientLightColor), ambientLightIntensity(1.0f), skybox(skybox)
 {
     if (makeMain)
     {
@@ -87,7 +89,27 @@ Matrix4x4 Camera::ViewMatrix() const
 
 Color Camera::GetAmbientLightColor() 
 {
-    return ambientLightColor;
+    return Color(
+                    ambientLightColor.r * ambientLightIntensity, 
+                    ambientLightColor.g * ambientLightIntensity, 
+                    ambientLightColor.b * ambientLightIntensity
+                );
+}
+
+void Camera::IncreaseAmbientLightIntensity(){
+    
+    ambientLightIntensity += AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
+
+}
+
+void Camera::DecreaseAmbientLightIntensity(){
+
+    ambientLightIntensity -= AMBIENT_LIGHT_INTENSITY_STEP * Time::DeltaTime;
+
+    if(ambientLightIntensity < 0.0f) {
+        ambientLightIntensity = 0.0f;
+    }
+
 }
 
 }
