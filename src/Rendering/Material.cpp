@@ -29,16 +29,20 @@ DefaultMaterial::DefaultMaterial(
 
 auto DefaultMaterial::Bind() -> void
 {
+
+    // Sets the program/shader
     Material::Bind();
 
     Color ambientColor = Renderer::GetAmbientLightColor();
 
+    // Binds the uniforms needed for calculating this materials lighting.
     glUniform1f(LOCATION_AMBIENT_REFLECTIVITY, ambientReflectivity.x * Renderer::GetAmbientLightIntensity());
     glUniform3f(LOCATION_AMBIENT_LIGHT_COLOR, ambientColor.r, ambientColor.g, ambientColor.b);
     glUniform1f(LOCATION_DIFFUSE_REFLECTIVITY, diffuseReflectivity.x);
     glUniform1f(LOCATION_SPECULAR_REFLECTIVITY, specularReflectivity.x);
     glUniform1f(LOCATION_SPECULAR_EXPONENT, specularExponent);
 
+    // If there's a texture binds it.
     if (texture != nullptr)
     {
         GLint textureUnit{ 0 };
@@ -51,6 +55,7 @@ auto DefaultMaterial::Bind() -> void
         glUniform1i(LOCATION_TEXTURE, textureUnit);
     }
 
+    // Binds each light's position and color
     for (std::size_t i = 0; i < Light::lights.size() && i < MAX_LIGHTS; i++)
     {
         if(auto* transform = Light::lights[i]->GetGameObject()->GetComponent<Transform>())
@@ -62,6 +67,7 @@ auto DefaultMaterial::Bind() -> void
             glUniform3f(LOCATION_LIGHTS + i * 6 + 1, color.r, color.g, color.b);
         }
     }
+
 }
 
 SkyboxMaterial::SkyboxMaterial(

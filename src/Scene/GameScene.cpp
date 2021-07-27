@@ -291,13 +291,14 @@ GameScene::GameScene()
     // Light 1
     {
         GameObject& gameObject = AddGameObject({});
-        gameObject.AddComponent<Transform>(Vector3{ 3.0f, 5.0f, 2.0f });
+        gameObject.AddComponent<Transform>(Vector3{ 5.0f, 5.0f, -5.0f });
         gameObject.AddComponent<Light>(Color{ 1.0f, 1.0f, 1.0f });
     }
+
     // Light 2
     {
         GameObject& gameObject = AddGameObject({});
-        gameObject.AddComponent<Transform>(Vector3{ -3.0f, 5.0f, -2.0f });
+        gameObject.AddComponent<Transform>(Vector3{ 0.0f, 3.0f, 0.0f });
         gameObject.AddComponent<Light>(Color{ 0.0f, 1.0f, 0.0f });
     }
 
@@ -309,10 +310,11 @@ GameScene::GameScene()
         Vector3{ 0.0f, 0.0f, 10.0f },
         Vector3{ 0.0f, 0.0f, 0.0f },
         {
-            { -10.0f, 0.0f, 10.0f},
-            { 10.0f, 0.0f, 10.0f},
-            { 10.0f, 0.0f, -10.0f},
-            { -10.0f, 0.0f, -10.0f},
+            { 0.0f, 0.0f, 10.0f },
+            { -10.0f, 0.0f, 10.0f },
+            { -10.0f, 0.0f, -10.0f },
+            { 0.0f, 0.0f, -10.0f },
+            { 0.0f, 0.0f, 10.0f }
         }
     );
 
