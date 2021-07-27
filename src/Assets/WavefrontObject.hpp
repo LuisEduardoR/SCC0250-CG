@@ -1,3 +1,15 @@
+// Abner Eduardo Silveira Santos - NUSP 10692012
+// Amanda de Moura Peres - NUSP 10734522
+// Luís Eduardo Rozante de Freitas Pereira - NUSP 10734794
+// Desenvolvido para a disciplina:
+//  SCC0250 - Computação Gráfica (2021)
+//  Prof. Ricardo M. Marcacini
+
+/*
+    This file contains the code to load Wavefront objects (.obj files)
+    that contain 3D geometry
+*/
+
 # ifndef AMN_WAVEFRONT_OBJECT_HPP
 # define AMN_WAVEFRONT_OBJECT_HPP
 

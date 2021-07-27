@@ -5,6 +5,11 @@
 //  SCC0250 - Computação Gráfica (2021)
 //  Prof. Ricardo M. Marcacini
 
+/*
+    This file contains the code to represent a light that
+    illuminates other objects in the scene
+*/
+
 # ifndef LIGHT_HPP
 # define LIGHT_HPP
 
@@ -25,17 +30,24 @@ class Transform;
 class Light : public Adven::Component
 {
 public:
+    // Static vector containing all the lights
     static std::vector<Light*> lights;
 public:
     Light(Color color);
 public:
     ~Light() override;
 public:
+
     [[nodiscard]] auto Clone() const -> std::unique_ptr<Component> override;
 
+    // Color for the light.
     Color color;
+
 private:
+
+    // Transform for the light (only position matters because we only have point lights).
     Transform* transform;
+
 };
 
 #endif /* end of include guard: LIGHT_HPP */

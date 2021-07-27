@@ -8,13 +8,16 @@
 # include "../Components/Light.hpp"
 # include "../Components/Transform.hpp"
 
+// CONSTRUCTOR
 Material::Material(std::shared_ptr<Shader> shader) : shader(shader) {}
 
+// Sets this material for rendering.
 auto Material::Bind() -> void
 {
     Renderer::SetProgram(*shader.get());
 }
 
+// CONSTRUCTOR
 DefaultMaterial::DefaultMaterial(
     std::shared_ptr<Shader> shader,
     const WavefrontMaterial& material,
@@ -27,6 +30,7 @@ DefaultMaterial::DefaultMaterial(
     specularExponent = material.specularExponent.value_or(0.0f);
 }
 
+// Sets this material for rendering.
 auto DefaultMaterial::Bind() -> void
 {
 
@@ -70,11 +74,13 @@ auto DefaultMaterial::Bind() -> void
 
 }
 
+// CONSTRUCTOR
 SkyboxMaterial::SkyboxMaterial(
     std::shared_ptr<Shader> shader,
     std::shared_ptr<TextureObject> texture)
     : Material(shader), texture(texture) {}
 
+// Sets this material for rendering.
 auto SkyboxMaterial::Bind() -> void
 {
     Material::Bind();

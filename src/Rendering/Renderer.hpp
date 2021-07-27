@@ -56,11 +56,17 @@ public:
     static void ToggleWireframe();
 
 private:
+
+    // Should wireframe mode be used for rendering?
     static bool wireframeMode;
+
+    // Rendering pipeline matrixes
 
     static Matrix4x4 projection;
 
     static Matrix4x4 view;
+
+    // Ambient light
 
     static Color ambientLightColor;
     static float ambientLightIntensity;
@@ -89,21 +95,25 @@ private:
 
 public:
 
-    static void DrawSkybox(
-            const void* data,
-            size_t data_size,
-            size_t count,
-            const Matrix4x4& transform,
-            Material* material);
+    // Ambient light:
 
     static void SetAmbientLightColor(Color color);
     static Color GetAmbientLightColor();
 
     static void SetAmbientLightIntensity(float intensity);
     static float GetAmbientLightIntensity();
+
+    // Special Draw function for skybox
+    static void DrawSkybox(
+            const void* data,
+            size_t data_size,
+            size_t count,
+            const Matrix4x4& transform,
+            Material* material);    
             
 };
 
+// Template draw funcion
 template<class T>
 void Renderer::Draw(const T& object, const Matrix4x4& transform) {
 

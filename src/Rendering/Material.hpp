@@ -14,7 +14,6 @@
 
 # define CONST_PI 3.14159265358979323846f
 
-
 # include "../Assets/WavefrontMaterial.hpp"
 # include "../Math/Vector.hpp"
 
@@ -27,23 +26,30 @@ union Matrix4x4;
 class TextureObject;
 class Shader;
 
+// Base material
 class Material {
 public:
+
     explicit Material(std::shared_ptr<Shader> shader);
 
+    // CONSTRUCTORS
     Material(const Material& other) = default;
     Material(Material&& other) = default;
 
+    // OPERATORS
     auto operator=(const Material& other) -> Material& = default;
     auto operator=(Material&& other) -> Material& = default;
 
+    // DESTRUCTOR
     virtual ~Material() = default;
 public:
+    // Sets this material for rendering.
     virtual auto Bind() -> void;
 private:
     std::shared_ptr<Shader> shader;
 };
 
+// Default material for most 3D objects
 class DefaultMaterial : public Material {
 public:
     static constexpr std::size_t MAX_LIGHTS{ 10 };
@@ -68,7 +74,10 @@ public:
 
     // Point Lights
     static constexpr GLint LOCATION_LIGHTS{ 10 };
+    
 public:
+
+    // CONSTRUCTORS
     DefaultMaterial(
         std::shared_ptr<Shader> shader,
         const WavefrontMaterial& material,
@@ -77,11 +86,15 @@ public:
     DefaultMaterial(const DefaultMaterial& other) = default;
     DefaultMaterial(DefaultMaterial&& other) = default;
 
+    // OPERATORS
     auto operator=(const DefaultMaterial& other) -> DefaultMaterial& = default;
     auto operator=(DefaultMaterial&& other) -> DefaultMaterial& = default;
 
+    // DESTRUCTOR
     ~DefaultMaterial() override = default;
+
 public:
+    // Sets this material for rendering.
     auto Bind() -> void override;
 private:
     /* Color color; */
@@ -92,7 +105,7 @@ private:
     float specularExponent;
 };
 
-
+// Special material for the skybox
 class SkyboxMaterial : public Material {
 public:
 
@@ -102,16 +115,22 @@ public:
     // Base color
     static constexpr GLint LOCATION_TEXTURE{ 4 };
 public:
+
+    // CONSTRUCTORS
     SkyboxMaterial(std::shared_ptr<Shader> shader, std::shared_ptr<TextureObject> texture);
 
     SkyboxMaterial(const SkyboxMaterial& other) = default;
     SkyboxMaterial(SkyboxMaterial&& other) = default;
 
+    // OPERATORS
     auto operator=(const SkyboxMaterial& other) -> SkyboxMaterial& = default;
     auto operator=(SkyboxMaterial&& other) -> SkyboxMaterial& = default;
 
+    // DESTRUCTOR
     ~SkyboxMaterial() override = default;
+
 public:
+    // Sets this material for rendering.
     auto Bind() -> void override;
 private:
     std::shared_ptr<TextureObject> texture;

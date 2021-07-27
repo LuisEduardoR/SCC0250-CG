@@ -116,6 +116,8 @@ void Renderer::CreateArrayBuffer() {
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
 }
 
+// Ambient light:
+
 void Renderer::SetAmbientLightColor(Color color) {
     ambientLightColor = color;
 }
@@ -186,6 +188,7 @@ void Renderer::DrawInternal(
 
 }
 
+// Special Draw function for skybox
 void Renderer::DrawSkybox(
     const void* data,
     size_t data_size,
@@ -219,6 +222,7 @@ void Renderer::DrawSkybox(
     glDepthMask(GL_TRUE);
 }
 
+// Toggles wireframe rendering.
 void Renderer::ToggleWireframe()
 {
     wireframeMode = !wireframeMode;

@@ -35,6 +35,7 @@
 
 using namespace Adven;
 
+// Loads an .obj file and it's respective .mtl file if available.
 namespace {
 std::shared_ptr<Mesh> LoadObj(std::string modelPath, std::shared_ptr<Shader> shader) {
     auto modelObj{ AssetLibrary<WavefrontObject>::RequireAsset(modelPath) };
@@ -106,7 +107,7 @@ void GameScene::CreateObject(
     const Vector3& position,
     const Vector3& rotation
 ) {
-    // FIXME: Don't allocated duplicated meshes
+    // ! FIXME: Don't allocated duplicated meshes
     std::shared_ptr<Mesh> mesh = LoadObj(modelPath, shader);
 
     GameObject& gameObject = AddGameObject({});
@@ -122,6 +123,7 @@ void GameScene::CreateItem(
     const Vector3& position,
     const Vector3& rotation
 ) {
+    // ! FIXME: Don't allocated duplicated meshes
     std::shared_ptr<Mesh> mesh = LoadObj(modelPath, shader);
 
     GameObject& gameObject = AddGameObject({});
@@ -140,14 +142,15 @@ void GameScene::CreateVoidMouth(
     const Vector3& rotation,
     const std::vector<Vector3>& path
 ) {
-    // FIXME: Don't allocated duplicated meshes
+    // ! FIXME: Don't allocated duplicated meshes
     std::shared_ptr<Mesh> mesh = LoadObj(modelPath, shader);
 
     GameObject& gameObject = AddGameObject({});
     gameObject.AddComponent<Transform> ( position, rotation, Vector3( 1.0f, 1.0f, 1.0f));
     gameObject.AddComponent<RendererComponent<Mesh>>(*mesh);
-    // ! FIX: light position not updating
+    // VoidMouths have a dangling light in their head used to attract prey
     gameObject.AddComponent<Light>(Color( 0.0f, 0.4f, 0.5f ));
+    // VoidMouth also move around
     gameObject.AddComponent<Moveable>();
     gameObject.AddComponent<Voidmouth>(path);
 
@@ -286,23 +289,23 @@ GameScene::GameScene()
         Vector3{ 0.0f, 0.0f, 0.0f }
     );
 
-    // LIGHTS =========================================================
+    // Creates the lights =============================================
 
-    // Light 1
+    // Moon Light
     {
         GameObject& gameObject = AddGameObject({});
         gameObject.AddComponent<Transform>(Vector3{ 5.0f, 5.0f, -5.0f });
         gameObject.AddComponent<Light>(Color{ 1.0f, 1.0f, 1.0f });
     }
 
-    // Light 2
+    // Green Light
     {
         GameObject& gameObject = AddGameObject({});
         gameObject.AddComponent<Transform>(Vector3{ 0.0f, 3.0f, 0.0f });
         gameObject.AddComponent<Light>(Color{ 0.0f, 1.0f, 0.0f });
     }
 
-    // VOID MOUTH (Moving light) ======================================
+    // Void Mouth (Moving light) ======================================
 
     CreateVoidMouth(
         "./assets/voidMouth.obj",
@@ -355,7 +358,7 @@ GameScene::GameScene()
     // Adds the camera with skybox.
     player.AddComponent<Camera>(true, cubeMesh);
 
-    // Configures the renderer
+    // Configures the ambient light on the renderer
     Renderer::SetAmbientLightColor(Color(1, 3, 42));
     Renderer::SetAmbientLightIntensity(1.0f);
 

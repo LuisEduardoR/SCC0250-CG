@@ -6,9 +6,9 @@
 //  Prof. Ricardo M. Marcacini
 
 /*
-    This file contains the Player component
-    Implements the player mechanics allowing for
-    user control
+    This file contains the VoidMouth component
+    to control a monster that roams around the
+    scenery
 */
 
 # ifndef VOIDMOUTH_HPP
@@ -42,11 +42,16 @@ public:
     void VDrawUpdate() override;
 
 private:
+
     Transform* transform;
     Adven::Moveable* moveable;
     float maxSpeed { 4.0f };
+
+    // Path for the VoidMouth to roam around
     std::vector<Vector3> path;
+
     std::size_t currentNode { 0 };
+
 };
 
 #endif /* end of include guard: VOIDMOUTH_HPP */
